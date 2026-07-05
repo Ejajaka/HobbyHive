@@ -1,0 +1,1827 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Skill Swap</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23A78BFA' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='lucide lucide-palette-icon lucide-palette'%3E%3Cpath d='M12 22a1 1 0 0 1 0-20 10 9 0 0 1 10 9 5 5 0 0 1-5 5h-2.25a1.75 1.75 0 0 0-1.4 2.8l.3.4a1.75 1.75 0 0 1-1.4 2.8z'/%3E%3Ccircle cx='13.5' cy='6.5' r='.5' fill='%23A78BFA'/%3E%3Ccircle cx='17.5' cy='10.5' r='.5' fill='%23A78BFA'/%3E%3Ccircle cx='6.5' cy='12.5' r='.5' fill='%23A78BFA'/%3E%3Ccircle cx='8.5' cy='7.5' r='.5' fill='%23A78BFA'/%3E%3C/svg%3E" />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(to bottom, #111827, #1f2937, #111827);
+      color: white;
+      min-height: 100vh;
+    }
+
+    .profile-card {
+      transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .profile-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .message {
+      transition: all 0.3s ease;
+    }
+
+    .message:hover {
+      background-color: rgba(167, 139, 250, 0.1);
+    }
+
+    .filter-option {
+      transition: all 0.3s ease;
+    }
+
+    .filter-option:hover {
+      background-color: rgba(167, 139, 250, 0.1);
+    }
+
+    .scroll-container {
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+
+    .scroll-container::-webkit-scrollbar {
+      display: none;
+    }
+
+    .swap-btn {
+      transition: all 0.3s ease;
+    }
+
+    .swap-btn.requested {
+      background-color: #10b981 !important;
+    }
+
+    .dropdown-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease-out;
+    }
+
+    .dropdown-content.show {
+      max-height: 500px;
+    }
+
+    .dropdown-header {
+      cursor: pointer;
+    }
+
+    .dropdown-header i {
+      transition: transform 0.3s ease;
+    }
+
+    .dropdown-header.active i {
+      transform: rotate(180deg);
+    }
+
+    /* Animation Classes */
+    .animate-fadeIn {
+      animation: fadeIn 0.3s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: scale(0.95);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .animate-slideUp {
+      animation: slideUp 0.5s ease-out;
+    }
+
+    /* Additional styles for the standalone version */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.7);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal.show {
+      display: flex;
+    }
+
+    .modal-content {
+      background-color: #1f2937;
+      border-radius: 0.5rem;
+      max-width: 500px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      animation: fadeIn 0.3s ease-in-out;
+    }
+
+    .navbar-dropdown {
+      display: none;
+      position: absolute;
+      right: 0;
+      top: 100%;
+      background-color: #1f2937;
+      border-radius: 0.5rem;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      z-index: 50;
+      min-width: 200px;
+    }
+
+    .navbar-dropdown.show {
+      display: block;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+  <!-- Navbar -->
+  <nav class="fixed w-full bg-gray-900/80 backdrop-blur-md shadow-lg z-50 transition-all duration-300 py-3" id="navbar">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <!-- Logo -->
+        <div class="flex items-center space-x-2">
+          <i data-lucide="palette" class="h-8 w-8 text-purple-400"></i>
+          <span class="text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+            <a href="https://singular-kringle-5f87fe.netlify.app/freelancer%20home%20page">HobbyHive</a>
+          </span>
+        </div>
+
+        <!-- Search Bar -->
+        <div class="flex-1 max-w-2xl mx-8 hidden md:block">
+          <div class="relative">
+            <input 
+              type="text" 
+              placeholder="Search for skills, topics, or users..." 
+              class="w-full bg-gray-800/50 text-gray-200 placeholder-gray-400 rounded-full py-2 pl-10 pr-4 focus:outline-none focus:ring-2 focus:ring-purple-400/50"
+            />
+            <i data-lucide="search" class="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400"></i>
+          </div>
+        </div>
+
+        <!-- Navigation Icons -->
+        <div class="flex items-center space-x-3 md:space-x-6">
+          <button class="text-purple-400 hover:text-purple-300 hidden md:block" onclick="window.location.href='https://singular-kringle-5f87fe.netlify.app/skillgig'">
+            <i data-lucide="dollar-sign" class="h-6 w-6"></i>
+          </button>
+          <button class="text-purple-400 hover:text-purple-300 hidden md:block" onclick="window.location.href='https://singular-kringle-5f87fe.netlify.app/skillswap'">
+            <i data-lucide="repeat" class="h-6 w-6"></i>
+          </button>
+          <button class="text-purple-400 hover:text-purple-300 hidden md:block" onclick="window.location.href='https://singular-kringle-5f87fe.netlify.app/skill%20course%20page'">
+            <i data-lucide="graduation-cap" class="h-6 w-6"></i>
+          </button>
+          <div class="h-6 w-px bg-gray-700 hidden md:block"></div>
+          
+          <!-- Notifications Dropdown -->
+          <div class="relative" id="notifications-dropdown">
+            <button 
+              class="text-purple-400 hover:text-purple-300 relative"
+              id="notifications-btn"
+            >
+              <i data-lucide="bell" class="h-6 w-6"></i>
+              <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
+                3
+              </span>
+            </button>
+            
+            <div class="navbar-dropdown" id="notifications-menu">
+              <h3 class="px-4 py-2 text-sm font-semibold text-white border-b border-gray-700">
+                Notifications
+              </h3>
+              <div class="notification-item px-4 py-3 hover:bg-gray-700/50 cursor-pointer">
+                <p class="text-sm text-gray-200">New course available: Advanced Painting</p>
+                <p class="text-xs text-gray-400 mt-1">2h ago</p>
+              </div>
+              <div class="notification-item px-4 py-3 hover:bg-gray-700/50 cursor-pointer">
+                <p class="text-sm text-gray-200">Your Progress in Digital Art is outstanding!</p>
+                <p class="text-xs text-gray-400 mt-1">1h ago</p>
+              </div>
+              <div class="notification-item px-4 py-3 hover:bg-gray-700/50 cursor-pointer">
+                <p class="text-sm text-gray-200">Offer from Boracle!</p>
+                <p class="text-xs text-gray-400 mt-1">2 days ago</p>
+              </div>
+            </div>
+          </div>
+          
+          <button class="text-purple-400 hover:text-purple-300" onclick="window.location.href='https://singular-kringle-5f87fe.netlify.app/wishlist'">
+            <i data-lucide="heart" class="h-6 w-6"></i>
+          </button>
+          
+          <!-- Profile Dropdown -->
+          <div class="relative" id="profile-dropdown">
+            <button 
+              class="flex items-center space-x-1 text-purple-400 hover:text-purple-300"
+              id="profile-btn"
+            >
+              <i data-lucide="user" class="h-6 w-6"></i>
+              
+            </button>
+            
+            <div class="navbar-dropdown" id="profile-menu">
+              <a 
+                href="https://singular-kringle-5f87fe.netlify.app/freelancers%20profile%20page" 
+                class="block px-4 py-2 text-sm text-gray-200 hover:bg-gray-700/50 flex items-center space-x-2"
+              >
+                <i class="h-4 w-4"></i>
+                <span>My Profile</span>
+              </a>
+              <a 
+                href="https://singular-kringle-5f87fe.netlify.app/mycourse" 
+                class="block px-4 py-2 text-sm text-gray-200 hover:bg-gray-700/50 flex items-center space-x-2"
+              >
+                <i  class="h-4 w-4"></i>
+                <span>My Courses</span>
+              </a>
+              <a 
+              href="https://singular-kringle-5f87fe.netlify.app/helpcenter" 
+              class="block px-4 py-2 text-sm text-gray-200 hover:bg-gray-700/50 flex items-center space-x-2"
+            >
+              <i  class="h-4 w-4"></i>
+              <span>Help Center</span>
+            </a>
+              <div class="border-t border-gray-700 my-1"></div>
+              <a 
+                href="https://singular-kringle-5f87fe.netlify.app/homepage" 
+                class="block px-4 py-2 text-sm text-red-400 hover:bg-gray-700/50 flex items-center space-x-2"
+              >
+                <i  class="h-4 w-4"></i>
+                <span>Logout</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+  
+  <!-- Main Content -->
+  <div class="pt-24 px-4 pb-12 flex-grow">
+    <div class="max-w-7xl mx-auto">
+      <div class="flex flex-col md:flex-row gap-8">
+        <!-- Filters Sidebar -->
+        <div class="w-full md:w-64 bg-gray-800/50 p-6 rounded-lg h-fit sticky top-24" id="filter-sidebar">
+          <div class="flex justify-between items-center mb-6">
+            <h3 class="text-xl font-semibold text-white">Filters</h3>
+            <button id="reset-filters" class="text-purple-400 hover:text-purple-300 text-sm">Reset</button>
+          </div>
+          
+          <!-- Skills Wanted Filter -->
+          <div class="mb-6">
+            <div class="dropdown-header flex justify-between items-center text-purple-400 font-medium mb-3 p-2 rounded" data-dropdown="wants-dropdown">
+              <span>Skills Wanted</span>
+              <i data-lucide="chevron-down" class="h-4 w-4 transition-transform duration-300"></i>
+            </div>
+            <div class="dropdown-content show" id="wants-dropdown">
+              <div class="space-y-2 pl-2" id="wants-filter-options">
+                <!-- Skills options will be loaded here -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Skills Offered Filter -->
+          <div class="mb-6">
+            <div class="dropdown-header flex justify-between items-center text-purple-400 font-medium mb-3 p-2 rounded" data-dropdown="offers-dropdown">
+              <span>Skills Offered</span>
+              <i data-lucide="chevron-down" class="h-4 w-4 transition-transform duration-300"></i>
+            </div>
+            <div class="dropdown-content" id="offers-dropdown">
+              <div class="space-y-2 pl-2" id="offers-filter-options">
+                <!-- Skills options will be loaded here -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Duration Filter -->
+          <div class="mb-6">
+            <div class="dropdown-header flex justify-between items-center text-purple-400 font-medium mb-3 p-2 rounded" data-dropdown="duration-dropdown">
+              <span>Duration</span>
+              <i data-lucide="chevron-down" class="h-4 w-4 transition-transform duration-300"></i>
+            </div>
+            <div class="dropdown-content" id="duration-dropdown">
+              <div class="space-y-2 pl-2">
+                <div class="filter-option flex items-center text-gray-300 p-2 rounded cursor-pointer">
+                  <input 
+                    type="checkbox" 
+                    id="short-term" 
+                    class="form-checkbox text-purple-500 rounded mr-2 duration-checkbox" 
+                    value="short-term"
+                  />
+                  <label for="short-term">Short-term (1-2 weeks)</label>
+                </div>
+                <div class="filter-option flex items-center text-gray-300 p-2 rounded cursor-pointer">
+                  <input 
+                    type="checkbox" 
+                    id="medium-term" 
+                    class="form-checkbox text-purple-500 rounded mr-2 duration-checkbox" 
+                    value="medium-term"
+                  />
+                  <label for="medium-term">Medium-term (3-4 weeks)</label>
+                </div>
+                <div class="filter-option flex items-center text-gray-300 p-2 rounded cursor-pointer">
+                  <input 
+                    type="checkbox" 
+                    id="long-term" 
+                    class="form-checkbox text-purple-500 rounded mr-2 duration-checkbox" 
+                    value="long-term"
+                  />
+                  <label for="long-term">Long-term (1+ months)</label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Swap History -->
+          <div class="mb-6">
+            <div class="dropdown-header flex justify-between items-center text-purple-400 font-medium mb-3 p-2 rounded" data-dropdown="history-dropdown">
+              <span>Swap History</span>
+              <i data-lucide="chevron-down" class="h-4 w-4 transition-transform duration-300"></i>
+            </div>
+            <div class="dropdown-content" id="history-dropdown">
+              <div class="space-y-2 pl-2">
+                <div class="filter-option flex items-center text-gray-300 p-2 rounded cursor-pointer view-changer" data-view="requested">
+                  <i data-lucide="send" class="h-4 w-4 text-purple-400 mr-2"></i>
+                  <span>Requested Swaps</span>
+                </div>
+                <div class="filter-option flex items-center text-gray-300 p-2 rounded cursor-pointer view-changer" data-view="pending">
+                  <i data-lucide="clock" class="h-4 w-4 text-purple-400 mr-2"></i>
+                  <span>Pending Requests</span>
+                </div>
+                <div class="filter-option flex items-center text-gray-300 p-2 rounded cursor-pointer view-changer" data-view="completed">
+                  <i data-lucide="check-circle" class="h-4 w-4 text-purple-400 mr-2"></i>
+                  <span>Completed Swaps</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Back to Matches Button -->
+          <button 
+            class="mt-4 w-full bg-purple-500 hover:bg-purple-600 text-white py-2 px-4 rounded-lg transition-colors duration-300 view-changer"
+            data-view="matches"
+          >
+            Back to Matches
+          </button>
+        </div>
+        
+        <!-- Main Content Area -->
+        <div class="flex-1 bg-gray-800/50 rounded-lg p-6">
+          <!-- Current View Title -->
+          <h1 class="text-3xl font-bold text-white mb-6" id="current-view-title">Matched Profiles</h1>
+          
+          <!-- Profiles View Container -->
+          <div id="profiles-container" class="space-y-6">
+            <!-- Profiles will be loaded here -->
+          </div>
+        </div>
+        
+        <!-- Messages Section -->
+        <div class="w-full md:w-72 h-fit sticky top-24">
+          <div class="bg-gray-800/50 rounded-lg p-6">
+            <h3 class="text-xl font-semibold text-white mb-4">Messages</h3>
+            <div class="space-y-2 max-h-96 overflow-y-auto scroll-container" id="messages-container">
+              <!-- Messages will be loaded here -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Chat Modal -->
+  <div id="chat-modal" class="modal">
+    <div class="modal-content max-w-md flex flex-col">
+      <div class="p-4 border-b border-gray-700 flex items-center justify-between">
+        <div class="flex items-center space-x-3">
+          <img 
+            src="" 
+            alt="" 
+            class="w-10 h-10 rounded-full object-cover"
+            id="chat-participant-img"
+          />
+          <h3 class="text-white font-medium" id="chat-participant-name"></h3>
+        </div>
+        <button 
+          id="close-chat-btn" 
+          class="text-gray-400 hover:text-white transition-colors duration-200"
+        >
+          <i data-lucide="x" class="h-6 w-6"></i>
+        </button>
+      </div>
+      
+      <div class="flex-1 p-4 overflow-y-auto space-y-4 min-h-[300px] max-h-[400px]" id="chat-messages">
+        <!-- Chat messages will be loaded here -->
+      </div>
+      
+      <div class="p-4 border-t border-gray-700">
+        <div class="flex items-center space-x-2">
+          <input 
+            type="text" 
+            id="chat-message-input"
+            placeholder="Type a message..." 
+            class="flex-1 bg-gray-700 text-white placeholder-gray-400 rounded-full py-2 px-4 focus:outline-none focus:ring-1 focus:ring-purple-400"
+          />
+          <button 
+            id="send-message-btn"
+            class="bg-purple-500/50 cursor-not-allowed text-white p-2 rounded-full transition-colors duration-300"
+            disabled
+          >
+            <i data-lucide="send" class="h-5 w-5"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Profile Modal -->
+  <div id="profile-modal" class="modal">
+    <div class="modal-content max-w-4xl">
+      <div class="p-6">
+        <div class="flex justify-between items-start mb-6">
+          <div class="flex items-center space-x-4">
+            <img 
+              src="" 
+              alt="" 
+              class="w-20 h-20 rounded-full object-cover border-2 border-purple-400/30"
+              id="modal-profile-img"
+            />
+            <div>
+              <h2 class="text-2xl font-bold text-white" id="modal-profile-name"></h2>
+              <p class="text-gray-300" id="modal-profile-description"></p>
+              <div class="flex items-center mt-2">
+                <div class="flex">
+                  <i data-lucide="star" class="h-4 w-4 text-yellow-400"></i>
+                  <i data-lucide="star" class="h-4 w-4 text-yellow-400"></i>
+                  <i data-lucide="star" class="h-4 w-4 text-yellow-400"></i>
+                  <i data-lucide="star" class="h-4 w-4 text-yellow-400"></i>
+                  <i data-lucide="star-half" class="h-4 w-4 text-yellow-400"></i>
+                </div>
+                <span class="text-gray-300 text-sm ml-1">4.5 (24 reviews)</span>
+              </div>
+            </div>
+          </div>
+          <button id="close-profile-btn" class="text-gray-400 hover:text-white">
+            <i data-lucide="x" class="h-6 w-6"></i>
+          </button>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+          <div>
+            <h3 class="text-lg font-semibold text-purple-400 mb-2">Skills Offered</h3>
+            <div id="modal-skills-offered" class="flex flex-wrap gap-2">
+              <!-- Skills offered tags will be added here -->
+            </div>
+          </div>
+          <div>
+            <h3 class="text-lg font-semibold text-purple-400 mb-2">Skills Wanted</h3>
+            <div id="modal-skills-wanted" class="flex flex-wrap gap-2">
+              <!-- Skills wanted tags will be added here -->
+            </div>
+          </div>
+        </div>
+        
+        <div class="mb-6">
+          <h3 class="text-lg font-semibold text-purple-400 mb-2">Duration</h3>
+          <p class="text-gray-300" id="modal-duration"></p>
+        </div>
+        
+        <!-- Previous Work Section -->
+        <div class="mb-6">
+          <h3 class="text-lg font-semibold text-purple-400 mb-3">Previous Works</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="previous-works">
+            <div class="bg-gray-800/70 rounded-lg overflow-hidden">
+              <img src="https://images.unsplash.com/photo-1545665277-5937489579f2?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Portfolio work" class="w-full h-40 object-cover">
+              <div class="p-3">
+                <h4 class="text-white font-medium">Portfolio Website</h4>
+                <p class="text-gray-400 text-sm">Built a responsive portfolio website for a photographer</p>
+              </div>
+            </div>
+            <div class="bg-gray-800/70 rounded-lg overflow-hidden">
+              <img src="https://images.unsplash.com/photo-1551650975-87deedd944c3?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Photography work" class="w-full h-40 object-cover">
+              <div class="p-3">
+                <h4 class="text-white font-medium">Photography Collection</h4>
+                <p class="text-gray-400 text-sm">Product photography for local artisan goods</p>
+              </div>
+            </div>
+            <div class="bg-gray-800/70 rounded-lg overflow-hidden">
+              <img src="https://images.unsplash.com/photo-1602576666092-bf6447a729fc?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Design work" class="w-full h-40 object-cover">
+              <div class="p-3">
+                <h4 class="text-white font-medium">Brand Identity</h4>
+                <p class="text-gray-400 text-sm">Complete brand identity package for startup</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Reviews Section -->
+        <div class="mb-6">
+          <h3 class="text-lg font-semibold text-purple-400 mb-3">Reviews</h3>
+          <div class="space-y-4" id="reviews">
+            <div class="bg-gray-800/70 rounded-lg p-4">
+              <div class="flex items-center mb-2">
+                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&q=80" alt="Reviewer" class="w-10 h-10 rounded-full object-cover mr-3">
+                <div>
+                  <h4 class="text-white font-medium">Michael Johnson</h4>
+                  <div class="flex items-center">
+                    <div class="flex">
+                      <i data-lucide="star" class="h-3 w-3 text-yellow-400"></i>
+                      <i data-lucide="star" class="h-3 w-3 text-yellow-400"></i>
+                      <i data-lucide="star" class="h-3 w-3 text-yellow-400"></i>
+                      <i data-lucide="star" class="h-3 w-3 text-yellow-400"></i>
+                      <i data-lucide="star" class="h-3 w-3 text-yellow-400"></i>
+                    </div>
+                    <span class="text-gray-400 text-xs ml-1">1 month ago</span>
+                  </div>
+                </div>
+              </div>
+              <p class="text-gray-300 text-sm">Extremely professional and talented! The work was delivered ahead of schedule and exceeded my expectations. Would definitely work with them again.</p>
+            </div>
+            
+            <div class="bg-gray-800/70 rounded-lg p-4">
+              <div class="flex items-center mb-2">
+                <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&q=80" alt="Reviewer" class="w-10 h-10 rounded-full object-cover mr-3">
+                <div>
+                  <h4 class="text-white font-medium">Sarah Williams</h4>
+                  <div class="flex items-center">
+                    <div class="flex">
+                      <i data-lucide="star" class="h-3 w-3 text-yellow-400"></i>
+                      <i data-lucide="star" class="h-3 w-3 text-yellow-400"></i>
+                      <i data-lucide="star" class="h-3 w-3 text-yellow-400"></i>
+                      <i data-lucide="star" class="h-3 w-3 text-yellow-400"></i>
+                      <i data-lucide="star-half" class="h-3 w-3 text-yellow-400"></i>
+                    </div>
+                    <span class="text-gray-400 text-xs ml-1">2 months ago</span>
+                  </div>
+                </div>
+              </div>
+              <p class="text-gray-300 text-sm">Great communication throughout the project and very patient with revisions. I learned a lot and got exactly what I needed. Highly recommend!</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="flex justify-end space-x-4 mt-6">
+          <button id="modal-request-btn" class="bg-purple-500 hover:bg-purple-600 text-white py-2 px-4 rounded-lg transition-colors duration-300">
+            Request Swap
+          </button>
+          <button id="modal-message-btn" class="bg-gray-700 hover:bg-gray-600 text-white py-2 px-4 rounded-lg transition-colors duration-300">
+            Message
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Footer -->
+  <footer class="bg-gray-900 py-8 mt-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div>
+          <div class="flex items-center space-x-2 mb-4">
+            <i data-lucide="palette" class="h-8 w-8 text-purple-400"></i>
+            <span class="text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+              HobbyHive
+            </span>
+          </div>
+          <p class="text-gray-400">Connecting people through shared interests and skill exchanges.</p>
+        </div>
+        
+        <div>
+          <h3 class="text-white font-semibold mb-4">Quick Links</h3>
+          <ul class="space-y-2 text-gray-400">
+            <li><a href="https://singular-kringle-5f87fe.netlify.app/aboutus%20after%20logginin" class="hover:text-purple-400 transition-colors">About Us</a></li>
+            <li><a href="https://singular-kringle-5f87fe.netlify.app/freelancer%20home%20page" class="hover:text-purple-400 transition-colors">Home</a></li>
+            <li><a href="https://singular-kringle-5f87fe.netlify.app/success%20stories" class="hover:text-purple-400 transition-colors">Success stories</a></li>
+            <li><a href="https://singular-kringle-5f87fe.netlify.app/mycourse" class="hover:text-purple-400 transition-colors">My Courses</a></li>
+            <li><a href="https://singular-kringle-5f87fe.netlify.app/howtobecomeinstructor" class="hover:text-purple-400 transition-colors">Become an Instructor</a></li>
+            
+          </ul>
+        </div>
+        
+        <div>
+          <h3 class="text-white font-semibold mb-4">Support</h3>
+          <ul class="space-y-2 text-gray-400">
+            <li><a href="https://singular-kringle-5f87fe.netlify.app/helpcenter" class="hover:text-purple-400 transition-colors">Help Center</a></li>
+            <li><a href="https://singular-kringle-5f87fe.netlify.app/community%20guidelines" class="hover:text-purple-400 transition-colors">Community Guidelines</a></li>
+            <li><a href="https://singular-kringle-5f87fe.netlify.app/terms%20and%20conditions" class="hover:text-purple-400 transition-colors">Terms And Conditions</a></li>
+           
+          </ul>
+        </div>
+        
+        <div>
+          <h3 class="text-white font-semibold mb-4">Connect With Us</h3>
+          <div class="flex space-x-4">
+            <a href="https://www.facebook.com/hobby.hive/" class="text-gray-400 hover:text-purple-400 transition-colors">
+              <i data-lucide="facebook" class="h-6 w-6"></i>
+            </a>
+            <a href="https://x.com/Hobby_Hive" class="text-gray-400 hover:text-purple-400 transition-colors">
+              <i data-lucide="twitter" class="h-6 w-6"></i>
+            </a>
+            <a href="https://www.instagram.com/hobby_hive9/" class="text-gray-400 hover:text-purple-400 transition-colors">
+              <i data-lucide="instagram" class="h-6 w-6"></i>
+            </a>
+          
+            </a>
+          </div>
+          <div class="mt-4">
+          
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="mt-8 pt-6 border-t border-gray-800 text-gray-400 text-center">
+        <p>&copy; 2025 HobbyHive. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Initialize Lucide icons
+    lucide.createIcons();
+
+    // Data for the application
+    const profilePreviousWorks = {
+      'john-doe': [
+        {
+          image: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80',
+          title: 'E-commerce Website',
+          description: 'Built a full-stack e-commerce platform with React and Node.js'
+        },
+        {
+          image: 'https://images.unsplash.com/photo-1608306448197-e83633f1261c?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80',
+          title: 'Mobile App',
+          description: 'Designed and developed a fitness tracking app with React Native'
+        },
+        {
+          image: 'https://images.unsplash.com/photo-1493119508027-2b584f234d6c?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80',
+          title: 'Blog Platform',
+          description: 'Created a custom CMS for content creators with advanced features'
+        }
+      ],
+      'emily-chen': [
+        {
+          image: 'https://images.unsplash.com/photo-1545665277-5937489579f2?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80',
+          title: 'Brand Identity',
+          description: 'Developed complete branding package for tech startup'
+        },
+        {
+          image: 'https://images.unsplash.com/photo-1540242908473-a473ea12873c?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80',
+          title: 'UI Design System',
+          description: 'Created a comprehensive design system with 200+ components'
+        },
+        {
+          image: 'https://images.unsplash.com/photo-1600132806370-bf17e65e942f?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80',
+          title: 'Packaging Design',
+          description: 'Award-winning packaging redesign for cosmetics brand'
+        }
+      ],
+      'alex-smith': [
+        {
+          image: 'https://images.unsplash.com/photo-1559028012-481c04fa702d?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80',
+          title: 'Marketing Campaign',
+          description: 'Led digital campaign that increased conversions by 45%'
+        },
+        {
+          image: 'https://images.unsplash.com/photo-1611162616475-46b635cb6868?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80',
+          title: 'SEO Optimization',
+          description: 'Improved search rankings for e-commerce client by 67%'
+        },
+        {
+          image: 'https://images.unsplash.com/photo-1585486543642-2653df8b71ad?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80',
+          title: 'Content Strategy',
+          description: 'Developed content plan that doubled engagement metrics'
+        }
+      ],
+      'maria-garcia': [
+        {
+          image: 'https://images.unsplash.com/photo-1551650975-87deedd944c3?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80',
+          title: 'Product Photography',
+          description: 'Shot product line for national jewelry brand campaign'
+        },
+        {
+          image: 'https://images.unsplash.com/photo-1520854221256-17451cc331bf?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80',
+          title: 'Wedding Photography',
+          description: 'Captured over 50 weddings with a signature artistic style'
+        },
+        {
+          image: 'https://images.unsplash.com/photo-1602576666092-bf6447a729fc?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80',
+          title: 'Portrait Series',
+          description: 'Award-winning portrait series featured in gallery exhibit'
+        }
+      ]
+    };
+    
+    const profileReviews = {
+      'john-doe': [
+        {
+          reviewer: 'Amanda Chen',
+          image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&q=80',
+          rating: 5,
+          time: '3 weeks ago',
+          text: 'John built an amazing website for my business. He was professional, responsive, and delivered everything on time. I highly recommend his services!'
+        },
+        {
+          reviewer: 'David Wilson',
+          image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&q=80',
+          rating: 4.5,
+          time: '2 months ago',
+          text: 'Great developer who really understands what clients need. The website exceeded my expectations and has helped increase my customer base.'
+        }
+      ],
+      'emily-chen': [
+        {
+          reviewer: 'Michael Johnson',
+          image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&q=80',
+          rating: 5,
+          time: '1 month ago',
+          text: 'Extremely professional and talented! The work was delivered ahead of schedule and exceeded my expectations. Would definitely work with Emily again.'
+        },
+        {
+          reviewer: 'Sarah Williams',
+          image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&q=80',
+          rating: 4.5,
+          time: '2 months ago',
+          text: 'Great communication throughout the project and very patient with revisions. I learned a lot and got exactly what I needed. Highly recommend!'
+        }
+      ],
+      'alex-smith': [
+        {
+          reviewer: 'Jennifer Patel',
+          image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&q=80',
+          rating: 5,
+          time: '3 weeks ago',
+          text: 'Alex completely transformed our marketing strategy. Our social media engagement has increased by 200% since implementing his recommendations.'
+        },
+        {
+          reviewer: 'Robert Kim',
+          image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&q=80',
+          rating: 5,
+          time: '2 months ago',
+          text: 'Working with Alex was one of the best business decisions we\'ve made. His marketing expertise helped us reach entirely new customer segments.'
+        }
+      ],
+      'maria-garcia': [
+        {
+          reviewer: 'Thomas Lee',
+          image: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&q=80',
+          rating: 5,
+          time: '2 weeks ago',
+          text: 'Maria is an incredible photographer! She captured our product line beautifully and delivered the photos ahead of schedule. The quality is outstanding.'
+        },
+        {
+          reviewer: 'Jessica Roberts',
+          image: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&q=80',
+          rating: 4.5,
+          time: '1 month ago',
+          text: 'Our wedding photos are absolutely stunning! Maria has a talent for capturing genuine moments and emotions. We couldn\'t be happier with the results.'
+        }
+      ]
+    };
+
+    const profiles = [
+      {
+        id: 'john-doe',
+        name: 'John Doe',
+        image: 'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg',
+        description: 'Full stack developer looking to learn photography',
+        skillsOffered: ['Web Development'],
+        skillsWanted: ['Photography'],
+        duration: 'short-term'
+      },
+      {
+        id: 'emily-chen',
+        name: 'Emily Chen',
+        image: 'https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg',
+        description: 'Creative designer passionate about visual storytelling',
+        skillsOffered: ['Graphic Design'],
+        skillsWanted: ['Digital Marketing'],
+        duration: 'medium-term'
+      },
+      {
+        id: 'alex-smith',
+        name: 'Alex Smith',
+        image: 'https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg',
+        description: 'Digital marketer looking to improve design skills',
+        skillsOffered: ['Digital Marketing'],
+        skillsWanted: ['Graphic Design'],
+        duration: 'long-term'
+      },
+      {
+        id: 'maria-garcia',
+        name: 'Maria Garcia',
+        image: 'https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg',
+        description: 'Photographer looking to build a portfolio website',
+        skillsOffered: ['Photography'],
+        skillsWanted: ['Web Development'],
+        duration: 'short-term'
+      }
+    ];
+
+    const conversations = {
+      'john-doe': {
+        id: 'conv-john-doe',
+        participantId: 'john-doe',
+        participantName: 'John Doe',
+        participantImage: 'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg',
+        lastMessage: 'Sure! What did you have in mind?',
+        lastMessageTime: '1:32 PM',
+        messages: [
+          {
+            sender: 'john-doe',
+            text: 'Hi there! I saw your profile and would love to swap skills - my web development for your photography!',
+            time: '1:30 PM'
+          },
+          {
+            sender: 'me',
+            text: 'That sounds great! I could really use some help with my portfolio website.',
+            time: '1:31 PM'
+          },
+          {
+            sender: 'john-doe',
+            text: 'Sure! What did you have in mind?',
+            time: '1:32 PM'
+          }
+        ]
+      },
+      'emily-chen': {
+        id: 'conv-emily-chen',
+        participantId: 'emily-chen',
+        participantName: 'Emily Chen',
+        participantImage: 'https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg',
+        lastMessage: 'I\'d love to swap skills with you!',
+        lastMessageTime: '10:45 AM',
+        messages: [
+          {
+            sender: 'emily-chen',
+            text: 'Hello! I noticed you offer web development and I need help with my website.',
+            time: '10:43 AM'
+          },
+          {
+            sender: 'me',
+            text: 'Hi Emily! I see you offer graphic design - I could use some help with my logo.',
+            time: '10:44 AM'
+          },
+          {
+            sender: 'emily-chen',
+            text: 'I\'d love to swap skills with you!',
+            time: '10:45 AM'
+          }
+        ]
+      }
+    };
+
+    const pendingRequests = [
+      {
+        id: 'sarah-johnson',
+        name: 'Sarah Johnson',
+        image: 'https://images.pexels.com/photos/1587009/pexels-photo-1587009.jpeg',
+        description: 'Photographer looking to learn web development',
+        skillsOffered: ['Photography'],
+        skillsWanted: ['Web Development'],
+        duration: 'medium-term'
+      }
+    ];
+
+    const completedSwaps = [
+      {
+        id: 'swap-1',
+        requesterId: 'michael-brown',
+        recipientId: 'me',
+        status: 'completed',
+        createdAt: '2023-06-01',
+        completedAt: '2023-06-15'
+      },
+      {
+        id: 'swap-2',
+        requesterId: 'me',
+        recipientId: 'lisa-wong',
+        status: 'completed',
+        createdAt: '2023-05-15',
+        completedAt: '2023-05-28'
+      }
+    ];
+
+    const completedSwapProfiles = {
+      'michael-brown': {
+        id: 'michael-brown',
+        name: 'Michael Brown',
+        image: 'https://images.pexels.com/photos/91227/pexels-photo-91227.jpeg',
+        description: 'Illustrator looking to learn digital marketing',
+        skillsOffered: ['Illustration'],
+        skillsWanted: ['Digital Marketing'],
+        duration: 'medium-term'
+      },
+      'lisa-wong': {
+        id: 'lisa-wong',
+        name: 'Lisa Wong',
+        image: 'https://images.pexels.com/photos/1181686/pexels-photo-1181686.jpeg',
+        description: 'Content writer looking to learn graphic design',
+        skillsOffered: ['Content Writing'],
+        skillsWanted: ['Graphic Design'],
+        duration: 'short-term'
+      }
+    };
+
+    const skillsList = [
+      'Photography',
+      'Web Development',
+      'Graphic Design',
+      'Digital Marketing',
+      'Content Writing',
+      'Illustration',
+      'UI/UX Design',
+      'Video Editing'
+    ];
+
+    // State variables
+    let currentView = 'matches';
+    let requestedProfiles = [];
+    let acceptedChats = [];
+    let filteredProfiles = [...profiles];
+    let activeChat = null;
+    let selectedProfile = null;
+    let filters = {
+      wants: [],
+      offers: [],
+      duration: []
+    };
+
+    // DOM Elements
+    const navbarElement = document.getElementById('navbar');
+    const notificationsBtn = document.getElementById('notifications-btn');
+    const notificationsMenu = document.getElementById('notifications-menu');
+    const profileBtn = document.getElementById('profile-btn');
+    const profileMenu = document.getElementById('profile-menu');
+    const chatModal = document.getElementById('chat-modal');
+    const closeChatBtn = document.getElementById('close-chat-btn');
+    const chatParticipantImg = document.getElementById('chat-participant-img');
+    const chatParticipantName = document.getElementById('chat-participant-name');
+    const chatMessages = document.getElementById('chat-messages');
+    const chatMessageInput = document.getElementById('chat-message-input');
+    const sendMessageBtn = document.getElementById('send-message-btn');
+    const profileModal = document.getElementById('profile-modal');
+    const closeProfileBtn = document.getElementById('close-profile-btn');
+    const modalProfileImg = document.getElementById('modal-profile-img');
+    const modalProfileName = document.getElementById('modal-profile-name');
+    const modalProfileDescription = document.getElementById('modal-profile-description');
+    const modalSkillsOffered = document.getElementById('modal-skills-offered');
+    const modalSkillsWanted = document.getElementById('modal-skills-wanted');
+    const modalDuration = document.getElementById('modal-duration');
+    const modalRequestBtn = document.getElementById('modal-request-btn');
+    const modalMessageBtn = document.getElementById('modal-message-btn');
+    const currentViewTitle = document.getElementById('current-view-title');
+    const profilesContainer = document.getElementById('profiles-container');
+    const messagesContainer = document.getElementById('messages-container');
+    const resetFiltersBtn = document.getElementById('reset-filters');
+    const wantsFilterOptions = document.getElementById('wants-filter-options');
+    const offersFilterOptions = document.getElementById('offers-filter-options');
+    const viewChangers = document.querySelectorAll('.view-changer');
+    const dropdownHeaders = document.querySelectorAll('.dropdown-header');
+    const durationCheckboxes = document.querySelectorAll('.duration-checkbox');
+
+    // Helper Functions
+    const formatDate = (dateString) => {
+      const options = { year: 'numeric', month: 'long', day: 'numeric' };
+      return new Date(dateString).toLocaleDateString('en-US', options);
+    };
+
+    const getDurationLabel = (duration) => {
+      const durations = {
+        'short-term': 'Short-term (1-2 weeks)',
+        'medium-term': 'Medium-term (3-4 weeks)',
+        'long-term': 'Long-term (1+ months)'
+      };
+      return durations[duration] || duration;
+    };
+
+    // Apply filters and get filtered profiles
+    const applyFilters = () => {
+      let filtered = [...profiles];
+
+      // Apply wants filter
+      if (filters.wants.length > 0) {
+        filtered = filtered.filter(profile =>
+          profile.skillsWanted.some(skill => filters.wants.includes(skill))
+        );
+      }
+
+      // Apply offers filter
+      if (filters.offers.length > 0) {
+        filtered = filtered.filter(profile =>
+          profile.skillsOffered.some(skill => filters.offers.includes(skill))
+        );
+      }
+
+      // Apply duration filter
+      if (filters.duration.length > 0) {
+        filtered = filtered.filter(profile =>
+          filters.duration.includes(profile.duration)
+        );
+      }
+
+      filteredProfiles = filtered;
+      renderProfiles();
+    };
+
+    // Render profile cards based on current view
+    const renderProfiles = () => {
+      profilesContainer.innerHTML = '';
+
+      // Update the view title
+      switch (currentView) {
+        case 'matches':
+          currentViewTitle.textContent = 'Matched Profiles';
+          break;
+        case 'requested':
+          currentViewTitle.textContent = 'Requested Swaps';
+          break;
+        case 'pending':
+          currentViewTitle.textContent = 'Pending Requests';
+          break;
+        case 'completed':
+          currentViewTitle.textContent = 'Completed Swaps';
+          break;
+      }
+
+      // Render based on current view
+      if (currentView === 'matches') {
+        if (filteredProfiles.length > 0) {
+          filteredProfiles.forEach(profile => {
+            profilesContainer.appendChild(createProfileCard(profile, 'match'));
+          });
+        } else {
+          profilesContainer.innerHTML = `
+            <div class="text-center py-8 text-gray-400">
+              <svg 
+                class="w-12 h-12 mx-auto mb-4 text-gray-500" 
+                fill="none" 
+                stroke="currentColor" 
+                viewBox="0 0 24 24" 
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path 
+                  stroke-linecap="round" 
+                  stroke-linejoin="round" 
+                  stroke-width="2" 
+                  d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" 
+                />
+              </svg>
+              <p class="text-xl">No profiles match your current filters</p>
+              <p class="text-sm mt-2">Try adjusting your filters or resetting them</p>
+            </div>
+          `;
+        }
+      } else if (currentView === 'requested') {
+        if (requestedProfiles.length > 0) {
+          requestedProfiles.forEach(profileId => {
+            const profile = profiles.find(p => p.id === profileId);
+            if (profile) {
+              profilesContainer.appendChild(createProfileCard(profile, 'requested'));
+            }
+          });
+        } else {
+          profilesContainer.innerHTML = `
+            <div class="text-center py-8 text-gray-400">
+              <p class="text-xl">You haven't requested any swaps yet</p>
+              <p class="text-sm mt-2">Browse profiles and request a skill swap to get started</p>
+            </div>
+          `;
+        }
+      } else if (currentView === 'pending') {
+        if (pendingRequests.length > 0) {
+          pendingRequests.forEach(profile => {
+            profilesContainer.appendChild(createProfileCard(profile, 'pending'));
+          });
+        } else {
+          profilesContainer.innerHTML = `
+            <div class="text-center py-8 text-gray-400">
+              <p class="text-xl">You don't have any pending swap requests</p>
+              <p class="text-sm mt-2">When someone requests to swap skills with you, they'll appear here</p>
+            </div>
+          `;
+        }
+      } else if (currentView === 'completed') {
+        if (completedSwaps.length > 0) {
+          completedSwaps.forEach(swap => {
+            const profileId = swap.requesterId === 'me' ? swap.recipientId : swap.requesterId;
+            const profile = completedSwapProfiles[profileId];
+            if (profile) {
+              profilesContainer.appendChild(createProfileCard(profile, 'completed', formatDate(swap.completedAt || '')));
+            }
+          });
+        } else {
+          profilesContainer.innerHTML = `
+            <div class="text-center py-8 text-gray-400">
+              <p class="text-xl">You haven't completed any swaps yet</p>
+              <p class="text-sm mt-2">Completed skill exchanges will appear here</p>
+            </div>
+          `;
+        }
+      }
+    };
+
+    // Create a profile card element
+    const createProfileCard = (profile, type = 'match', completedDate = '') => {
+      const isRequested = requestedProfiles.includes(profile.id);
+      
+      const card = document.createElement('div');
+      card.className = 'profile-card bg-gray-700/50 p-6 rounded-lg transform transition-all duration-300 hover:translate-y-[-5px] hover:bg-gray-700/70 hover:shadow-xl';
+      card.dataset.wants = profile.skillsWanted.join(',');
+      card.dataset.offers = profile.skillsOffered.join(',');
+      card.dataset.duration = profile.duration;
+      
+      let buttonHtml = '';
+      
+      if (type === 'match') {
+        buttonHtml = `
+          <button 
+            class="swap-btn ${isRequested ? 'bg-green-500' : 'bg-purple-500 hover:bg-purple-600'} text-white py-2 px-4 rounded-lg transition-colors duration-300"
+            data-id="${profile.id}"
+          >
+            ${isRequested ? 'Request Sent' : 'Request Swap'}
+          </button>
+        `;
+      } else if (type === 'requested') {
+        buttonHtml = `
+          <div class="flex items-center space-x-2 text-gray-300">
+            <i data-lucide="clock" class="h-4 w-4 text-yellow-400"></i>
+            <span>Pending response</span>
+          </div>
+        `;
+      } else if (type === 'pending') {
+        buttonHtml = `
+          <div class="flex space-x-3">
+            <button 
+              class="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-lg transition-colors duration-300 accept-swap-btn"
+              data-id="${profile.id}"
+            >
+              Accept
+            </button>
+            <button 
+              class="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded-lg transition-colors duration-300 decline-swap-btn"
+              data-id="${profile.id}"
+            >
+              Decline
+            </button>
+          </div>
+        `;
+      } else if (type === 'completed' && completedDate) {
+        buttonHtml = `
+          <div class="flex items-center space-x-2 text-gray-300">
+            <i data-lucide="check-circle" class="h-4 w-4 text-green-400"></i>
+            <span>Completed on ${completedDate}</span>
+          </div>
+        `;
+      }
+      
+      card.innerHTML = `
+        <div class="flex items-start space-x-4">
+          <img 
+            src="${profile.image}" 
+            alt="${profile.name}" 
+            class="w-16 h-16 rounded-full object-cover border-2 border-purple-400/30 cursor-pointer hover:border-purple-400 transition-colors duration-200 view-profile-img"
+            data-id="${profile.id}"
+          />
+          <div class="flex-1">
+            <h3 
+              class="text-xl font-semibold text-white cursor-pointer hover:text-purple-400 transition-colors duration-200 view-profile-name"
+              data-id="${profile.id}"
+            >
+              ${profile.name}
+            </h3>
+            <p class="text-gray-300 mb-3">${profile.description}</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+              <div>
+                <p class="text-purple-400 font-medium">Offers:</p>
+                <p class="text-gray-300">${profile.skillsOffered.join(', ')}</p>
+              </div>
+              <div>
+                <p class="text-purple-400 font-medium">Wants:</p>
+                <p class="text-gray-300">${profile.skillsWanted.join(', ')}</p>
+              </div>
+            </div>
+            
+            ${buttonHtml}
+          </div>
+        </div>
+      `;
+
+      // Add event listeners after the card is created
+      setTimeout(() => {
+        const requestBtn = card.querySelector('.swap-btn');
+        if (requestBtn) {
+          requestBtn.addEventListener('click', () => handleRequestSwap(profile.id));
+        }
+
+        const acceptBtn = card.querySelector('.accept-swap-btn');
+        if (acceptBtn) {
+          acceptBtn.addEventListener('click', () => handleAcceptSwap(profile.id));
+        }
+        
+        const declineBtn = card.querySelector('.decline-swap-btn');
+        if (declineBtn) {
+          declineBtn.addEventListener('click', () => handleDeclineSwap(profile.id));
+        }
+
+        const viewProfileImgs = card.querySelectorAll('.view-profile-img');
+        viewProfileImgs.forEach(img => {
+          img.addEventListener('click', () => handleViewProfile(profile));
+        });
+
+        const viewProfileNames = card.querySelectorAll('.view-profile-name');
+        viewProfileNames.forEach(name => {
+          name.addEventListener('click', () => handleViewProfile(profile));
+        });
+
+        // Initialize Lucide icons for the newly added elements
+        lucide.createIcons({ scope: card });
+      }, 0);
+
+      return card;
+    };
+
+    // Render messages in the sidebar
+    const renderMessages = () => {
+      messagesContainer.innerHTML = '';
+      
+      if (Object.keys(conversations).length === 0) {
+        messagesContainer.innerHTML = `
+          <div class="text-center py-4 text-gray-400">
+            <p>No messages yet</p>
+          </div>
+        `;
+        return;
+      }
+      
+      Object.values(conversations).forEach(conv => {
+        const messageItem = document.createElement('div');
+        messageItem.className = 'message cursor-pointer flex items-center space-x-2 p-2 rounded';
+        messageItem.dataset.id = conv.participantId;
+        
+        messageItem.innerHTML = `
+          <img 
+            src="${conv.participantImage}" 
+            alt="${conv.participantName}" 
+            class="w-10 h-10 rounded-full object-cover"
+          />
+          <div class="flex-1 min-w-0">
+            <div class="flex justify-between">
+              <h4 class="text-white font-medium truncate">${conv.participantName}</h4>
+              <span class="text-gray-400 text-xs">${conv.lastMessageTime}</span>
+            </div>
+            <p class="text-gray-400 text-sm truncate">${conv.lastMessage}</p>
+          </div>
+        `;
+        
+        messageItem.addEventListener('click', () => handleOpenChat(conv.participantId));
+        
+        messagesContainer.appendChild(messageItem);
+      });
+    };
+
+    // Render and open chat modal
+    const renderChatModal = (userId) => {
+      const conversation = conversations[userId];
+      if (!conversation) return;
+      
+      chatParticipantImg.src = conversation.participantImage;
+      chatParticipantImg.alt = conversation.participantName;
+      chatParticipantName.textContent = conversation.participantName;
+      
+      chatMessages.innerHTML = '';
+      
+      conversation.messages.forEach(msg => {
+        const messageEl = document.createElement('div');
+        if (msg.sender === 'system') {
+          messageEl.className = 'flex justify-center';
+          messageEl.innerHTML = `
+            <div class="bg-gray-700 text-gray-300 text-center text-sm rounded-lg p-3 max-w-xs">
+              <p>${msg.text}</p>
+              <p class="text-xs mt-1 text-gray-400">${msg.time}</p>
+            </div>
+          `;
+        } else {
+          messageEl.className = `flex ${msg.sender === 'me' ? 'justify-end' : 'justify-start'}`;
+          messageEl.innerHTML = `
+            <div 
+              class="${
+                msg.sender === 'me' 
+                  ? 'bg-purple-500 text-white' 
+                  : 'bg-gray-700 text-white'
+              } max-w-xs rounded-lg p-3"
+            >
+              <p>${msg.text}</p>
+              <p class="${
+                msg.sender === 'me' ? 'text-purple-200' : 'text-gray-400'
+              } text-xs mt-1">${msg.time}</p>
+            </div>
+          `;
+        }
+        
+        chatMessages.appendChild(messageEl);
+      });
+      
+      setTimeout(() => {
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+      }, 0);
+      
+      chatModal.classList.add('show');
+    };
+
+    // Populate skill filter options
+    const populateSkillFilters = () => {
+      // Skills Wanted options
+      wantsFilterOptions.innerHTML = '';
+      skillsList.forEach(skill => {
+        const skillOption = document.createElement('div');
+        skillOption.className = 'filter-option flex items-center text-gray-300 p-2 rounded cursor-pointer';
+        skillOption.innerHTML = `
+          <input 
+            type="checkbox" 
+            id="want-${skill.toLowerCase().replace(/\s+/g, '-')}" 
+            class="form-checkbox text-purple-500 rounded mr-2 wants-checkbox" 
+            value="${skill}"
+            ${filters.wants.includes(skill) ? 'checked' : ''}
+          />
+          <label for="want-${skill.toLowerCase().replace(/\s+/g, '-')}">${skill}</label>
+        `;
+        wantsFilterOptions.appendChild(skillOption);
+      });
+
+      // Skills Offered options
+      offersFilterOptions.innerHTML = '';
+      skillsList.forEach(skill => {
+        const skillOption = document.createElement('div');
+        skillOption.className = 'filter-option flex items-center text-gray-300 p-2 rounded cursor-pointer';
+        skillOption.innerHTML = `
+          <input 
+            type="checkbox" 
+            id="offer-${skill.toLowerCase().replace(/\s+/g, '-')}" 
+            class="form-checkbox text-purple-500 rounded mr-2 offers-checkbox" 
+            value="${skill}"
+            ${filters.offers.includes(skill) ? 'checked' : ''}
+          />
+          <label for="offer-${skill.toLowerCase().replace(/\s+/g, '-')}">${skill}</label>
+        `;
+        offersFilterOptions.appendChild(skillOption);
+      });
+
+      // Add event listeners to the checkboxes
+      document.querySelectorAll('.wants-checkbox').forEach(checkbox => {
+        checkbox.addEventListener('change', (e) => {
+          const skill = e.target.value;
+          if (e.target.checked) {
+            if (!filters.wants.includes(skill)) {
+              filters.wants.push(skill);
+            }
+          } else {
+            filters.wants = filters.wants.filter(item => item !== skill);
+          }
+          applyFilters();
+        });
+      });
+
+      document.querySelectorAll('.offers-checkbox').forEach(checkbox => {
+        checkbox.addEventListener('change', (e) => {
+          const skill = e.target.value;
+          if (e.target.checked) {
+            if (!filters.offers.includes(skill)) {
+              filters.offers.push(skill);
+            }
+          } else {
+            filters.offers = filters.offers.filter(item => item !== skill);
+          }
+          applyFilters();
+        });
+      });
+    };
+
+    // Event Handlers
+    const handleRequestSwap = (profileId) => {
+      if (!requestedProfiles.includes(profileId)) {
+        requestedProfiles.push(profileId);
+        currentView = 'requested';
+        renderProfiles();
+      }
+    };
+
+    const handleAcceptSwap = (profileId) => {
+      if (!acceptedChats.includes(profileId)) {
+        // Find the profile to create a conversation with
+        const profile = pendingRequests.find(p => p.id === profileId);
+        if (profile) {
+          // Add to accepted chats
+          acceptedChats.push(profileId);
+          
+          // Remove from pending requests
+          pendingRequests.splice(pendingRequests.findIndex(p => p.id === profileId), 1);
+          
+          // Create a new conversation for this user
+          const now = new Date();
+          const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+          
+          conversations[profileId] = {
+            id: `conv-${profileId}`,
+            participantId: profileId,
+            participantName: profile.name,
+            participantImage: profile.image,
+            lastMessage: 'Swap request accepted!',
+            lastMessageTime: timeString,
+            messages: [
+              {
+                sender: 'system',
+                text: `You accepted ${profile.name}'s swap request. You can now chat with each other.`,
+                time: timeString
+              }
+            ]
+          };
+          
+          // Switch to matches view
+          currentView = 'matches';
+          
+          // Update UI
+          renderProfiles();
+          renderMessages();
+          
+          // Show success message
+          alert(`Swap with ${profile.name} accepted! You can now chat with them.`);
+        }
+      }
+    };
+
+    // Handle declining a swap request
+    const handleDeclineSwap = (profileId) => {
+      // Find the profile in pending requests
+      const profileIndex = pendingRequests.findIndex(p => p.id === profileId);
+      if (profileIndex !== -1) {
+        // Remove from pending requests
+        pendingRequests.splice(profileIndex, 1);
+        
+        // Update UI
+        renderProfiles();
+        
+        // Show message
+        alert('Swap request declined.');
+      }
+    };
+
+    const handleOpenChat = (userId) => {
+      activeChat = userId;
+      renderChatModal(userId);
+    };
+
+    const handleViewProfile = (profile) => {
+      selectedProfile = profile;
+      
+      // Update the modal with profile data
+      modalProfileImg.src = profile.image;
+      modalProfileImg.alt = profile.name;
+      modalProfileName.textContent = profile.name;
+      modalProfileDescription.textContent = profile.description;
+      
+      // Skills offered tags
+      modalSkillsOffered.innerHTML = '';
+      profile.skillsOffered.forEach(skill => {
+        const skillTag = document.createElement('span');
+        skillTag.className = 'bg-purple-500/30 text-purple-300 py-1 px-3 rounded-full text-sm';
+        skillTag.textContent = skill;
+        modalSkillsOffered.appendChild(skillTag);
+      });
+      
+      // Skills wanted tags
+      modalSkillsWanted.innerHTML = '';
+      profile.skillsWanted.forEach(skill => {
+        const skillTag = document.createElement('span');
+        skillTag.className = 'bg-blue-500/30 text-blue-300 py-1 px-3 rounded-full text-sm';
+        skillTag.textContent = skill;
+        modalSkillsWanted.appendChild(skillTag);
+      });
+      
+      // Duration
+      modalDuration.textContent = getDurationLabel(profile.duration);
+      
+      // Add previous works
+      const previousWorksContainer = document.getElementById('previous-works');
+      previousWorksContainer.innerHTML = '';
+      
+      if (profilePreviousWorks[profile.id]) {
+        profilePreviousWorks[profile.id].forEach(work => {
+          const workCard = document.createElement('div');
+          workCard.className = 'bg-gray-800/70 rounded-lg overflow-hidden';
+          workCard.innerHTML = `
+            <img src="${work.image}" alt="${work.title}" class="w-full h-40 object-cover">
+            <div class="p-3">
+              <h4 class="text-white font-medium">${work.title}</h4>
+              <p class="text-gray-400 text-sm">${work.description}</p>
+            </div>
+          `;
+          previousWorksContainer.appendChild(workCard);
+        });
+      } else {
+        previousWorksContainer.innerHTML = `
+          <div class="col-span-full text-center py-4 text-gray-400">
+            <p>No previous works to display</p>
+          </div>
+        `;
+      }
+      
+      // Add reviews
+      const reviewsContainer = document.getElementById('reviews');
+      reviewsContainer.innerHTML = '';
+      
+      if (profileReviews[profile.id]) {
+        profileReviews[profile.id].forEach(review => {
+          const reviewCard = document.createElement('div');
+          reviewCard.className = 'bg-gray-800/70 rounded-lg p-4';
+          
+          // Create stars based on rating
+          let stars = '';
+          const fullStars = Math.floor(review.rating);
+          const hasHalfStar = review.rating % 1 !== 0;
+          
+          for (let i = 0; i < fullStars; i++) {
+            stars += `<i data-lucide="star" class="h-3 w-3 text-yellow-400"></i>`;
+          }
+          
+          if (hasHalfStar) {
+            stars += `<i data-lucide="star-half" class="h-3 w-3 text-yellow-400"></i>`;
+          }
+          
+          reviewCard.innerHTML = `
+            <div class="flex items-center mb-2">
+              <img src="${review.image}" alt="${review.reviewer}" class="w-10 h-10 rounded-full object-cover mr-3">
+              <div>
+                <h4 class="text-white font-medium">${review.reviewer}</h4>
+                <div class="flex items-center">
+                  <div class="flex">
+                    ${stars}
+                  </div>
+                  <span class="text-gray-400 text-xs ml-1">${review.time}</span>
+                </div>
+              </div>
+            </div>
+            <p class="text-gray-300 text-sm">${review.text}</p>
+          `;
+          
+          reviewsContainer.appendChild(reviewCard);
+        });
+        
+        // Initialize Lucide icons for the new elements
+        setTimeout(() => {
+          lucide.createIcons({ scope: reviewsContainer });
+        }, 0);
+      } else {
+        reviewsContainer.innerHTML = `
+          <div class="text-center py-4 text-gray-400">
+            <p>No reviews yet</p>
+          </div>
+        `;
+      }
+      
+      // Update request button state
+      if (requestedProfiles.includes(profile.id)) {
+        modalRequestBtn.textContent = 'Request Sent';
+        modalRequestBtn.className = 'bg-green-500 text-white py-2 px-4 rounded-lg transition-colors duration-300';
+        modalRequestBtn.disabled = true;
+      } else {
+        modalRequestBtn.textContent = 'Request Swap';
+        modalRequestBtn.className = 'bg-purple-500 hover:bg-purple-600 text-white py-2 px-4 rounded-lg transition-colors duration-300';
+        modalRequestBtn.disabled = false;
+      }
+      
+      // Update button event listeners
+      modalRequestBtn.onclick = () => {
+        handleRequestSwap(profile.id);
+        profileModal.classList.remove('show');
+      };
+      
+      modalMessageBtn.onclick = () => {
+        profileModal.classList.remove('show');
+        handleOpenChat(profile.id);
+      };
+      
+      // Show the modal
+      profileModal.classList.add('show');
+    };
+
+    const handleSendMessage = () => {
+      if (!activeChat || !chatMessageInput.value.trim()) return;
+      
+      const message = chatMessageInput.value.trim();
+      const now = new Date();
+      const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      
+      // Update the conversation
+      const conversation = conversations[activeChat];
+      if (conversation) {
+        conversation.lastMessage = message;
+        conversation.lastMessageTime = timeString;
+        conversation.messages.push({
+          sender: 'me',
+          text: message,
+          time: timeString
+        });
+        
+        // Add message to chat window
+        const messageEl = document.createElement('div');
+        messageEl.className = 'flex justify-end';
+        messageEl.innerHTML = `
+          <div class="bg-purple-500 text-white max-w-xs rounded-lg p-3">
+            <p>${message}</p>
+            <p class="text-purple-200 text-xs mt-1">${timeString}</p>
+          </div>
+        `;
+        
+        chatMessages.appendChild(messageEl);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+        
+        // Clear input
+        chatMessageInput.value = '';
+        sendMessageBtn.classList.add('bg-purple-500/50');
+        sendMessageBtn.classList.remove('bg-purple-500', 'hover:bg-purple-600');
+        sendMessageBtn.disabled = true;
+        
+        // Update messages list
+        renderMessages();
+      }
+    };
+
+    const handleResetFilters = () => {
+      filters = {
+        wants: [],
+        offers: [],
+        duration: []
+      };
+      
+      // Reset all checkboxes
+      document.querySelectorAll('.wants-checkbox, .offers-checkbox, .duration-checkbox').forEach(checkbox => {
+        checkbox.checked = false;
+      });
+      
+      applyFilters();
+    };
+
+    const toggleDropdown = (id) => {
+      const dropdown = document.getElementById(id);
+      dropdown.classList.toggle('show');
+      
+      // Toggle chevron icon rotation
+      const header = document.querySelector(`[data-dropdown="${id}"]`);
+      if (header) {
+        const chevron = header.querySelector('i[data-lucide="chevron-down"]');
+        if (chevron) {
+          chevron.classList.toggle('transform');
+          chevron.classList.toggle('rotate-180');
+        }
+      }
+    };
+
+    // Initialize event listeners
+    const initEventListeners = () => {
+      // Reset filters button
+      resetFiltersBtn.addEventListener('click', handleResetFilters);
+      
+      // Scroll event for navbar
+      window.addEventListener('scroll', () => {
+        if (window.scrollY > 20) {
+          navbarElement.classList.add('py-2');
+          navbarElement.classList.remove('py-3');
+        } else {
+          navbarElement.classList.add('py-3');
+          navbarElement.classList.remove('py-2');
+        }
+      });
+
+      // Chat related events
+      closeChatBtn.addEventListener('click', () => {
+        chatModal.classList.remove('show');
+        activeChat = null;
+      });
+
+      chatMessageInput.addEventListener('input', (e) => {
+        if (e.target.value.trim()) {
+          sendMessageBtn.classList.remove('bg-purple-500/50', 'cursor-not-allowed');
+          sendMessageBtn.classList.add('bg-purple-500', 'hover:bg-purple-600');
+          sendMessageBtn.disabled = false;
+        } else {
+          sendMessageBtn.classList.add('bg-purple-500/50', 'cursor-not-allowed');
+          sendMessageBtn.classList.remove('bg-purple-500', 'hover:bg-purple-600');
+          sendMessageBtn.disabled = true;
+        }
+      });
+
+      chatMessageInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter' && !e.shiftKey && chatMessageInput.value.trim()) {
+          e.preventDefault();
+          handleSendMessage();
+        }
+      });
+
+      sendMessageBtn.addEventListener('click', handleSendMessage);
+
+      // Profile modal events
+      closeProfileBtn.addEventListener('click', () => {
+        profileModal.classList.remove('show');
+        selectedProfile = null;
+      });
+
+      // Close modals when clicking outside of them
+      [chatModal, profileModal].forEach(modal => {
+        modal.addEventListener('click', (e) => {
+          if (e.target === modal) {
+            modal.classList.remove('show');
+            if (modal === chatModal) activeChat = null;
+            if (modal === profileModal) selectedProfile = null;
+          }
+        });
+      });
+
+      // Navbar dropdown events
+      notificationsBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        notificationsMenu.classList.toggle('show');
+        profileMenu.classList.remove('show');
+      });
+
+      profileBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        profileMenu.classList.toggle('show');
+        notificationsMenu.classList.remove('show');
+      });
+
+      // Close dropdowns when clicking outside
+      document.addEventListener('click', (e) => {
+        if (!notificationsBtn.contains(e.target) && !notificationsMenu.contains(e.target)) {
+          notificationsMenu.classList.remove('show');
+        }
+        if (!profileBtn.contains(e.target) && !profileMenu.contains(e.target)) {
+          profileMenu.classList.remove('show');
+        }
+      });
+
+      // View changers
+      viewChangers.forEach(btn => {
+        btn.addEventListener('click', () => {
+          currentView = btn.dataset.view;
+          renderProfiles();
+        });
+      });
+
+      // Dropdown headers
+      dropdownHeaders.forEach(header => {
+        header.addEventListener('click', () => {
+          const dropdownId = header.dataset.dropdown;
+          toggleDropdown(dropdownId);
+        });
+      });
+
+      // Duration checkboxes
+      durationCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', (e) => {
+          const value = e.target.value;
+          if (e.target.checked) {
+            if (!filters.duration.includes(value)) {
+              filters.duration.push(value);
+            }
+          } else {
+            filters.duration = filters.duration.filter(item => item !== value);
+          }
+          applyFilters();
+        });
+      });
+    };
+
+    // Initialize the application
+    const init = () => {
+      populateSkillFilters();
+      renderProfiles();
+      renderMessages();
+      initEventListeners();
+    };
+
+    // Start the application
+    init();
+  </script>
+</body>
+</html>

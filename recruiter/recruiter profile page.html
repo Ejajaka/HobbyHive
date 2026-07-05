@@ -1,0 +1,1460 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23A78BFA' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='lucide lucide-palette-icon lucide-palette'%3E%3Cpath d='M12 22a1 1 0 0 1 0-20 10 9 0 0 1 10 9 5 5 0 0 1-5 5h-2.25a1.75 1.75 0 0 0-1.4 2.8l.3.4a1.75 1.75 0 0 1-1.4 2.8z'/%3E%3Ccircle cx='13.5' cy='6.5' r='.5' fill='%23A78BFA'/%3E%3Ccircle cx='17.5' cy='10.5' r='.5' fill='%23A78BFA'/%3E%3Ccircle cx='6.5' cy='12.5' r='.5' fill='%23A78BFA'/%3E%3Ccircle cx='8.5' cy='7.5' r='.5' fill='%23A78BFA'/%3E%3C/svg%3E" />
+
+    <title>Recruiter Profile</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/feather-icons"></script>
+    <style>
+        @tailwind base;
+        @tailwind components;
+        @tailwind utilities;
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        body {
+            background-color: rgb(10, 17, 34);
+            color: white;
+        }
+        
+         ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        
+         ::-webkit-scrollbar-track {
+            background-color: rgb(31, 41, 55);
+        }
+        
+         ::-webkit-scrollbar-thumb {
+            background-color: rgb(75, 85, 99);
+            border-radius: 9999px;
+        }
+        
+         ::-webkit-scrollbar-thumb:hover {
+            background-color: rgb(107, 114, 128);
+        }
+        
+        .gradient-text {
+            background: linear-gradient(to right, #a259ff, #f857a6);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .modal-content {
+            animation: modalFadeIn 0.3s ease-out;
+        }
+        
+        .status-pending {
+            background-color: #fbbf24;
+        }
+        
+        .status-reviewed {
+            background-color: #60a5fa;
+        }
+        
+        .status-interviewed {
+            background-color: #a78bfa;
+        }
+        
+        .status-hired {
+            background-color: #34d399;
+        }
+        
+        .status-rejected {
+            background-color: #ef4444;
+        }
+        
+        .file-input-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+        }
+        
+        .file-input-wrapper input[type=file] {
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+        
+        .avatar-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            border-radius: 0.5rem;
+        }
+        
+        .avatar-wrapper:hover .avatar-overlay {
+            opacity: 1;
+        }
+    </style>
+</head>
+
+<body class="min-h-screen flex flex-col">
+    <nav class="fixed w-full bg-gray-900/80 backdrop-blur-md shadow-lg z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Logo -->
+                <div class="flex items-center space-x-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="none" class="h-8 w-8 text-purple-400">
+                        <!-- Dots -->
+                        <circle cx="13.5" cy="6.5" r="1.5"></circle>
+                        <circle cx="17.5" cy="10.5" r="1.5"></circle>
+                        <circle cx="8.5" cy="7.5" r="1.5"></circle>
+                        <circle cx="6.5" cy="12.5" r="1"></circle>
+                        <!-- Main hexagon shape -->
+                        <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z" fill="none" stroke="currentColor" stroke-width="2"></path>
+                    </svg>
+                    <span class="text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+                        <a href="https://singular-kringle-5f87fe.netlify.app/recruiter%20dashboard">HobbyHive</a>
+                    </span>
+                </div>
+
+                <div class="lg:hidden">
+                    <button id="mobileMenuButton" class="text-purple-400 hover:text-purple-300 focus:outline-none">
+                        <i data-feather="menu" class="h-6 w-6"></i>
+                    </button>
+                </div>
+
+                <div class="hidden lg:block flex-1 max-w-2xl mx-8">
+
+                </div>
+
+                <div class="hidden lg:flex items-center space-x-6">
+                    <button class="text-purple-400 hover:text-purple-300 transition-colors" onclick="window.location.href='https://singular-kringle-5f87fe.netlify.app/recruiter%20activitypage'">
+                        <i data-feather="dollar-sign" class="h-6 w-6"></i>
+                    </button>
+                    <div class="h-6 w-px bg-gray-700"></div>
+
+                    <!-- Notification Dropdown -->
+                    <div class="relative">
+                        <button id="notificationButton" class="text-purple-400 hover:text-purple-300 transition-colors relative">
+                            <i data-feather="bell" class="h-6 w-6"></i>
+                            <span class="absolute top-0 right-0 h-2 w-2 rounded-full bg-pink-500"></span>
+                        </button>
+                        <div id="notificationDropdown" class="hidden absolute right-0 mt-2 w-80 bg-gray-800 rounded-md shadow-lg py-1 z-50 border border-gray-700">
+                            <div class="px-4 py-3 border-b border-gray-700">
+                                <p class="text-lg font-semibold text-white">Notifications</p>
+                            </div>
+                            <div class="max-h-96 overflow-y-auto">
+                                <a href="#" class="block px-4 py-3 hover:bg-gray-700 border-b border-gray-700">
+                                    <div>
+                                        <p class="font-medium text-white">Application from Sarah Johnson</p>
+                                        <p class="text-sm text-gray-400 mt-1">2h ago</p>
+                                    </div>
+                                </a>
+                                <a href="#" class="block px-4 py-3 hover:bg-gray-700 border-b border-gray-700">
+                                    <div>
+                                        <p class="font-medium text-white">Your job post is about to expire</p>
+                                        <p class="text-sm text-gray-400 mt-1">5h ago</p>
+                                    </div>
+                                </a>
+                                <a href="#" class="block px-4 py-3 hover:bg-gray-700">
+                                    <div>
+                                        <p class="font-medium text-white">New candidates match your saved search criteria</p>
+                                        <p class="text-sm text-gray-400 mt-1">1d ago</p>
+                                    </div>
+                                </a>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- Profile Dropdown -->
+                    <div class="relative">
+                        <button id="profileButton" class="text-purple-400 hover:text-purple-300 transition-colors flex items-center">
+                            <i data-feather="user" class="h-6 w-6"></i>
+                            
+                            
+                        </button>
+                        <div id="profileDropdown" class="hidden absolute right-0 mt-2 w-48 bg-gray-800 rounded-md shadow-lg py-1 z-50 border border-gray-700">
+                            <a href="https://singular-kringle-5f87fe.netlify.app/recruiter%20profile%20page" class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700">Your Profile</a>
+                            <div class="border-t border-gray-700"></div>
+                            <a href="https://singular-kringle-5f87fe.netlify.app/homepage" class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700" style="color: red;">
+                                Log out
+                            </a>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobileMenu" class="hidden lg:hidden bg-gray-900 shadow-lg">
+            <div class="px-4 pt-2 pb-4 space-y-4">
+                <div class="relative mt-3 mb-4">
+                    <input type="text" placeholder="Search..." class="w-full bg-gray-800/50 text-gray-200 placeholder-gray-400 rounded-full py-2 pl-10 pr-4 focus:outline-none focus:ring-2 focus:ring-purple-400/50" />
+                    <i data-feather="search" class="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400"></i>
+                </div>
+
+                <div class="flex justify-around">
+                    <button class="text-purple-400 hover:text-purple-300 flex flex-col items-center">
+                        <i data-feather="dollar-sign" class="h-6 w-6"></i>
+                        <span class="text-xs mt-1">Payments</span>
+                    </button>
+
+                    <!-- Mobile Notification Dropdown -->
+                    <div class="relative">
+                        <button id="mobileNotificationButton" class="text-purple-400 hover:text-purple-300 flex flex-col items-center relative">
+                            <i data-feather="bell" class="h-6 w-6"></i>
+                            <span class="text-xs mt-1">Notifications</span>
+                            <span class="absolute top-0 right-4 h-2 w-2 rounded-full bg-pink-500"></span>
+                        </button>
+                        <div id="mobileNotificationDropdown" class="hidden absolute right-0 mt-2 w-72 bg-gray-800 rounded-md shadow-lg py-1 z-50 border border-gray-700">
+                            <div class="px-4 py-3 border-b border-gray-700">
+                                <p class="text-lg font-semibold text-white">Notifications</p>
+                            </div>
+                            <div class="max-h-60 overflow-y-auto">
+                                <a href="#" class="block px-4 py-3 hover:bg-gray-700 border-b border-gray-700">
+                                    <p class="font-medium text-white">Application from Sarah Johnson</p>
+                                    <p class="text-sm text-gray-400 mt-1">2h ago</p>
+                                </a>
+                                <a href="#" class="block px-4 py-3 hover:bg-gray-700 border-b border-gray-700">
+                                    <p class="font-medium text-white">Your job post is about to expire</p>
+                                    <p class="text-sm text-gray-400 mt-1">5h ago</p>
+                                </a>
+                                <a href="#" class="block px-4 py-3 hover:bg-gray-700">
+                                    <p class="font-medium text-white">New candidates match your criteria</p>
+                                    <p class="text-sm text-gray-400 mt-1">1d ago</p>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Mobile Profile Dropdown -->
+                    <div class="relative">
+                        <button id="mobileProfileButton" class="text-purple-400 hover:text-purple-300 flex flex-col items-center">
+                            <i data-feather="user" class="h-6 w-6"></i>
+                            <span class="text-xs mt-1">Profile</span>
+                        </button>
+                        <div id="mobileProfileDropdown" class="hidden absolute right-0 mt-2 w-48 bg-gray-800 rounded-md shadow-lg py-1 z-50 border border-gray-700">
+                            <a href="https://singular-kringle-5f87fe.netlify.app/recruiter%20profile%20page" class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700">Your Profile</a>
+                            <a href="https://singular-kringle-5f87fe.netlify.app/homepage" class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700" style="color: red;">
+                                Log out
+                            </a>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <script>
+        // Initialize Feather Icons
+        document.addEventListener('DOMContentLoaded', function() {
+            feather.replace();
+
+            // Mobile menu toggle
+            const mobileMenuButton = document.getElementById('mobileMenuButton');
+            const mobileMenu = document.getElementById('mobileMenu');
+
+            mobileMenuButton.addEventListener('click', function() {
+                mobileMenu.classList.toggle('hidden');
+            });
+
+            // Desktop notification dropdown
+            const notificationButton = document.getElementById('notificationButton');
+            const notificationDropdown = document.getElementById('notificationDropdown');
+
+            notificationButton.addEventListener('click', function(e) {
+                e.stopPropagation();
+                notificationDropdown.classList.toggle('hidden');
+                profileDropdown.classList.add('hidden');
+            });
+
+            // Desktop profile dropdown
+            const profileButton = document.getElementById('profileButton');
+            const profileDropdown = document.getElementById('profileDropdown');
+
+            profileButton.addEventListener('click', function(e) {
+                e.stopPropagation();
+                profileDropdown.classList.toggle('hidden');
+                notificationDropdown.classList.add('hidden');
+            });
+
+            // Mobile notification dropdown
+            const mobileNotificationButton = document.getElementById('mobileNotificationButton');
+            const mobileNotificationDropdown = document.getElementById('mobileNotificationDropdown');
+
+            mobileNotificationButton.addEventListener('click', function(e) {
+                e.stopPropagation();
+                mobileNotificationDropdown.classList.toggle('hidden');
+                mobileProfileDropdown.classList.add('hidden');
+            });
+
+            // Mobile profile dropdown
+            const mobileProfileButton = document.getElementById('mobileProfileButton');
+            const mobileProfileDropdown = document.getElementById('mobileProfileDropdown');
+
+            mobileProfileButton.addEventListener('click', function(e) {
+                e.stopPropagation();
+                mobileProfileDropdown.classList.toggle('hidden');
+                mobileNotificationDropdown.classList.add('hidden');
+            });
+
+            // Close dropdowns when clicking outside
+            document.addEventListener('click', function(event) {
+                if (!notificationButton.contains(event.target) && !notificationDropdown.contains(event.target)) {
+                    notificationDropdown.classList.add('hidden');
+                }
+                if (!profileButton.contains(event.target) && !profileDropdown.contains(event.target)) {
+                    profileDropdown.classList.add('hidden');
+                }
+                if (!mobileNotificationButton.contains(event.target) && !mobileNotificationDropdown.contains(event.target)) {
+                    mobileNotificationDropdown.classList.add('hidden');
+                }
+                if (!mobileProfileButton.contains(event.target) && !mobileProfileDropdown.contains(event.target)) {
+                    mobileProfileDropdown.classList.add('hidden');
+                }
+            });
+        });
+    </script>
+
+
+
+
+
+
+    <div class="pt-20 pb-16 flex-grow">
+        <div class="container mx-auto p-6 max-w-[1400px]">
+            <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+                <div class="lg:col-span-1">
+                    <div class="space-y-6">
+                        <div>
+                            <div class="avatar-wrapper relative inline-block mb-4">
+                                <img id="profile-avatar" src="https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg" alt="Emily" class="w-[120px] h-[120px] object-cover rounded-lg shadow-lg hover:scale-105 transition-transform duration-300" />
+                                <div class="avatar-overlay">
+                                    <button id="changeAvatarBtn" class="text-white flex flex-col items-center">
+                    <i data-feather="camera" class="h-6 w-6"></i>
+                    <span class="text-xs mt-1">Change Photo</span>
+                  </button>
+                                </div>
+                            </div>
+                            <h1 id="profile-name" class="text-2xl font-bold gradient-text mb-1">
+                                Emily 
+                            </h1>
+                            <p id="profile-title" class="text-gray-400 mb-4">Senior Talent Acquisition Manager</p>
+
+                            <div class="space-y-3">
+                                <div class="flex items-center text-gray-400">
+                                    <span class="mr-2">🏢</span>
+                                    <span id="profile-company">Creative Innovation Hub</span>
+                                </div>
+                                <div class="flex items-center text-gray-400">
+                                    <span class="mr-2">📍</span>
+                                    <span id="profile-location">Seattle, WA</span>
+                                </div>
+                                <div class="flex items-center text-blue-400">
+                                    <span class="mr-2">📧</span>
+                                    <a id="profile-email" href="mailto:emily@creativehub.com">emily@creativehub.com</a>
+                                </div>
+                                <div class="flex items-center text-blue-400">
+                                    <span class="mr-2">🌐</span>
+                                    <a id="profile-website" href="https://www.creativehub.com" target="_blank" rel="noopener noreferrer">
+                    www.creativehub.com
+                  </a>
+                                </div>
+                            </div>
+
+                            <div class="flex gap-3 mt-6">
+                                <button id="editProfileBtn" class="flex-1 bg-gradient-to-r from-[#a259ff] to-[#f857a6] text-white py-2 px-4 rounded-md hover:opacity-90 transition-opacity">
+                  Edit Profile
+                </button>
+                                <button id="shareBtn" class="flex-1 bg-gray-700 text-white py-2 px-4 rounded-md hover:bg-gray-600 transition-colors">
+                  Share
+                </button>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h2 class="text-lg font-semibold gradient-text mb-3">
+                                Languages
+                            </h2>
+                            <div id="profile-languages" class="flex flex-wrap gap-2">
+                                <span class="px-3 py-1 bg-gray-700 text-gray-300 rounded-full text-sm">English</span>
+                                <span class="px-3 py-1 bg-gray-700 text-gray-300 rounded-full text-sm">Spanish</span>
+                                <span class="px-3 py-1 bg-gray-700 text-gray-300 rounded-full text-sm">French</span>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h2 class="text-lg font-semibold gradient-text mb-3">
+                                Certifications
+                            </h2>
+                            <div id="profile-certifications" class="space-y-3">
+                                <div class="flex items-start gap-3">
+                                    <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+                                        <span>C</span>
+                                    </div>
+                                    <div>
+                                        <h3 class="text-white font-medium">Certified Recruitment Professional</h3>
+                                        <p class="text-gray-400 text-sm">(2023)</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <div class="w-8 h-8 bg-purple-600 rounded-lg flex items-center justify-center">
+                                        <span>D</span>
+                                    </div>
+                                    <div>
+                                        <h3 class="text-white font-medium">Digital Arts Specialist</h3>
+                                        <p class="text-gray-400 text-sm">(2022)</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-3 space-y-6">
+                    <div class="bg-gray-800/50 rounded-lg p-6">
+                        <h2 class="text-lg font-semibold gradient-text mb-4">Statistics</h2>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div class="bg-gray-700/50 rounded-lg p-4 text-center">
+                                <h3 class="text-gray-400 text-sm mb-1">Candidates Hired</h3>
+                                <p class="text-3xl font-semibold text-white">150</p>
+                            </div>
+                            <div class="bg-gray-700/50 rounded-lg p-4 text-center">
+                                <h3 class="text-gray-400 text-sm mb-1">Interviews Conducted</h3>
+                                <p class="text-3xl font-semibold text-white">495</p>
+                            </div>
+                            <div class="bg-gray-700/50 rounded-lg p-4 text-center">
+                                <h3 class="text-gray-400 text-sm mb-1">Satisfaction Rate</h3>
+                                <p class="text-3xl font-semibold text-white">98%</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-800/50 rounded-lg p-6">
+                        <div class="flex justify-between items-center mb-4">
+                            <h2 class="text-lg font-semibold gradient-text">About</h2>
+                            <button id="editAboutBtn" class="text-purple-400 hover:text-purple-300 transition-colors">
+                <i data-feather="edit-2" class="h-4 w-4"></i>
+              </button>
+                        </div>
+                        <p id="profile-about" class="text-gray-300 whitespace-pre-line">
+                            Passionate talent acquisition professional with over 8 years of experience in the creative industry. Specialized in identifying and recruiting top artistic talent across digital media, design, and development roles. Known for innovative recruiting strategies
+                            that align with company culture and creative vision. At Creative Innovation Hub, I've built diverse teams that have driven our company to the forefront of the digital arts industry, winning multiple awards for our collaborative
+                            projects and innovations.
+                        </p>
+                    </div>
+
+                    <div class="bg-gray-800/50 rounded-lg p-6">
+                        <div class="flex justify-between items-center mb-4">
+                            <h2 class="text-lg font-semibold gradient-text">Expertise</h2>
+                            <button id="addExpertiseBtn" class="text-purple-400 hover:text-purple-300 transition-colors">
+                <i data-feather="plus" class="h-4 w-4"></i>
+              </button>
+                        </div>
+                        <div id="profile-expertise" class="flex flex-wrap gap-2">
+                            <span class="px-3 py-1 bg-gray-700 text-gray-300 rounded-full text-sm">UX/UI Design</span>
+                            <span class="px-3 py-1 bg-gray-700 text-gray-300 rounded-full text-sm">3D Animation</span>
+                            <span class="px-3 py-1 bg-gray-700 text-gray-300 rounded-full text-sm">Game Development</span>
+                            <span class="px-3 py-1 bg-gray-700 text-gray-300 rounded-full text-sm">Digital Illustration</span>
+                            <span class="px-3 py-1 bg-gray-700 text-gray-300 rounded-full text-sm">Frontend Development</span>
+                            <span class="px-3 py-1 bg-gray-700 text-gray-300 rounded-full text-sm">AR/VR</span>
+                            <span class="px-3 py-1 bg-gray-700 text-gray-300 rounded-full text-sm">Creative Direction</span>
+                            <span class="px-3 py-1 bg-gray-700 text-gray-300 rounded-full text-sm">Motion Graphics</span>
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-800/50 rounded-lg p-6">
+                        <div class="flex justify-between items-center mb-4">
+                            <h2 class="text-lg font-semibold gradient-text">Recent Activity</h2>
+                            <button id="newPostBtn" class="text-sm bg-gradient-to-r from-[#a259ff] to-[#f857a6] text-white px-3 py-1 rounded-full hover:opacity-90 transition-opacity flex items-center gap-1">
+                <i data-feather="plus" class="h-3 w-3"></i>
+                <span>New Post</span>
+              </button>
+                        </div>
+
+                        <div id="posts-container" class="space-y-6">
+                            <div class="bg-gray-700/50 rounded-lg p-4" data-post-id="post-001">
+                                <div class="flex items-start gap-3 mb-3">
+                                    <img src="https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg" alt="Emily " class="w-10 h-10 rounded-full object-cover" />
+                                    <div>
+                                        <h3 class="font-semibold text-white">Emily </h3>
+                                        <p class="text-gray-400 text-sm">2 hours ago</p>
+                                    </div>
+                                    <button class="ml-auto text-gray-400 hover:text-white post-edit-btn">
+                    <i data-feather="more-vertical" class="h-4 w-4"></i>
+                  </button>
+                                </div>
+                                <p class="text-gray-300 mb-3">
+                                    Excited to announce that we've successfully completed our Q2 hiring goals, bringing on 15 incredible talents across design, development, and animation departments! Looking forward to seeing the amazing projects they'll contribute to. #CreativeHiring #DigitalArts
+                                </p>
+                                <div class="mb-3">
+                                    <img src="https://images.pexels.com/photos/3184338/pexels-photo-3184338.jpeg" alt="Team photo" class="w-full h-auto rounded-lg" />
+                                </div>
+                            </div>
+
+                            <div class="bg-gray-700/50 rounded-lg p-4" data-post-id="post-002">
+                                <div class="flex items-start gap-3 mb-3">
+                                    <img src="https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg" alt="Emily " class="w-10 h-10 rounded-full object-cover" />
+                                    <div>
+                                        <h3 class="font-semibold text-white">Emily </h3>
+                                        <p class="text-gray-400 text-sm">Yesterday</p>
+                                    </div>
+                                    <button class="ml-auto text-gray-400 hover:text-white post-edit-btn">
+                    <i data-feather="more-vertical" class="h-4 w-4"></i>
+                  </button>
+                                </div>
+                                <p class="text-gray-300 mb-3">
+                                    Attended the Digital Arts Career Fair today. Amazing to see so much talent in one place! If you're a 3D animator or character designer looking for opportunities, send me a message. We have several exciting positions open right now!
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-800/50 rounded-lg p-6">
+                        <h2 class="text-lg font-semibold gradient-text mb-4">Candidate Tracking</h2>
+                        <div class="overflow-auto">
+                            <table class="min-w-full">
+                                <thead>
+                                    <tr>
+                                        <th class="px-4 py-2 text-left text-gray-400 text-sm">Candidate</th>
+                                        <th class="px-4 py-2 text-left text-gray-400 text-sm">Position</th>
+                                        <th class="px-4 py-2 text-left text-gray-400 text-sm">Status</th>
+                                        <th class="px-4 py-2 text-left text-gray-400 text-sm">Last Updated</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="border-t border-gray-700">
+                                        <td class="px-4 py-3">
+                                            <div class="flex items-center gap-3">
+                                                <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Alex Chen" class="w-8 h-8 rounded-full object-cover" />
+                                                <span>Alex Chen</span>
+                                            </div>
+                                        </td>
+                                        <td class="px-4 py-3 text-gray-400">Senior UX Designer</td>
+                                        <td class="px-4 py-3">
+                                            <span class="inline-block px-2 py-1 rounded-full text-xs text-white bg-purple-500">
+                        Interviewed
+                      </span>
+                                        </td>
+                                        <td class="px-4 py-3 text-gray-400">2 days ago</td>
+                                    </tr>
+
+                                    <tr class="border-t border-gray-700">
+                                        <td class="px-4 py-3">
+                                            <div class="flex items-center gap-3">
+                                                <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Sophia Kim" class="w-8 h-8 rounded-full object-cover" />
+                                                <span>Sophia Kim</span>
+                                            </div>
+                                        </td>
+                                        <td class="px-4 py-3 text-gray-400">3D Animator</td>
+                                        <td class="px-4 py-3">
+                                            <span class="inline-block px-2 py-1 rounded-full text-xs text-white bg-green-500">
+                        Hired
+                      </span>
+                                        </td>
+                                        <td class="px-4 py-3 text-gray-400">1 week ago</td>
+                                    </tr>
+
+                                    <tr class="border-t border-gray-700">
+                                        <td class="px-4 py-3">
+                                            <div class="flex items-center gap-3">
+                                                <img src="https://randomuser.me/api/portraits/men/67.jpg" alt="Marcus Johnson" class="w-8 h-8 rounded-full object-cover" />
+                                                <span>Marcus Johnson</span>
+                                            </div>
+                                        </td>
+                                        <td class="px-4 py-3 text-gray-400">Frontend Developer</td>
+                                        <td class="px-4 py-3">
+                                            <span class="inline-block px-2 py-1 rounded-full text-xs text-white bg-blue-500">
+                        Reviewed
+                      </span>
+                                        </td>
+                                        <td class="px-4 py-3 text-gray-400">3 days ago</td>
+                                    </tr>
+
+                                    <tr class="border-t border-gray-700">
+                                        <td class="px-4 py-3">
+                                            <div class="flex items-center gap-3">
+                                                <img src="https://randomuser.me/api/portraits/women/22.jpg" alt="Olivia Martinez" class="w-8 h-8 rounded-full object-cover" />
+                                                <span>Olivia Martinez</span>
+                                            </div>
+                                        </td>
+                                        <td class="px-4 py-3 text-gray-400">AR/VR Specialist</td>
+                                        <td class="px-4 py-3">
+                                            <span class="inline-block px-2 py-1 rounded-full text-xs text-white bg-yellow-500">
+                        Pending
+                      </span>
+                                        </td>
+                                        <td class="px-4 py-3 text-gray-400">Just now</td>
+                                    </tr>
+
+                                    <tr class="border-t border-gray-700">
+                                        <td class="px-4 py-3">
+                                            <div class="flex items-center gap-3">
+                                                <img src="https://randomuser.me/api/portraits/men/45.jpg" alt="Daniel Lee" class="w-8 h-8 rounded-full object-cover" />
+                                                <span>Daniel Lee</span>
+                                            </div>
+                                        </td>
+                                        <td class="px-4 py-3 text-gray-400">Motion Graphics Designer</td>
+                                        <td class="px-4 py-3">
+                                            <span class="inline-block px-2 py-1 rounded-full text-xs text-white bg-red-500">
+                        Rejected
+                      </span>
+                                        </td>
+                                        <td class="px-4 py-3 text-gray-400">5 days ago</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer with the new design based on the image -->
+    <footer class="bg-gray-900/80 backdrop-blur-md border-t border-gray-800 py-8 mt-auto">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 lg:gap-12">
+                <!-- About HobbyHive -->
+                <div>
+                    <h3 class="text-xl font-bold mb-4">About HobbyHive</h3>
+                    <p class="text-gray-400 mb-4">
+                        Empowering creativity and skill development through interactive learning experiences.
+                    </p>
+                </div>
+
+                <!-- Quick Links -->
+                <div>
+                    <h3 class="text-xl font-bold mb-4">Quick Links</h3>
+                    <ul class="space-y-2">
+                        <li><a href="https://sweet-croissant-7d5700.netlify.app/aboutus%20after%20loggining%20recruiter" class="text-gray-400 hover:text-purple-400 transition-colors">About Us</a></li>
+                        <li><a href="https://singular-kringle-5f87fe.netlify.app/recruiter%20dashboard" class="text-gray-400 hover:text-purple-400 transition-colors">Home</a></li>
+                        <li><a href="https://sweet-croissant-7d5700.netlify.app/success%20stories%20after%20logging%20in%20recruiter" class="text-gray-400 hover:text-purple-400 transition-colors">Success Stories</a></li>
+                    </ul>
+                </div>
+
+                <!-- Support -->
+                <div>
+                    <h3 class="text-xl font-bold mb-4">Support</h3>
+                    <ul class="space-y-2">
+                        <li><a href="https://singular-kringle-5f87fe.netlify.app/helpcenter" class="text-gray-400 hover:text-purple-400 transition-colors">Help Center</a></li>
+                        <li><a href="https://singular-kringle-5f87fe.netlify.app/community%20guidelines" class="text-gray-400 hover:text-purple-400 transition-colors">Community Guidelines</a></li>
+                        <li><a href="https://singular-kringle-5f87fe.netlify.app/terms%20and%20conditions" class="text-gray-400 hover:text-purple-400 transition-colors">Terms and Conditions</a></li>
+                    </ul>
+                </div>
+
+                <!-- Connect With Us -->
+                <div>
+                    <h3 class="text-xl font-bold mb-4">Connect With Us</h3>
+                    <div class="flex space-x-4">
+                        <a href="https://www.facebook.com/hobby.hive/" class="text-gray-400 hover:text-purple-400 transition-colors transform hover:scale-110">
+                            <i data-feather="facebook" class="h-5 w-5"></i>
+                        </a>
+                        <a href="https://x.com/Hobby_Hive" class="text-gray-400 hover:text-purple-400 transition-colors transform hover:scale-110">
+                            <i data-feather="twitter" class="h-5 w-5"></i>
+                        </a>
+                        <a href="https://www.instagram.com/hobby_hive9/" class="text-gray-400 hover:text-purple-400 transition-colors transform hover:scale-110">
+                            <i data-feather="instagram" class="h-5 w-5"></i>
+                        </a>
+                     
+                    </div>
+                </div>
+            </div>
+
+            <div class="pt-6 mt-6 border-t border-gray-800 text-center text-gray-400 text-sm">
+                <p>© 2024 HobbyHive. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+    <div id="toast" class="fixed bottom-5 right-5 bg-green-500/90 text-white py-3 px-4 rounded-lg shadow-lg z-50 transform transition-all duration-300 translate-y-20 opacity-0">
+        Toast message will appear here
+    </div>
+
+    <div id="profileEditModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4 hidden">
+        <div class="bg-[rgb(22,29,47)] rounded-lg p-6 w-full max-w-md max-h-[90vh] overflow-auto modal-content">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-xl font-bold gradient-text">
+                    Edit Profile
+                </h2>
+                <button class="text-gray-400 hover:text-white transition-colors modal-close">
+          <i data-feather="x" class="h-5 w-5"></i>
+        </button>
+            </div>
+
+            <form id="profileEditForm" class="space-y-4">
+                <div>
+                    <label for="avatar" class="block text-gray-300 mb-2">Profile Photo</label>
+                    <div class="flex items-center space-x-4">
+                        <img id="avatar-preview" src="https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg" alt="Avatar preview" class="w-16 h-16 rounded-lg object-cover" />
+                        <div class="file-input-wrapper">
+                            <button type="button" class="bg-gray-700 text-white py-2 px-4 rounded-md hover:bg-gray-600 transition-colors">
+                Choose File
+              </button>
+                            <input type="file" id="avatar-upload" accept="image/*" class="cursor-pointer" />
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <label for="name" class="block text-gray-300 mb-2">Name</label>
+                    <input type="text" id="name" value="Emily " class="w-full bg-gray-800 border border-gray-700 rounded-md py-2 px-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                </div>
+
+                <div>
+                    <label for="title" class="block text-gray-300 mb-2">Title</label>
+                    <input type="text" id="title" value="Senior Talent Acquisition Manager" class="w-full bg-gray-800 border border-gray-700 rounded-md py-2 px-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                </div>
+
+                <div>
+                    <label for="company" class="block text-gray-300 mb-2">Company</label>
+                    <input type="text" id="company" value="Creative Innovation Hub" class="w-full bg-gray-800 border border-gray-700 rounded-md py-2 px-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                </div>
+
+                <div>
+                    <label for="location" class="block text-gray-300 mb-2">Location</label>
+                    <input type="text" id="location" value="Seattle, WA" class="w-full bg-gray-800 border border-gray-700 rounded-md py-2 px-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                </div>
+
+                <div>
+                    <label for="email" class="block text-gray-300 mb-2">Email</label>
+                    <input type="email" id="email" value="emily@creativehub.com" class="w-full bg-gray-800 border border-gray-700 rounded-md py-2 px-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                </div>
+
+                <div>
+                    <label for="website" class="block text-gray-300 mb-2">Website</label>
+                    <input type="text" id="website" value="www.creativehub.com" class="w-full bg-gray-800 border border-gray-700 rounded-md py-2 px-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                </div>
+
+                <div class="pt-4 flex justify-end gap-3">
+                    <button type="button" class="bg-gray-700 text-white py-2 px-4 rounded-md hover:bg-gray-600 transition-colors modal-close">
+            Cancel
+          </button>
+                    <button type="submit" class="bg-gradient-to-r from-[#a259ff] to-[#f857a6] text-white py-2 px-4 rounded-md hover:opacity-90 transition-opacity">
+            Save Changes
+          </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="avatarModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4 hidden">
+        <div class="bg-[rgb(22,29,47)] rounded-lg p-6 w-full max-w-md max-h-[90vh] overflow-auto modal-content">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-xl font-bold gradient-text">
+                    Change Profile Photo
+                </h2>
+                <button class="text-gray-400 hover:text-white transition-colors modal-close">
+          <i data-feather="x" class="h-5 w-5"></i>
+        </button>
+            </div>
+
+            <form id="avatarForm" class="space-y-4">
+                <div class="mb-4">
+                    <div class="mb-4 flex justify-center">
+                        <img id="avatar-modal-preview" src="https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg" alt="Avatar preview" class="w-32 h-32 rounded-lg object-cover" />
+                    </div>
+
+                    <div class="file-input-wrapper w-full">
+                        <button type="button" class="w-full bg-gray-700 text-white py-2 px-4 rounded-md hover:bg-gray-600 transition-colors">
+              Choose File
+            </button>
+                        <input type="file" id="avatar-modal-upload" accept="image/*" class="cursor-pointer" />
+                    </div>
+                    <p class="text-xs text-gray-400 mt-2">Supported formats: JPG, PNG, GIF. Max size: 5MB</p>
+                </div>
+
+                <div class="pt-4 flex justify-end gap-3">
+                    <button type="button" class="bg-gray-700 text-white py-2 px-4 rounded-md hover:bg-gray-600 transition-colors modal-close">
+            Cancel
+          </button>
+                    <button type="submit" id="save-avatar-btn" class="bg-gradient-to-r from-[#a259ff] to-[#f857a6] text-white py-2 px-4 rounded-md hover:opacity-90 transition-opacity" disabled>
+            Save Photo
+          </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="shareModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4 hidden">
+        <div class="bg-[rgb(22,29,47)] rounded-lg p-6 w-full max-w-md max-h-[90vh] overflow-auto modal-content">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-xl font-bold gradient-text">
+                    Share Profile
+                </h2>
+                <button class="text-gray-400 hover:text-white transition-colors modal-close">
+          <i data-feather="x" class="h-5 w-5"></i>
+        </button>
+            </div>
+
+            <div class="space-y-6">
+                <div>
+                    <label class="block text-gray-300 mb-2">Profile Link</label>
+                    <div class="flex">
+                        <input type="text" value="https://hobbyhive.com/recruiters/emily-thompson" readonly class="flex-1 bg-gray-800 border border-gray-700 rounded-l-md py-2 px-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                        <button id="copyLinkBtn" class="bg-gray-700 text-white py-2 px-4 rounded-r-md hover:bg-gray-600 transition-colors">
+              Copy
+            </button>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-gray-300 mb-2">Share on Social Media</label>
+                    <div class="flex space-x-3">
+                        <button data-platform="Facebook" class="share-btn flex-1 bg-[#4267B2] text-white py-2 px-3 rounded-md hover:bg-opacity-90 transition-opacity flex items-center justify-center gap-2">
+              <i data-feather="facebook" class="h-5 w-5"></i>
+              <span>Facebook</span>
+            </button>
+                        <button data-platform="Twitter" class="share-btn flex-1 bg-[#1DA1F2] text-white py-2 px-3 rounded-md hover:bg-opacity-90 transition-opacity flex items-center justify-center gap-2">
+              <i data-feather="twitter" class="h-5 w-5"></i>
+              <span>Twitter</span>
+            </button>
+                        <button data-platform="LinkedIn" class="share-btn flex-1 bg-[#0077B5] text-white py-2 px-3 rounded-md hover:bg-opacity-90 transition-opacity flex items-center justify-center gap-2">
+              <i data-feather="linkedin" class="h-5 w-5"></i>
+              <span>LinkedIn</span>
+            </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    </div>
+    </div>
+    </div>
+
+    <div id="aboutEditModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4 hidden">
+        <div class="bg-[rgb(22,29,47)] rounded-lg p-6 w-full max-w-md max-h-[90vh] overflow-auto modal-content">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-xl font-bold gradient-text">
+                    Edit About
+                </h2>
+                <button class="text-gray-400 hover:text-white transition-colors modal-close">
+          <i data-feather="x" class="h-5 w-5"></i>
+        </button>
+            </div>
+
+            <form id="aboutEditForm" class="space-y-4">
+                <div>
+                    <label for="aboutText" class="block text-gray-300 mb-2">About Me</label>
+                    <textarea id="aboutText" rows="6" class="w-full bg-gray-800 border border-gray-700 rounded-md py-2 px-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500">Passionate talent acquisition professional with over 8 years of experience in the creative industry. Specialized in identifying and recruiting top artistic talent across digital media, design, and development roles. Known for innovative recruiting strategies that align with company culture and creative vision.
+
+At Creative Innovation Hub, I've built diverse teams that have driven our company to the forefront of the digital arts industry, winning multiple awards for our collaborative projects and innovations.</textarea>
+                </div>
+
+                <div class="pt-4 flex justify-end gap-3">
+                    <button type="button" class="bg-gray-700 text-white py-2 px-4 rounded-md hover:bg-gray-600 transition-colors modal-close">
+            Cancel
+          </button>
+                    <button type="submit" class="bg-gradient-to-r from-[#a259ff] to-[#f857a6] text-white py-2 px-4 rounded-md hover:opacity-90 transition-opacity">
+            Save Changes
+          </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="expertiseAddModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4 hidden">
+        <div class="bg-[rgb(22,29,47)] rounded-lg p-6 w-full max-w-md max-h-[90vh] overflow-auto modal-content">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-xl font-bold gradient-text">
+                    Add Expertise
+                </h2>
+                <button class="text-gray-400 hover:text-white transition-colors modal-close">
+          <i data-feather="x" class="h-5 w-5"></i>
+        </button>
+            </div>
+
+            <form id="expertiseAddForm" class="space-y-4">
+                <div>
+                    <label for="expertiseInput" class="block text-gray-300 mb-2">New Expertise</label>
+                    <input type="text" id="expertiseInput" placeholder="e.g. Virtual Reality, Character Design" class="w-full bg-gray-800 border border-gray-700 rounded-md py-2 px-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                </div>
+
+                <div class="pt-4 flex justify-end gap-3">
+                    <button type="button" class="bg-gray-700 text-white py-2 px-4 rounded-md hover:bg-gray-600 transition-colors modal-close">
+            Cancel
+          </button>
+                    <button type="submit" class="bg-gradient-to-r from-[#a259ff] to-[#f857a6] text-white py-2 px-4 rounded-md hover:opacity-90 transition-opacity">
+            Add Expertise
+          </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="postModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4 hidden">
+        <div class="bg-[rgb(22,29,47)] rounded-lg p-6 w-full max-w-md max-h-[90vh] overflow-auto modal-content">
+            <div class="flex justify-between items-center mb-6">
+                <h2 id="postModalTitle" class="text-xl font-bold gradient-text">
+                    Edit Post
+                </h2>
+                <button class="text-gray-400 hover:text-white transition-colors modal-close">
+          <i data-feather="x" class="h-5 w-5"></i>
+        </button>
+            </div>
+
+            <form id="postForm" class="space-y-4">
+                <input type="hidden" id="postId" value="">
+                <div>
+                    <label for="postContent" class="block text-gray-300 mb-2">Content</label>
+                    <textarea id="postContent" placeholder="What's on your mind?" rows="4" class="w-full bg-gray-800 border border-gray-700 rounded-md py-2 px-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"></textarea>
+                </div>
+
+                <div class="bg-gray-800/70 border border-gray-700 rounded-md p-4">
+                    <div class="flex items-center justify-between mb-2">
+                        <label class="block text-gray-300 font-medium">Post Image</label>
+                        <span id="currentImageStatus" class="text-xs text-gray-400"></span>
+                    </div>
+
+                    <div id="imagePreview" class="mb-3">
+                        <img id="previewImage" src="" alt="Preview" class="w-full h-auto max-h-40 object-cover rounded-md" />
+                    </div>
+
+                    <div class="file-input-wrapper w-full">
+                        <button type="button" class="w-full bg-gray-700 text-white py-2 px-4 rounded-md hover:bg-gray-600 transition-colors flex items-center justify-center gap-2">
+              <i data-feather="image" class="h-4 w-4"></i>
+              <span>Replace Image</span>
+            </button>
+                        <input type="file" id="post-image-upload" accept="image/*" class="cursor-pointer" />
+                    </div>
+                    <p class="text-xs text-gray-400 mt-2">Choose an image from your device to replace the current one</p>
+                </div>
+
+                <div class="pt-4 flex justify-end gap-3">
+                    <button type="button" class="bg-gray-700 text-white py-2 px-4 rounded-md hover:bg-gray-600 transition-colors modal-close">
+            Cancel
+          </button>
+                    <button type="submit" id="postSubmitBtn" class="bg-gradient-to-r from-[#a259ff] to-[#f857a6] text-white py-2 px-4 rounded-md hover:opacity-90 transition-opacity">
+            Update Post
+          </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            feather.replace();
+        });
+
+        const appState = {
+            profile: {
+                id: 'prof-001',
+                name: 'Emily ',
+                title: 'Senior Talent Acquisition Manager',
+                company: 'Creative Innovation Hub',
+                location: 'Seattle, WA',
+                email: 'emily@creativehub.com',
+                website: 'www.creativehub.com',
+                avatar: 'https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg',
+                about: 'Passionate talent acquisition professional with over 8 years of experience in the creative industry. Specialized in identifying and recruiting top artistic talent across digital media, design, and development roles. Known for innovative recruiting strategies that align with company culture and creative vision.\n\nAt Creative Innovation Hub, I\'ve built diverse teams that have driven our company to the forefront of the digital arts industry, winning multiple awards for our collaborative projects and innovations.',
+                languages: ['English', 'Spanish', 'French'],
+                certifications: [{
+                    id: 'cert-001',
+                    name: 'Certified Recruitment Professional',
+                    year: 2023,
+                    backgroundColor: 'bg-blue-600',
+                }, {
+                    id: 'cert-002',
+                    name: 'Digital Arts Specialist',
+                    year: 2022,
+                    backgroundColor: 'bg-purple-600',
+                }, ],
+                expertise: [{
+                    id: 'exp-001',
+                    name: 'UX/UI Design'
+                }, {
+                    id: 'exp-002',
+                    name: '3D Animation'
+                }, {
+                    id: 'exp-003',
+                    name: 'Game Development'
+                }, {
+                    id: 'exp-004',
+                    name: 'Digital Illustration'
+                }, {
+                    id: 'exp-005',
+                    name: 'Frontend Development'
+                }, {
+                    id: 'exp-006',
+                    name: 'AR/VR'
+                }, {
+                    id: 'exp-007',
+                    name: 'Creative Direction'
+                }, {
+                    id: 'exp-008',
+                    name: 'Motion Graphics'
+                }, ],
+                stats: {
+                    hired: 150,
+                    interviews: 495,
+                    satisfaction: 98,
+                },
+            },
+            posts: [{
+                id: 'post-001',
+                userId: 'prof-001',
+                content: "Excited to announce that we've successfully completed our Q2 hiring goals, bringing on 15 incredible talents across design, development, and animation departments! Looking forward to seeing the amazing projects they'll contribute to. #CreativeHiring #DigitalArts",
+                imageUrl: 'https://images.pexels.com/photos/3184338/pexels-photo-3184338.jpeg',
+                timestamp: '2 hours ago',
+            }, {
+                id: 'post-002',
+                userId: 'prof-001',
+                content: "Attended the Digital Arts Career Fair today. Amazing to see so much talent in one place! If you're a 3D animator or character designer looking for opportunities, send me a message. We have several exciting positions open right now!",
+                timestamp: 'Yesterday',
+            }]
+        };
+
+        const mobileMenuButton = document.getElementById('mobileMenuButton');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const editProfileBtn = document.getElementById('editProfileBtn');
+        const shareBtn = document.getElementById('shareBtn');
+        const editAboutBtn = document.getElementById('editAboutBtn');
+        const addExpertiseBtn = document.getElementById('addExpertiseBtn');
+        const newPostBtn = document.getElementById('newPostBtn');
+        const changeAvatarBtn = document.getElementById('changeAvatarBtn');
+        const toast = document.getElementById('toast');
+        const modals = {
+            profileEdit: document.getElementById('profileEditModal'),
+            avatar: document.getElementById('avatarModal'),
+            share: document.getElementById('shareModal'),
+            aboutEdit: document.getElementById('aboutEditModal'),
+            expertiseAdd: document.getElementById('expertiseAddModal'),
+            post: document.getElementById('postModal')
+        };
+
+        // Avatar upload preview for main modal
+        document.getElementById('avatar-upload').addEventListener('change', function(e) {
+            if (e.target.files && e.target.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('avatar-preview').src = e.target.result;
+                };
+                reader.readAsDataURL(e.target.files[0]);
+            }
+        });
+
+        // Avatar upload from dedicated modal
+        document.getElementById('avatar-modal-upload').addEventListener('change', function(e) {
+            if (e.target.files && e.target.files[0]) {
+                const reader = new FileReader();
+                const saveBtn = document.getElementById('save-avatar-btn');
+
+                reader.onload = function(e) {
+                    document.getElementById('avatar-modal-preview').src = e.target.result;
+                    saveBtn.disabled = false;
+                };
+                reader.readAsDataURL(e.target.files[0]);
+            }
+        });
+
+        // Avatar form submission
+        document.getElementById('avatarForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const newAvatar = document.getElementById('avatar-modal-preview').src;
+            appState.profile.avatar = newAvatar;
+
+            // Update all profile avatar instances
+            document.getElementById('profile-avatar').src = newAvatar;
+            document.getElementById('avatar-preview').src = newAvatar;
+
+            // Update avatar in posts
+            document.querySelectorAll('[data-post-id]').forEach(post => {
+                if (post.querySelector('img')) {
+                    const postAuthorImg = post.querySelector('img');
+                    if (postAuthorImg.alt === appState.profile.name) {
+                        postAuthorImg.src = newAvatar;
+                    }
+                }
+            });
+
+            closeAllModals();
+            showToast('Profile photo updated successfully');
+        });
+
+        changeAvatarBtn.addEventListener('click', () => openModal('avatar'));
+
+        mobileMenuButton.addEventListener('click', () => {
+            const icon = mobileMenuButton.querySelector('[data-feather]');
+
+            if (mobileMenu.classList.contains('hidden')) {
+                mobileMenu.classList.remove('hidden');
+                feather.replace({
+                    'feather-menu': 'feather-x',
+                });
+            } else {
+                mobileMenu.classList.add('hidden');
+                feather.replace({
+                    'feather-x': 'feather-menu',
+                });
+            }
+
+            feather.replace();
+        });
+
+        function showToast(message) {
+            toast.textContent = message;
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+
+            setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+
+        function openModal(modalId) {
+            modals[modalId].classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeAllModals() {
+            for (const modal in modals) {
+                modals[modal].classList.add('hidden');
+            }
+            document.body.style.overflow = 'auto';
+        }
+
+        document.querySelectorAll('.modal-close').forEach(button => {
+            button.addEventListener('click', closeAllModals);
+        });
+
+        for (const modal in modals) {
+            modals[modal].addEventListener('click', (e) => {
+                if (e.target === modals[modal]) {
+                    closeAllModals();
+                }
+            });
+        }
+
+        editProfileBtn.addEventListener('click', () => openModal('profileEdit'));
+        shareBtn.addEventListener('click', () => openModal('share'));
+        editAboutBtn.addEventListener('click', () => openModal('aboutEdit'));
+        addExpertiseBtn.addEventListener('click', () => openModal('expertiseAdd'));
+        newPostBtn.addEventListener('click', () => {
+            document.getElementById('postId').value = '';
+            document.getElementById('postContent').value = '';
+            document.getElementById('imagePreview').style.display = 'none';
+            document.getElementById('postModalTitle').textContent = 'Create New Post';
+            document.getElementById('postSubmitBtn').textContent = 'Create Post';
+            openModal('post');
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeAllModals();
+            }
+        });
+
+        document.getElementById('profileEditForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            // Process avatar if selected
+            const avatarUpload = document.getElementById('avatar-upload');
+            if (avatarUpload.files && avatarUpload.files[0]) {
+                const newAvatar = document.getElementById('avatar-preview').src;
+                appState.profile.avatar = newAvatar;
+                document.getElementById('profile-avatar').src = newAvatar;
+
+                // Update all post avatars
+                document.querySelectorAll('[data-post-id]').forEach(post => {
+                    if (post.querySelector('img')) {
+                        const postAuthorImg = post.querySelector('img');
+                        if (postAuthorImg.alt === appState.profile.name) {
+                            postAuthorImg.src = newAvatar;
+                        }
+                    }
+                });
+            }
+
+            appState.profile.name = document.getElementById('name').value;
+            appState.profile.title = document.getElementById('title').value;
+            appState.profile.company = document.getElementById('company').value;
+            appState.profile.location = document.getElementById('location').value;
+            appState.profile.email = document.getElementById('email').value;
+            appState.profile.website = document.getElementById('website').value;
+
+            document.getElementById('profile-name').textContent = appState.profile.name;
+            document.getElementById('profile-title').textContent = appState.profile.title;
+            document.getElementById('profile-company').textContent = appState.profile.company;
+            document.getElementById('profile-location').textContent = appState.profile.location;
+            document.getElementById('profile-email').textContent = appState.profile.email;
+            document.getElementById('profile-email').href = `mailto:${appState.profile.email}`;
+            document.getElementById('profile-website').textContent = appState.profile.website;
+            document.getElementById('profile-website').href = `https://${appState.profile.website}`;
+
+            closeAllModals();
+            showToast('Profile updated successfully');
+        });
+
+        document.getElementById('aboutEditForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            appState.profile.about = document.getElementById('aboutText').value;
+
+            document.getElementById('profile-about').textContent = appState.profile.about;
+
+            closeAllModals();
+            showToast('About section updated successfully');
+        });
+
+        document.getElementById('expertiseAddForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const expertiseInput = document.getElementById('expertiseInput');
+            const expertise = expertiseInput.value.trim();
+
+            if (expertise) {
+                const exists = appState.profile.expertise.some(exp => exp.name.toLowerCase() === expertise.toLowerCase());
+
+                if (!exists) {
+                    const newExpertise = {
+                        id: `exp-${Date.now()}`,
+                        name: expertise
+                    };
+                    appState.profile.expertise.push(newExpertise);
+
+                    const container = document.getElementById('profile-expertise');
+                    const span = document.createElement('span');
+                    span.className = 'px-3 py-1 bg-gray-700 text-gray-300 rounded-full text-sm';
+                    span.textContent = expertise;
+                    container.appendChild(span);
+
+                    showToast('Expertise added successfully');
+                } else {
+                    showToast('This expertise already exists');
+                }
+            }
+
+            expertiseInput.value = '';
+            closeAllModals();
+        });
+
+        document.getElementById('copyLinkBtn').addEventListener('click', () => {
+            const profileLink = 'https://hobbyhive.com/recruiters/emily-thompson';
+            navigator.clipboard.writeText(profileLink)
+                .then(() => showToast('Link copied to clipboard!'))
+                .catch(() => showToast('Failed to copy link'));
+        });
+
+        document.querySelectorAll('.share-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const platform = btn.getAttribute('data-platform');
+                const profileLink = 'https://hobbyhive.com/recruiters/emily-thompson';
+                const shareText = 'Check out my recruiter profile on HobbyHive';
+
+                let url;
+                switch (platform) {
+                    case 'Facebook':
+                        url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(profileLink)}`;
+                        break;
+                    case 'Twitter':
+                        url = `https://twitter.com/intent/tweet?url=${encodeURIComponent(profileLink)}&text=${encodeURIComponent(shareText)}`;
+                        break;
+                    case 'LinkedIn':
+                        url = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(profileLink)}`;
+                        break;
+                }
+
+                window.open(url, '_blank');
+                showToast(`Shared on ${platform}!`);
+            });
+        });
+
+
+
+        // Post image upload handling
+        document.getElementById('post-image-upload').addEventListener('change', function(e) {
+            if (e.target.files && e.target.files[0]) {
+                const reader = new FileReader();
+
+                reader.onload = function(e) {
+                    document.getElementById('previewImage').src = e.target.result;
+                    document.getElementById('imagePreview').style.display = 'block';
+                    document.getElementById('currentImageStatus').textContent = 'New image selected';
+                };
+                reader.readAsDataURL(e.target.files[0]);
+            }
+        });
+
+        // Edit post functionality
+        function editPost(postId) {
+            const post = appState.posts.find(p => p.id === postId);
+
+            if (post) {
+                // Set form values
+                document.getElementById('postId').value = postId;
+                document.getElementById('postContent').value = post.content;
+                document.getElementById('postModalTitle').textContent = 'Edit Post';
+                document.getElementById('postSubmitBtn').textContent = 'Update Post';
+
+                // Handle image display
+                const imagePreview = document.getElementById('imagePreview');
+                const previewImage = document.getElementById('previewImage');
+                const statusText = document.getElementById('currentImageStatus');
+
+                if (post.imageUrl) {
+                    previewImage.src = post.imageUrl;
+                    imagePreview.style.display = 'block';
+                    statusText.textContent = 'Current image';
+                } else {
+                    imagePreview.style.display = 'none';
+                    statusText.textContent = 'No image';
+                }
+
+                openModal('post');
+            }
+        }
+
+        document.getElementById('postForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const postId = document.getElementById('postId').value;
+            const content = document.getElementById('postContent').value;
+            const imageFile = document.getElementById('post-image-upload').files[0];
+
+            if (content.trim()) {
+                if (postId) {
+                    // Edit existing post
+                    const post = appState.posts.find(p => p.id === postId);
+
+                    if (post) {
+                        // Update post content
+                        post.content = content;
+
+                        // Update post image if a new one was selected
+                        if (imageFile) {
+                            post.imageUrl = document.getElementById('previewImage').src;
+                        }
+
+                        // Update the DOM
+                        const postElem = document.querySelector(`[data-post-id="${postId}"]`);
+                        const contentP = postElem.querySelector('p.text-gray-300');
+                        contentP.textContent = content;
+
+                        // Handle image update in DOM
+                        let imgContainer = postElem.querySelector('div.mb-3:not(:first-child)');
+
+                        if (imageFile) {
+                            // Add or update image
+                            if (imgContainer) {
+                                // Update existing image
+                                imgContainer.querySelector('img').src = post.imageUrl;
+                            } else {
+                                // Create new image container
+                                imgContainer = document.createElement('div');
+                                imgContainer.className = 'mb-3';
+                                const img = document.createElement('img');
+                                img.src = post.imageUrl;
+                                img.alt = 'Post image';
+                                img.className = 'w-full h-auto rounded-lg';
+                                imgContainer.appendChild(img);
+                                contentP.after(imgContainer);
+                            }
+                        }
+
+                        showToast('Post updated successfully');
+                    }
+                } else {
+                    // Create new post
+                    const newPost = {
+                        id: `post-${Date.now()}`,
+                        userId: appState.profile.id,
+                        content,
+                        timestamp: 'Just now',
+                    };
+
+                    if (imageFile) {
+                        newPost.imageUrl = document.getElementById('previewImage').src;
+                    }
+
+                    appState.posts.unshift(newPost);
+
+                    // Add new post to DOM
+                    const postsContainer = document.getElementById('posts-container');
+                    const postElem = document.createElement('div');
+                    postElem.className = 'bg-gray-700/50 rounded-lg p-4';
+                    postElem.setAttribute('data-post-id', newPost.id);
+
+                    let postHtml = `
+            <div class="flex items-start gap-3 mb-3">
+              <img 
+                src="${appState.profile.avatar}" 
+                alt="${appState.profile.name}" 
+                class="w-10 h-10 rounded-full object-cover"
+              />
+              <div>
+                <h3 class="font-semibold text-white">${appState.profile.name}</h3>
+                <p class="text-gray-400 text-sm">${newPost.timestamp}</p>
+              </div>
+              <button class="ml-auto text-gray-400 hover:text-white post-edit-btn">
+                <i data-feather="more-vertical" class="h-4 w-4"></i>
+              </button>
+            </div>
+            <p class="text-gray-300 mb-3">${newPost.content}</p>
+          `;
+
+                    if (newPost.imageUrl) {
+                        postHtml += `
+              <div class="mb-3">
+                <img 
+                  src="${newPost.imageUrl}" 
+                  alt="Post image" 
+                  class="w-full h-auto rounded-lg"
+                />
+              </div>
+            `;
+                    }
+
+                    postElem.innerHTML = postHtml;
+                    postsContainer.prepend(postElem);
+
+                    feather.replace();
+
+                    addPostEventListeners(postElem);
+
+                    showToast('Post added successfully');
+                }
+
+                closeAllModals();
+            }
+        });
+
+        function addPostEventListeners(postElem) {
+            const editBtn = postElem.querySelector('.post-edit-btn');
+
+            editBtn.addEventListener('click', () => {
+                const postId = postElem.getAttribute('data-post-id');
+                editPost(postId);
+            });
+        }
+
+        // Add event listeners to existing posts
+        document.querySelectorAll('[data-post-id]').forEach(addPostEventListeners);
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,2008 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HobbyHive Recruiter Dashboard</title>
+
+    <!-- Include Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+      // Configure Tailwind with our custom theme
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              navy: {
+                700: "#1e293b",
+                800: "#172033",
+                900: "#0f172a",
+                950: "#0a0f1a",
+              },
+              purple: {
+                400: "#a78bfa",
+                600: "#7c3aed",
+                800: "#5b21b6",
+                900: "#4c1d95",
+              },
+              pink: {
+                400: "#f472b6",
+                600: "#db2777",
+                900: "#831843",
+              },
+            },
+          },
+        },
+      };
+    </script>
+
+    <style>
+      /* Base styles */
+      :root {
+        color-scheme: dark;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background-color: #0f172a;
+        color: white;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          Helvetica, Arial, sans-serif;
+      }
+
+      /* Custom scrollbar - updated with neutral color */
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+
+      ::-webkit-scrollbar-track {
+        background-color: #0f172a;
+        border-radius: 4px;
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background-color: #475569; /* Changed from purple to a neutral gray */
+        border-radius: 4px;
+      }
+
+      /* Modal styles */
+      .modal-content {
+        scrollbar-width: thin;
+        scrollbar-color: #475569 #0f172a; /* Updated to match the webkit scrollbar */
+      }
+
+      .modal-open {
+        overflow: hidden;
+      }
+
+      /* Animation utilities */
+      .animate-in {
+        animation: fadeIn 0.3s ease-in-out;
+      }
+
+      .slide-in-from-top-5 {
+        animation: slideInFromTop 0.3s ease-in-out;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      @keyframes slideInFromTop {
+        from {
+          transform: translateY(-20px);
+          opacity: 0;
+        }
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+
+      /* Common utility classes */
+      .gradient-text {
+        background: linear-gradient(to right, #a78bfa, #f472b6);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .gradient-bg {
+        background: linear-gradient(to right, #7c3aed, #db2777);
+      }
+
+      .icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .lucide-icon svg {
+        vertical-align: middle;
+      }
+
+      .hidden {
+        display: none !important;
+      }
+      /* Base styles */
+      body {
+        background-color: rgb(17, 24, 39);
+        color: white;
+        font-family:
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+      }
+
+      /* Navigation and dropdown styles */
+      nav {
+        background-color: rgba(17, 24, 39, 0.8);
+        backdrop-filter: blur(12px);
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        position: fixed;
+        width: 100%;
+        z-index: 50;
+      }
+
+      /* Dropdown styles */
+      .dropdown {
+        display: none;
+      }
+
+      .dropdown.active {
+        display: block;
+      }
+
+      .hover-item:hover {
+        background-color: rgba(126, 34, 206, 0.2);
+      }
+
+      /* File input styling */
+      .custom-file-input {
+        position: relative;
+        overflow: hidden;
+        display: inline-block;
+        cursor: pointer;
+      }
+
+      .custom-file-input input[type="file"] {
+        position: absolute;
+        font-size: 100px;
+        opacity: 0;
+        right: 0;
+        top: 0;
+        cursor: pointer;
+      }
+
+      /* Image preview */
+      .image-preview {
+        width: 100%;
+        height: 200px;
+        background-size: cover;
+        background-position: center;
+        border-radius: 8px;
+        margin-top: 8px;
+      }
+
+      /* Toggle switch */
+      .toggle-container {
+        position: relative;
+        display: flex;
+        align-items: center;
+        margin-bottom: 1.5rem;
+      }
+
+      .toggle-bg {
+        position: relative;
+        width: 200px;
+        height: 36px;
+        border-radius: 18px;
+        background-color: #172033;
+        border: 1px solid #2d3748;
+        display: flex;
+        cursor: pointer;
+      }
+
+      .toggle-button {
+        position: absolute;
+        left: 0;
+        top: 1px;
+        width: 100px;
+        height: 34px;
+        border-radius: 17px;
+        background: linear-gradient(to right, #7c3aed, #db2777);
+        transition: transform 0.3s ease;
+      }
+
+      .toggle-button.recruitment {
+        transform: translateX(100px);
+      }
+
+      .toggle-option {
+        z-index: 1;
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 500;
+        color: white;
+        transition: color 0.3s ease;
+      }
+    </style>
+
+    <!-- Add Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  </head>
+  <body class="bg-navy-900 text-white">
+    <!-- Gradient background -->
+    <div
+      class="fixed inset-0 bg-gradient-to-br from-purple-900/10 to-pink-900/10 -z-10"
+    ></div>
+
+    <!-- Navigation Bar -->
+    <nav>
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-16">
+          <!-- Logo -->
+          <div class="flex items-center space-x-2">
+            <i data-lucide="palette" class="h-8 w-8 text-purple-400"></i>
+            <span
+              class="text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent"
+            >
+              <a href="https://singular-kringle-5f87fe.netlify.app/recruiter%20dashboard">HobbyHive</a>
+            </span>
+          </div>
+
+          <!-- Navigation Icons -->
+          <div class="flex items-center">
+            <!-- Pricing Icon -->
+            <button
+              class="flex items-center justify-center h-10 w-10 text-purple-400 hover:text-purple-300 transition-colors"
+              onclick="window.location.href='https://singular-kringle-5f87fe.netlify.app/recruiter%20activitypage'"
+            >
+              <i data-lucide="dollar-sign" class="h-6 w-6"></i>
+            </button>
+
+            <!-- Divider -->
+            <div class="h-6 w-px bg-gray-700 mx-2"></div>
+
+            <!-- Notification Icon with Dropdown -->
+            <div class="relative">
+              <button
+                id="notificationBtn"
+                class="flex items-center justify-center h-10 w-10 text-purple-400 hover:text-purple-300 transition-colors relative"
+              >
+                <i data-lucide="bell" class="h-6 w-6"></i>
+                <span
+                  class="absolute -top-1 -right-1 bg-pink-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center"
+                  >3</span
+                >
+              </button>
+              <div
+                id="notificationDropdown"
+                class="dropdown absolute right-0 mt-2 w-80 bg-gray-900 rounded-md shadow-lg border border-gray-800 py-2 z-50"
+              >
+                <div class="px-4 py-3 border-b border-gray-800">
+                  <h3 class="text-lg font-semibold">Notifications</h3>
+                </div>
+                <div class="max-h-96 overflow-y-auto">
+                  <a
+                    href="#"
+                    class="block px-4 py-3 hover-item border-b border-gray-800"
+                  >
+                    <p class="font-medium">Application from a Sarah Johnson</p>
+                    <p class="text-sm text-gray-400 mt-1">2h ago</p>
+                  </a>
+                  <a
+                    href="#"
+                    class="block px-4 py-3 hover-item border-b border-gray-800"
+                  >
+                    <p class="font-medium">Your job post is about to expire</p>
+                    <p class="text-sm text-gray-400 mt-1">5h ago</p>
+                  </a>
+                  <a href="#" class="block px-4 py-3 hover-item">
+                    <p class="font-medium">
+                      New candidates match your saved search criteria
+                    </p>
+                    <p class="text-sm text-gray-400 mt-1">1d ago</p>
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <!-- Profile Icon with Dropdown -->
+            <div class="relative">
+              <button
+                id="profileBtn"
+                class="flex items-center justify-center h-10 w-10 text-purple-400 hover:text-purple-300 transition-colors ml-2"
+              >
+                <i data-lucide="user" class="h-6 w-6"></i>
+              </button>
+              <div
+                id="profileDropdown"
+                class="dropdown absolute right-0 mt-2 w-56 bg-gray-900 rounded-md shadow-lg border border-gray-800 py-2 z-50"
+              >
+                <div class="py-1">
+                  <a href="https://singular-kringle-5f87fe.netlify.app/recruiter%20profile%20page" class="block px-4 py-2 hover-item">My Profile</a>
+                </div>
+                <div class="py-1 border-t border-gray-800">
+                  <a href="https://singular-kringle-5f87fe.netlify.app/homepage" class="block px-4 py-2 hover-item text-red-400"
+                    >Logout</a
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <main class="container mx-auto px-4 py-8 pt-20">
+      <!-- Welcome and Post Button -->
+      <div class="flex justify-between items-center mb-8">
+        <h1 class="text-3xl font-bold text-white">Welcome back, Emily!</h1>
+        <button
+          id="create-post-btn"
+          class="flex items-center space-x-2 gradient-bg px-4 py-2 rounded-lg shadow-lg hover:opacity-90 transition-opacity"
+        >
+          <div class="icon h-5 w-5 text-white" data-lucide="plus"></div>
+          <span class="text-white font-semibold">Create Post</span>
+        </button>
+      </div>
+
+      <!-- Posts Section -->
+      <section
+        class="bg-navy-800/50 backdrop-blur-md rounded-lg p-6 mb-8 border border-slate-800"
+      >
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-2xl font-bold text-white">Your Posts</h2>
+          <div class="flex space-x-2">
+            <button
+              class="p-2 rounded-lg bg-navy-700 text-gray-300 hover:bg-purple-600/30 transition-colors"
+              id="posts-prev"
+            >
+              <div class="icon h-5 w-5" data-lucide="chevron-left"></div>
+            </button>
+            <button
+              class="p-2 rounded-lg bg-navy-700 text-gray-300 hover:bg-purple-600/30 transition-colors"
+              id="posts-next"
+            >
+              <div class="icon h-5 w-5" data-lucide="chevron-right"></div>
+            </button>
+          </div>
+        </div>
+        <div
+          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+          id="posts-container"
+        >
+          <!-- Posts will be inserted here -->
+        </div>
+      </section>
+
+      <!-- Recently Viewed Profiles -->
+      <section
+        class="bg-navy-800/50 backdrop-blur-md rounded-lg p-6 mb-8 border border-slate-800"
+      >
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-2xl font-bold text-white">
+            Recently Viewed Profiles
+          </h2>
+          <div class="flex space-x-2">
+            <button
+              class="p-2 rounded-lg bg-navy-700 text-gray-300 hover:bg-purple-600/30 transition-colors"
+              id="recent-profiles-prev"
+            >
+              <div class="icon h-5 w-5" data-lucide="chevron-left"></div>
+            </button>
+            <button
+              class="p-2 rounded-lg bg-navy-700 text-gray-300 hover:bg-purple-600/30 transition-colors"
+              id="recent-profiles-next"
+            >
+              <div class="icon h-5 w-5" data-lucide="chevron-right"></div>
+            </button>
+          </div>
+        </div>
+        <div
+          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+          id="recent-profiles-container"
+        >
+          <!-- Profiles will be inserted here -->
+        </div>
+      </section>
+
+      <!-- Saved Profiles -->
+      <section
+        class="bg-navy-800/50 backdrop-blur-md rounded-lg p-6 mb-8 border border-slate-800"
+      >
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-2xl font-bold text-white">Saved Profiles</h2>
+          <div class="flex space-x-2">
+            <button
+              class="p-2 rounded-lg bg-navy-700 text-gray-300 hover:bg-purple-600/30 transition-colors"
+              id="saved-profiles-prev"
+            >
+              <div class="icon h-5 w-5" data-lucide="chevron-left"></div>
+            </button>
+            <button
+              class="p-2 rounded-lg bg-navy-700 text-gray-300 hover:bg-purple-600/30 transition-colors"
+              id="saved-profiles-next"
+            >
+              <div class="icon h-5 w-5" data-lucide="chevron-right"></div>
+            </button>
+          </div>
+        </div>
+        <div
+          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+          id="saved-profiles-container"
+        >
+          <div class="col-span-3 text-center py-10 text-gray-400">
+            No saved profiles yet. Browse and save profiles to view them here.
+          </div>
+        </div>
+      </section>
+
+      <!-- Upcoming Events -->
+      <section
+        class="bg-navy-800/50 backdrop-blur-md rounded-lg p-6 mb-8 border border-slate-800"
+      >
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-2xl font-bold text-white">Upcoming Events</h2>
+          <div class="flex space-x-2">
+            <button
+              class="p-2 rounded-lg bg-navy-700 text-gray-300 hover:bg-purple-600/30 transition-colors"
+              id="events-prev"
+            >
+              <div class="icon h-5 w-5" data-lucide="chevron-left"></div>
+            </button>
+            <button
+              class="p-2 rounded-lg bg-navy-700 text-gray-300 hover:bg-purple-600/30 transition-colors"
+              id="events-next"
+            >
+              <div class="icon h-5 w-5" data-lucide="chevron-right"></div>
+            </button>
+          </div>
+        </div>
+        <div
+          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+          id="events-container"
+        >
+          <!-- Events will be inserted here -->
+        </div>
+      </section>
+    </main>
+
+    <!-- Modals -->
+    <div
+      id="profile-modal-container"
+      class="fixed inset-0 bg-black/80 flex items-center justify-center z-50 hidden animate-in"
+    ></div>
+    <div
+      id="post-modal-container"
+      class="fixed inset-0 bg-black/80 flex items-center justify-center z-50 hidden animate-in"
+    ></div>
+    <div
+      id="detailed-profile-modal-container"
+      class="fixed inset-0 bg-black/80 flex items-center justify-center z-50 hidden animate-in"
+    ></div>
+
+    <!-- Create Post Modal -->
+    <div
+      id="create-post-modal"
+      class="fixed inset-0 bg-black/80 flex items-center justify-center z-50 hidden animate-in"
+    >
+      <div
+        class="bg-navy-800 rounded-lg max-w-lg w-full max-h-[90vh] overflow-y-auto p-6 animate-in slide-in-from-top-5 border border-slate-800 modal-content"
+      >
+        <div class="flex justify-between items-center mb-6">
+          <h2 class="text-xl font-bold text-white">Create Post</h2>
+          <button
+            id="close-create-post-modal"
+            class="text-gray-500 hover:text-gray-300 flex items-center justify-center h-8 w-8"
+          >
+            <div class="icon h-6 w-6" data-lucide="x"></div>
+          </button>
+        </div>
+
+        <!-- Post Type Toggle -->
+        <div class="toggle-container">
+          <div class="toggle-bg">
+            <div class="toggle-button"></div>
+            <div class="toggle-option achievement-option">Achievement</div>
+            <div class="toggle-option recruitment-option">Recruitment</div>
+          </div>
+        </div>
+
+        <form id="create-post-form">
+          <input type="hidden" id="post-type" value="achievement" />
+
+          <!-- Common Fields -->
+          <div class="mb-4">
+            <label
+              for="post-title"
+              class="block text-sm font-medium text-gray-300 mb-1"
+              >Title</label
+            >
+            <input
+              type="text"
+              id="post-title"
+              class="w-full bg-navy-700 border border-slate-700 rounded-md py-2 px-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+              placeholder="Enter post title"
+              required
+            />
+          </div>
+
+          <div class="mb-4">
+            <label
+              for="post-description"
+              class="block text-sm font-medium text-gray-300 mb-1"
+              >Description</label
+            >
+            <textarea
+              id="post-description"
+              rows="3"
+              class="w-full bg-navy-700 border border-slate-700 rounded-md py-2 px-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+              placeholder="Enter post description"
+              required
+            ></textarea>
+          </div>
+
+          <!-- Image Upload -->
+          <div class="mb-6">
+            <label class="block text-sm font-medium text-gray-300 mb-1"
+              >Image</label
+            >
+            <div class="custom-file-input w-full">
+              <button
+                type="button"
+                class="bg-navy-700 border border-slate-700 rounded-md py-2 px-3 text-white w-full flex items-center justify-center space-x-2 hover:bg-navy-600 transition-colors"
+              >
+                <span class="icon h-5 w-5" data-lucide="image"></span>
+                <span>Choose Image</span>
+              </button>
+              <input type="file" id="post-image" accept="image/*" required />
+            </div>
+            <div id="image-preview" class="image-preview hidden"></div>
+          </div>
+
+          <!-- Hiring-specific Fields -->
+          <div id="recruitment-fields" class="hidden">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+              <div>
+                <label
+                  for="company-name"
+                  class="block text-sm font-medium text-gray-300 mb-1"
+                  >Company Name</label
+                >
+                <input
+                  type="text"
+                  id="company-name"
+                  class="w-full bg-navy-700 border border-slate-700 rounded-md py-2 px-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+                  placeholder="Enter company name"
+                />
+              </div>
+
+              <div>
+                <label
+                  for="job-location"
+                  class="block text-sm font-medium text-gray-300 mb-1"
+                  >Location</label
+                >
+                <input
+                  type="text"
+                  id="job-location"
+                  class="w-full bg-navy-700 border border-slate-700 rounded-md py-2 px-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+                  placeholder="Enter job location"
+                />
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+              <div>
+                <label
+                  for="salary-range"
+                  class="block text-sm font-medium text-gray-300 mb-1"
+                  >Salary Range</label
+                >
+                <input
+                  type="text"
+                  id="salary-range"
+                  class="w-full bg-navy-700 border border-slate-700 rounded-md py-2 px-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+                  placeholder="e.g., $80,000 - $120,000"
+                />
+              </div>
+
+              <div>
+                <label
+                  for="experience-required"
+                  class="block text-sm font-medium text-gray-300 mb-1"
+                  >Experience Required</label
+                >
+                <input
+                  type="text"
+                  id="experience-required"
+                  class="w-full bg-navy-700 border border-slate-700 rounded-md py-2 px-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+                  placeholder="e.g., 3+ years"
+                />
+              </div>
+            </div>
+
+            <div class="mb-4">
+              <label
+                for="job-requirements"
+                class="block text-sm font-medium text-gray-300 mb-1"
+                >Requirements (one per line)</label
+              >
+              <textarea
+                id="job-requirements"
+                rows="3"
+                class="w-full bg-navy-700 border border-slate-700 rounded-md py-2 px-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+                placeholder="Enter requirements, one per line"
+              ></textarea>
+            </div>
+
+            <div class="mb-6">
+              <label
+                for="job-responsibilities"
+                class="block text-sm font-medium text-gray-300 mb-1"
+                >Responsibilities (one per line)</label
+              >
+              <textarea
+                id="job-responsibilities"
+                rows="3"
+                class="w-full bg-navy-700 border border-slate-700 rounded-md py-2 px-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+                placeholder="Enter responsibilities, one per line"
+              ></textarea>
+            </div>
+          </div>
+
+          <!-- Submit Button -->
+          <div class="flex justify-end">
+            <button
+              type="submit"
+              class="gradient-bg text-white px-6 py-2 rounded-lg hover:opacity-90 transition-opacity flex items-center space-x-2"
+            >
+              <span class="icon h-5 w-5" data-lucide="save"></span>
+              <span>Create Post</span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer
+      class="w-full bg-navy-950/80 backdrop-blur-md border-t border-slate-800 py-12"
+    >
+      <div class="max-w-7xl mx-auto px-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div>
+            <h3 class="text-white text-lg font-semibold mb-4">
+              About HobbyHive
+            </h3>
+            <p class="text-gray-400 leading-relaxed">
+              Empowering creativity and skill development through interactive
+              learning experiences.
+            </p>
+          </div>
+
+          <div>
+            <h3 class="text-white text-lg font-semibold mb-4">Quick Links</h3>
+            <ul class="space-y-2">
+              <li>
+                <a
+                  href="https://sweet-croissant-7d5700.netlify.app/aboutus%20after%20loggining%20recruiter"
+                  class="text-gray-400 hover:text-purple-400 transition-colors"
+                  >About Us</a
+                >
+              </li>
+              <li>
+                <a
+                  href="https://singular-kringle-5f87fe.netlify.app/recruiter%20dashboard"
+                  class="text-gray-400 hover:text-purple-400 transition-colors"
+                  >Home</a
+                >
+              </li>
+              <li>
+                <a
+                  href="https://sweet-croissant-7d5700.netlify.app/success%20stories%20after%20logging%20in%20recruiter"
+                  class="text-gray-400 hover:text-purple-400 transition-colors"
+                  >Success Stories</a
+                >
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 class="text-white text-lg font-semibold mb-4">Support</h3>
+            <ul class="space-y-2">
+              <li>
+                <a
+                  href="https://singular-kringle-5f87fe.netlify.app/helpcenter"
+                  class="text-gray-400 hover:text-purple-400 transition-colors"
+                  >Help Center</a
+                >
+              </li>
+              <li>
+                <a
+                  href="https://singular-kringle-5f87fe.netlify.app/community%20guidelines"
+                  class="text-gray-400 hover:text-purple-400 transition-colors"
+                  >Commmunity Guidelines</a
+                >
+              </li>
+              <li>
+                <a
+                  href="https://singular-kringle-5f87fe.netlify.app/terms%20and%20conditions"
+                  class="text-gray-400 hover:text-purple-400 transition-colors"
+                  >Terms and Conditions</a
+                >
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 class="text-white text-lg font-semibold mb-4">
+              Connect With Us
+            </h3>
+            <div class="flex space-x-4">
+              <a
+                href="https://www.facebook.com/hobby.hive/"
+                class="text-gray-400 hover:text-purple-400 transition-colors"
+              >
+                <div class="icon h-5 w-5" data-lucide="facebook"></div>
+              </a>
+              <a
+                href="https://x.com/Hobby_Hive"
+                class="text-gray-400 hover:text-purple-400 transition-colors"
+              >
+                <div class="icon h-5 w-5" data-lucide="twitter"></div>
+              </a>
+              <a
+                href="https://www.instagram.com/hobby_hive9/"
+                class="text-gray-400 hover:text-purple-400 transition-colors"
+              >
+                <div class="icon h-5 w-5" data-lucide="instagram"></div>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="border-t border-slate-800 mt-8 pt-6 text-center">
+          <p class="text-gray-400 text-sm">
+            &copy; 2024 HobbyHive. All rights reserved.
+          </p>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      // Initialize Lucide icons
+      function initIcons() {
+        // Use the default initialization for Lucide icons
+        lucide.createIcons();
+
+        // Run a second pass to ensure all dynamically added icons are also initialized
+        setTimeout(() => {
+          lucide.createIcons();
+        }, 100);
+      }
+
+      // Data
+      const profiles = [
+        {
+          id: "1",
+          name: "Alex Johnson",
+          avatar:
+            "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400",
+          skills: ["React", "TypeScript", "Node.js"],
+          experience: "5 years at Google",
+          company: "Previous: Google",
+          bio: "Full stack developer with passion for building scalable applications",
+          location: "San Francisco, CA",
+          interests: ["Web Development", "Mobile Apps", "Cloud Computing"],
+          recentPosts: [
+            {
+              id: "p1",
+              type: "image",
+              content:
+                "https://images.unsplash.com/photo-1587620962725-abab7fe55159?w=500",
+              caption: "Working on a new React project with TypeScript!",
+            },
+            {
+              id: "p2",
+              type: "text",
+              content:
+                "Just finished my AWS certification. Excited to implement serverless architectures!",
+            },
+          ],
+        },
+        {
+          id: "2",
+          name: "Jane Smith",
+          avatar:
+            "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400",
+          skills: ["UI/UX", "Figma", "Adobe XD"],
+          experience: "3 years at Apple",
+          company: "Previous: Apple",
+          bio: "Creative designer focused on user-centered experiences",
+          location: "New York, NY",
+          interests: ["UX Research", "Digital Illustration", "Motion Design"],
+          recentPosts: [
+            {
+              id: "p3",
+              type: "image",
+              content:
+                "https://images.unsplash.com/photo-1561070791-2526d30994b5?w=500",
+              caption: "New design system I created for a fintech client",
+            },
+            {
+              id: "p4",
+              type: "text",
+              content:
+                "Excited to share that I'll be speaking at the UX Conference next month!",
+            },
+          ],
+        },
+        {
+          id: "3",
+          name: "Mike Johnson",
+          avatar:
+            "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400",
+          skills: ["Python", "Machine Learning", "TensorFlow"],
+          experience: "4 years at Microsoft",
+          company: "Previous: Microsoft",
+          bio: "AI enthusiast specializing in machine learning applications",
+          location: "Seattle, WA",
+          interests: ["Artificial Intelligence", "Data Science", "Robotics"],
+          recentPosts: [
+            {
+              id: "p5",
+              type: "image",
+              content:
+                "https://images.unsplash.com/photo-1591696331111-ef9586a5b17a?w=500",
+              caption: "My latest machine learning model in action!",
+            },
+            {
+              id: "p6",
+              type: "text",
+              content:
+                "Published a research paper on neural networks. Link in bio!",
+            },
+          ],
+        },
+        {
+          id: "4",
+          name: "Sarah Williams",
+          avatar:
+            "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400",
+          skills: ["Angular", "Java", "Spring Boot"],
+          experience: "6 years at Amazon",
+          company: "Previous: Amazon",
+          bio: "Full stack developer with strong backend expertise",
+          location: "Austin, TX",
+          interests: ["System Architecture", "Microservices", "DevOps"],
+          recentPosts: [
+            {
+              id: "p7",
+              type: "image",
+              content:
+                "https://images.unsplash.com/photo-1518773553398-650c184e0bb3?w=500",
+              caption: "Architecting a new microservices system",
+            },
+            {
+              id: "p8",
+              type: "text",
+              content:
+                "Just deployed our new CI/CD pipeline. Reduced build times by 40%!",
+            },
+          ],
+        },
+      ];
+
+      const posts = [
+        {
+          id: "1",
+          title: "Senior Frontend Developer",
+          type: "hiring",
+          description:
+            "Looking for an experienced frontend developer to join our growing team",
+          image:
+            "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400",
+          company: "HobbyHive Tech",
+          location: "San Francisco, CA",
+          salary: "$120,000 - $150,000",
+          experience: "5+ years",
+          requirements: [
+            "Strong experience with React and TypeScript",
+            "Experience with state management (Redux/MobX)",
+            "Understanding of modern CSS and responsive design",
+            "Experience with testing frameworks",
+          ],
+          responsibilities: [
+            "Lead frontend development initiatives",
+            "Mentor junior developers",
+            "Collaborate with design team",
+            "Implement new features and maintain existing ones",
+          ],
+          postedDate: "2025-03-25",
+        },
+        {
+          id: "2",
+          title: "Won Best Startup 2025",
+          type: "achievement",
+          description:
+            "Proud to announce our recent achievement at the Global Tech Awards",
+          image:
+            "https://images.unsplash.com/photo-1533750516457-a7f992034fec?w=400",
+          postedDate: "2025-03-20",
+        },
+        {
+          id: "3",
+          title: "UI/UX Designer",
+          type: "hiring",
+          description:
+            "Seeking a creative UI/UX designer to help shape our product experience",
+          image:
+            "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=400",
+          company: "HobbyHive Design",
+          location: "Remote",
+          salary: "$90,000 - $120,000",
+          experience: "3+ years",
+          requirements: [
+            "Proficiency in Figma and Adobe Creative Suite",
+            "Strong portfolio demonstrating UI/UX projects",
+            "Experience with user research and testing",
+            "Understanding of accessibility standards",
+          ],
+          responsibilities: [
+            "Create user-centered designs",
+            "Develop wireframes and prototypes",
+            "Conduct user research",
+            "Collaborate with development team",
+          ],
+          postedDate: "2025-03-23",
+        },
+        {
+          id: "4",
+          title: "Partnership with Tech Giants",
+          type: "achievement",
+          description:
+            "Excited to announce our strategic partnership with leading tech companies",
+          image:
+            "https://images.unsplash.com/photo-1552664730-d307ca884978?w=400",
+          postedDate: "2025-03-18",
+        },
+      ];
+
+      const events = [
+        {
+          id: "1",
+          title: "Interview with React Developer",
+          date: "2025-03-28 14:00",
+          link: "#",
+        },
+        {
+          id: "2",
+          title: "Team Planning Meeting",
+          date: "2025-03-29 10:00",
+          link: "#",
+        },
+        {
+          id: "3",
+          title: "Design Review Session",
+          date: "2025-03-30 15:00",
+          link: "#",
+        },
+        {
+          id: "4",
+          title: "Technical Assessment",
+          date: "2025-03-31 11:00",
+          link: "#",
+        },
+      ];
+
+      // App state
+      const appState = {
+        currentIndex: {
+          posts: 0,
+          recentProfiles: 0,
+          savedProfiles: 0,
+          events: 0,
+        },
+        savedPosts: [],
+        savedProfiles: [],
+      };
+
+      // Helper functions
+      function createProfileCard(profile) {
+        const card = document.createElement("div");
+        card.className =
+          "bg-navy-700 rounded-lg shadow-lg p-4 cursor-pointer hover:shadow-xl transition-shadow border border-slate-800";
+        card.onclick = () => showProfileModal(profile);
+
+        card.innerHTML = `
+        <div class="flex items-center space-x-4 mb-4">
+          <img src="${profile.avatar}" alt="${profile.name}" class="w-16 h-16 rounded-full object-cover border-2 border-purple-600" />
+          <div>
+            <h3 class="font-semibold text-lg text-white">${profile.name}</h3>
+            <p class="text-gray-400">${profile.company}</p>
+          </div>
+        </div>
+        <div class="flex flex-wrap gap-2 mb-4">
+          ${profile.skills
+            .map(
+              (skill) => `
+            <span class="bg-purple-800/50 text-purple-400 px-2 py-1 rounded text-sm">${skill}</span>
+          `,
+            )
+            .join("")}
+        </div>
+        <p class="text-gray-400">${profile.experience}</p>
+        <div class="mt-2 flex items-center text-sm text-gray-500">
+          <span class="icon h-4 w-4 mr-1 map-pin-icon-${profile.id}"></span>
+          <span>${profile.location}</span>
+        </div>
+      `;
+
+        // Add the icon after the card is added to the DOM
+        requestAnimationFrame(() => {
+          const icon = card.querySelector(`.map-pin-icon-${profile.id}`);
+          if (icon) {
+            icon.setAttribute("data-lucide", "map-pin");
+            // We'll rely on the global initialization later
+          }
+        });
+
+        return card;
+      }
+
+      function createPostCard(post) {
+        const card = document.createElement("div");
+        card.className =
+          "bg-navy-700 rounded-lg shadow-lg overflow-hidden cursor-pointer transform hover:scale-105 transition-all duration-300 border border-slate-800";
+        card.onclick = () => showPostModal(post);
+
+        card.innerHTML = `
+        <img src="${post.image}" alt="${post.title}" class="w-full h-48 object-cover" />
+        <div class="p-4">
+          <span class="inline-block px-2 py-1 rounded text-sm mb-2 ${
+            post.type === "hiring"
+              ? "bg-green-900/50 text-green-400"
+              : "bg-purple-800/50 text-purple-400"
+          }">
+            ${post.type === "hiring" ? "Hiring" : "Achievement"}
+          </span>
+          <h3 class="text-lg font-semibold mb-2 text-white">${post.title}</h3>
+          <p class="text-gray-400">${post.description}</p>
+          ${
+            post.type === "hiring" && post.location
+              ? `
+            <div class="mt-4 flex items-center text-sm text-gray-500">
+              <span class="icon h-4 w-4 mr-1 map-pin-icon-post-${post.id}"></span>
+              <span>${post.location}</span>
+            </div>
+          `
+              : ""
+          }
+        </div>
+      `;
+
+        // Add the icon after the card is added to the DOM
+        requestAnimationFrame(() => {
+          if (post.type === "hiring" && post.location) {
+            const icon = card.querySelector(`.map-pin-icon-post-${post.id}`);
+            if (icon) {
+              icon.setAttribute("data-lucide", "map-pin");
+              // We'll rely on the global initialization later
+            }
+          }
+        });
+
+        return card;
+      }
+
+      function createEventCard(event) {
+        const card = document.createElement("div");
+        card.className =
+          "bg-navy-700 rounded-lg shadow-lg p-4 border border-slate-800 hover:border-purple-600 transition-colors";
+
+        card.innerHTML = `
+        <h3 class="font-semibold text-lg mb-2 text-white">${event.title}</h3>
+        <p class="text-gray-400 mb-4">${new Date(event.date).toLocaleString()}</p>
+        <a
+          href="https://meet.google.com/ytz-dpkd-opp"
+          target="_blank"
+          class="inline-flex items-center space-x-2 gradient-bg px-4 py-2 rounded-lg hover:opacity-90 transition-opacity"
+        >
+          <span class="text-white">Join Meeting</span>
+        </a>
+      `;
+
+        return card;
+      }
+
+      function showProfileModal(profile) {
+        const isSaved = appState.savedProfiles.includes(profile.id);
+        const modalContainer = document.getElementById(
+          "profile-modal-container",
+        );
+
+        modalContainer.innerHTML = `
+        <div class="bg-navy-800 rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 animate-in slide-in-from-top-5 border border-slate-800">
+          <div class="flex justify-between items-start mb-6">
+            <div class="flex items-center space-x-4">
+              <img src="${profile.avatar}" alt="${profile.name}" class="w-20 h-20 rounded-full object-cover border-2 border-purple-600" />
+              <div>
+                <h2 class="text-2xl font-bold text-white">${profile.name}</h2>
+                <p class="text-gray-400">${profile.company}</p>
+                <p class="text-gray-500 flex items-center mt-1">
+                  <span class="icon h-4 w-4 mr-1" data-lucide="map-pin"></span>
+                  ${profile.location}
+                </p>
+              </div>
+            </div>
+            <button
+              id="close-profile-modal"
+              class="text-gray-500 hover:text-gray-300 text-2xl"
+            >
+              <span class="icon h-6 w-6" data-lucide="x"></span>
+            </button>
+          </div>
+          
+          <div class="mb-6">
+            <h3 class="font-semibold mb-2 text-white">Skills</h3>
+            <div class="flex flex-wrap gap-2">
+              ${profile.skills
+                .map(
+                  (skill) => `
+                <span class="bg-purple-800/50 text-purple-400 px-2 py-1 rounded">
+                  ${skill}
+                </span>
+              `,
+                )
+                .join("")}
+            </div>
+          </div>
+          
+          <div class="mb-6">
+            <h3 class="font-semibold mb-2 text-white">Bio</h3>
+            <p class="text-gray-400">${profile.bio}</p>
+          </div>
+          
+          <div class="flex space-x-4">
+            <button 
+              id="view-detailed-profile"
+              data-profile-id="${profile.id}"
+              class="flex-1 gradient-bg text-white px-4 py-2 rounded-lg hover:opacity-90 transition-opacity flex items-center justify-center space-x-2"
+            >
+              <span class="icon h-5 w-5" data-lucide="external-link"></span>
+              <span>View Profile</span>
+            </button>
+            <button 
+              id="toggle-save-profile"
+              data-profile-id="${profile.id}"
+              class="flex-1 border ${
+                isSaved
+                  ? "border-yellow-500 text-yellow-400"
+                  : "border-purple-600 text-purple-400"
+              } px-4 py-2 rounded-lg hover:bg-purple-900/20 transition-colors flex items-center justify-center space-x-2"
+            >
+              <span class="icon h-5 w-5" data-lucide="${isSaved ? "star" : "bookmark"}"></span>
+              <span>${isSaved ? "Saved" : "Save Profile"}</span>
+            </button>
+          </div>
+        </div>
+      `;
+
+        // Initialize icons
+        requestAnimationFrame(() => {
+          lucide.createIcons();
+        });
+
+        // Show modal
+        modalContainer.classList.remove("hidden");
+
+        // Event listeners
+        document
+          .getElementById("close-profile-modal")
+          .addEventListener("click", () => {
+            modalContainer.classList.add("hidden");
+          });
+
+        document
+          .getElementById("toggle-save-profile")
+          .addEventListener("click", () => {
+            const profileId = document
+              .getElementById("toggle-save-profile")
+              .getAttribute("data-profile-id");
+            toggleSaveProfile(profileId);
+            modalContainer.classList.add("hidden");
+            renderSavedProfiles();
+          });
+
+        // Event listener for viewing detailed profile
+        document
+          .getElementById("view-detailed-profile")
+          .addEventListener("click", () => {
+            const profileId = document
+              .getElementById("view-detailed-profile")
+              .getAttribute("data-profile-id");
+            showDetailedProfileModal(profiles.find((p) => p.id === profileId));
+            modalContainer.classList.add("hidden");
+          });
+      }
+
+      // New function to show the detailed profile modal popup
+      function showDetailedProfileModal(profile) {
+        const modalContainer = document.getElementById(
+          "detailed-profile-modal-container",
+        );
+
+        // Generate HTML for recent posts with more details - updated for more content
+        const recentPostsHTML = profile.recentPosts
+          .map((post) => {
+            if (post.type === "image") {
+              return `
+            <div class="mb-8 bg-navy-800 rounded-lg border border-slate-700 overflow-hidden">
+              <div class="p-4 border-b border-slate-700">
+                <div class="flex justify-between items-center">
+                  <h3 class="text-xl font-bold text-white">My Weekend Photography Project</h3>
+                  <button class="text-gray-500 hover:text-gray-300">
+                    <span class="icon h-5 w-5" data-lucide="x"></span>
+                  </button>
+                </div>
+                <p class="text-purple-400 text-sm">by ${profile.name}</p>
+              </div>
+              
+              <img src="${post.content}" alt="Post" class="w-full h-64 object-cover">
+              
+              <div class="p-4">
+                <h4 class="font-semibold text-white mb-2">Description</h4>
+                <p class="text-gray-300 mb-4">${post.caption} Spent the weekend exploring urban photography across the city. Would love feedback on my composition and lighting techniques. Anyone interested in joining me for photo walks on weekends?</p>
+                
+                <h4 class="font-semibold text-white mb-2">Files</h4>
+                <div class="space-y-2">
+                  <div class="flex items-center justify-between bg-navy-700 p-2 rounded-lg">
+                    <div class="flex items-center">
+                      <span class="icon h-5 w-5 text-red-400 mr-2" data-lucide="file-text"></span>
+                      <span class="text-gray-300">camera_settings.pdf</span>
+                    </div>
+                    <div class="text-xs text-gray-500">1.2 MB</div>
+                    <button class="text-gray-400 hover:text-white">
+                      <span class="icon h-5 w-5" data-lucide="download"></span>
+                    </button>
+                  </div>
+                  <div class="flex items-center justify-between bg-navy-700 p-2 rounded-lg">
+                    <div class="flex items-center">
+                      <span class="icon h-5 w-5 text-blue-400 mr-2" data-lucide="file-text"></span>
+                      <span class="text-gray-300">photo_tips.docx</span>
+                    </div>
+                    <div class="text-xs text-gray-500">580 KB</div>
+                    <button class="text-gray-400 hover:text-white">
+                      <span class="icon h-5 w-5" data-lucide="download"></span>
+                    </button>
+                  </div>
+                </div>
+                
+                <div class="flex justify-end text-gray-400 text-sm mt-5 pt-4 border-t border-gray-700">
+                  <div class="flex items-center">
+                    <span class="text-xs">Posted 3 days ago</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          `;
+            } else {
+              return `
+            <div class="mb-8 bg-navy-800 rounded-lg border border-slate-700 overflow-hidden">
+              <div class="p-4 border-b border-slate-700">
+                <div class="flex justify-between items-center">
+                  <h3 class="text-xl font-bold text-white">Technical Update</h3>
+                  <button class="text-gray-500 hover:text-gray-300">
+                    <span class="icon h-5 w-5" data-lucide="x"></span>
+                  </button>
+                </div>
+                <p class="text-purple-400 text-sm">by ${profile.name}</p>
+              </div>
+              
+              <div class="p-4">
+                <h4 class="font-semibold text-white mb-2">Description</h4>
+                <p class="text-gray-300 mb-4">${post.content} Recently implemented several optimizations that improved our application performance by 40%. Using advanced caching strategies and code-splitting techniques.</p>
+                
+                <div class="bg-navy-700 p-3 rounded-lg mb-4">
+                  <div class="flex items-center mb-2">
+                    <span class="icon h-5 w-5 text-yellow-400 mr-2" data-lucide="code"></span>
+                    <span class="text-gray-200 font-mono text-sm">Code Snippet</span>
+                  </div>
+                  <pre class="bg-navy-900 p-3 rounded text-gray-300 text-xs overflow-x-auto">
+// Optimization example
+const memoizedValue = useMemo(() => {
+  return computeExpensiveValue(a, b);
+}, [a, b]);
+                  </pre>
+                </div>
+                
+                <div class="flex justify-end text-gray-400 text-sm mt-5 pt-4 border-t border-gray-700">
+                  <div class="flex items-center">
+                    <span class="text-xs">Posted 5 days ago</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          `;
+            }
+          })
+          .join("");
+
+        modalContainer.innerHTML = `
+        <div class="bg-navy-800 rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto p-6 animate-in slide-in-from-top-5 border border-slate-800">
+          <div class="flex justify-between items-start mb-6">
+            <div class="flex items-start space-x-4">
+              <img src="${profile.avatar}" alt="${profile.name}" class="w-24 h-24 rounded-full object-cover border-2 border-purple-600" />
+              <div>
+                <h2 class="text-2xl font-bold text-white mb-1">${profile.name}</h2>
+                <p class="text-gray-400 mb-2">${profile.company}</p>
+                <p class="text-gray-500 flex items-center">
+                  <span class="icon h-4 w-4 mr-1" data-lucide="map-pin"></span>
+                  ${profile.location}
+                </p>
+                <div class="flex mt-3 space-x-3">
+                  <button id="connect-btn" class="border border-purple-600 text-purple-400 px-3 py-1 rounded-lg hover:bg-purple-900/20 transition-colors text-sm flex items-center justify-center space-x-1">
+                    <span class="icon h-4 w-4 mr-1" data-lucide="user-plus"></span>
+                    <span>Connect</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <button
+              id="close-detailed-profile-modal"
+              class="text-gray-500 hover:text-gray-300 text-2xl"
+            >
+              <span class="icon h-6 w-6" data-lucide="x"></span>
+            </button>
+          </div>
+          
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+            <div class="md:col-span-1">
+              <div class="bg-navy-700 rounded-lg p-4 border border-slate-700">
+                <h3 class="font-semibold mb-3 text-white text-lg">Bio-data</h3>
+                <div class="space-y-2">
+                  <div>
+                    <h4 class="text-sm font-medium text-purple-400">Experience</h4>
+                    <p class="text-gray-300">${profile.experience}</p>
+                  </div>
+                  <div>
+                    <h4 class="text-sm font-medium text-purple-400">Location</h4>
+                    <p class="text-gray-300">${profile.location}</p>
+                  </div>
+                  <div>
+                    <h4 class="text-sm font-medium text-purple-400">Education</h4>
+                    <p class="text-gray-300">M.S. Computer Science, Stanford University</p>
+                  </div>
+                  <div>
+                    <h4 class="text-sm font-medium text-purple-400">Languages</h4>
+                    <p class="text-gray-300">English (Fluent), Spanish (Intermediate)</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="md:col-span-2">
+              <div class="bg-navy-700 rounded-lg p-4 border border-slate-700">
+                <h3 class="font-semibold mb-3 text-white text-lg">About</h3>
+                <p class="text-gray-300">${profile.bio}</p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+            <div class="md:col-span-1">
+              <div class="bg-navy-700 rounded-lg p-4 border border-slate-700">
+                <h3 class="font-semibold mb-3 text-white text-lg">Skills</h3>
+                <div class="flex flex-wrap gap-2">
+                  ${profile.skills
+                    .map(
+                      (skill) => `
+                    <span class="bg-purple-800/50 text-purple-400 px-2 py-1 rounded">
+                      ${skill}
+                    </span>
+                  `,
+                    )
+                    .join("")}
+                </div>
+              </div>
+            </div>
+            
+            <div class="md:col-span-2">
+              <div class="bg-navy-700 rounded-lg p-4 border border-slate-700">
+                <h3 class="font-semibold mb-3 text-white text-lg">Fields of Interest</h3>
+                <div class="flex flex-wrap gap-2">
+                  ${profile.interests
+                    .map(
+                      (interest) => `
+                    <span class="bg-pink-900/50 text-pink-300 px-2 py-1 rounded">
+                      ${interest}
+                    </span>
+                  `,
+                    )
+                    .join("")}
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="mb-6">
+            <h3 class="font-semibold mb-4 text-white text-lg">Recent Posts</h3>
+            ${recentPostsHTML}
+          </div>
+          
+          <div class="flex justify-end">
+            <button 
+              id="close-detailed-view-btn"
+              class="px-4 py-2 border border-slate-600 text-gray-300 rounded-lg hover:bg-navy-700 transition-colors"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      `;
+
+        // Initialize icons
+        requestAnimationFrame(() => {
+          lucide.createIcons();
+        });
+
+        // Show modal
+        modalContainer.classList.remove("hidden");
+
+        // Event listeners
+        document
+          .getElementById("close-detailed-profile-modal")
+          .addEventListener("click", () => {
+            modalContainer.classList.add("hidden");
+          });
+
+        document
+          .getElementById("close-detailed-view-btn")
+          .addEventListener("click", () => {
+            modalContainer.classList.add("hidden");
+          });
+
+        // Connect button functionality
+        document
+          .getElementById("connect-btn")
+          .addEventListener("click", (e) => {
+            const btn = e.currentTarget;
+            btn.innerHTML = `
+          <span class="icon h-4 w-4 mr-1" data-lucide="check"></span>
+          <span>Connection request sent</span>
+        `;
+            btn.classList.remove("text-purple-400", "border-purple-600");
+            btn.classList.add(
+              "bg-green-800/50",
+              "text-green-400",
+              "border-green-600",
+            );
+            btn.disabled = true;
+
+            // Re-initialize the icon
+            requestAnimationFrame(() => {
+              lucide.createIcons();
+            });
+          });
+      }
+
+      function showPostModal(post) {
+        // Display hiring and achievement posts
+        if (post.type !== "hiring" && post.type !== "achievement") return;
+
+        const modalContainer = document.getElementById("post-modal-container");
+
+        modalContainer.innerHTML = `
+        <div class="bg-navy-800 rounded-lg max-w-3xl w-full max-h-[90vh] overflow-y-auto p-6 animate-in slide-in-from-top-5 border border-slate-800">
+          <div class="flex justify-between items-start mb-6">
+            <div>
+              <span class="inline-block px-2 py-1 rounded text-sm ${post.type === "hiring" ? "bg-green-900/50 text-green-400" : "bg-purple-800/50 text-purple-400"} mb-2">
+                ${post.type === "hiring" ? "Hiring" : "Achievement"}
+              </span>
+              <h2 class="text-2xl font-bold mb-2 text-white">${post.title}</h2>
+              <div class="flex items-center space-x-4 text-gray-400">
+                ${
+                  post.company
+                    ? `
+                  <span class="flex items-center">
+                    <span class="icon h-4 w-4 mr-1" data-lucide="building"></span>
+                    ${post.company}
+                  </span>
+                `
+                    : ""
+                }
+                ${
+                  post.location
+                    ? `
+                  <span class="flex items-center">
+                    <span class="icon h-4 w-4 mr-1" data-lucide="map-pin"></span>
+                    ${post.location}
+                  </span>
+                `
+                    : ""
+                }
+                ${
+                  post.experience
+                    ? `
+                  <span class="flex items-center">
+                    <span class="icon h-4 w-4 mr-1" data-lucide="briefcase"></span>
+                    ${post.experience}
+                  </span>
+                `
+                    : ""
+                }
+              </div>
+            </div>
+            <button
+              id="close-post-modal"
+              class="text-gray-500 hover:text-gray-300 text-2xl"
+            >
+              <span class="icon h-6 w-6" data-lucide="x"></span>
+            </button>
+          </div>
+          
+          ${
+            post.salary
+              ? `
+            <div class="mb-6">
+              <h3 class="font-semibold mb-2 text-white">Salary Range</h3>
+              <p class="text-gray-400">${post.salary}</p>
+            </div>
+          `
+              : ""
+          }
+
+          <div class="mb-6">
+            <h3 class="font-semibold mb-2 text-white">${post.type === "hiring" ? "Job Description" : "Description"}</h3>
+            <p class="text-gray-400">${post.description}</p>
+          </div>
+
+          ${
+            post.requirements
+              ? `
+            <div class="mb-6">
+              <h3 class="font-semibold mb-2 text-white">Requirements</h3>
+              <ul class="list-disc list-inside text-gray-400">
+                ${post.requirements.map((req) => `<li>${req}</li>`).join("")}
+              </ul>
+            </div>
+          `
+              : ""
+          }
+
+          ${
+            post.responsibilities
+              ? `
+            <div class="mb-6">
+              <h3 class="font-semibold mb-2 text-white">Responsibilities</h3>
+              <ul class="list-disc list-inside text-gray-400">
+                ${post.responsibilities.map((resp) => `<li>${resp}</li>`).join("")}
+              </ul>
+            </div>
+          `
+              : ""
+          }
+
+          <div class="flex">
+            <button 
+              id="delete-post-button"
+              data-post-id="${post.id}"
+              class="flex-1 bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors flex items-center justify-center space-x-2"
+            >
+              <span class="icon h-5 w-5" data-lucide="trash-2"></span>
+              <span>Delete</span>
+            </button>
+          </div>
+
+          <p class="text-sm text-gray-500 mt-4">
+            Posted on ${new Date(post.postedDate).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}
+          </p>
+        </div>
+      `;
+
+        // Initialize icons
+        requestAnimationFrame(() => {
+          lucide.createIcons();
+        });
+
+        // Show modal
+        modalContainer.classList.remove("hidden");
+
+        // Event listeners
+        document
+          .getElementById("close-post-modal")
+          .addEventListener("click", () => {
+            modalContainer.classList.add("hidden");
+          });
+
+        document
+          .getElementById("delete-post-button")
+          .addEventListener("click", (e) => {
+            const postId = e.currentTarget.getAttribute("data-post-id");
+            deletePost(postId);
+            modalContainer.classList.add("hidden");
+          });
+      }
+
+      function toggleSaveProfile(profileId) {
+        const index = appState.savedProfiles.indexOf(profileId);
+        if (index === -1) {
+          appState.savedProfiles.push(profileId);
+        } else {
+          appState.savedProfiles.splice(index, 1);
+        }
+      }
+
+      function deletePost(postId) {
+        const postIndex = posts.findIndex((p) => p.id === postId);
+        if (postIndex !== -1) {
+          posts.splice(postIndex, 1);
+          renderPosts();
+        }
+      }
+
+      // Render functions
+      function renderPosts() {
+        const container = document.getElementById("posts-container");
+        container.innerHTML = "";
+
+        const startIndex = appState.currentIndex.posts;
+        const endIndex = Math.min(startIndex + 3, posts.length);
+
+        for (let i = startIndex; i < endIndex; i++) {
+          container.appendChild(createPostCard(posts[i]));
+        }
+
+        // Initialize icons for the new elements
+        initIcons();
+      }
+
+      function renderRecentProfiles() {
+        const container = document.getElementById("recent-profiles-container");
+        container.innerHTML = "";
+
+        const startIndex = appState.currentIndex.recentProfiles;
+        const endIndex = Math.min(startIndex + 3, profiles.length);
+
+        for (let i = startIndex; i < endIndex; i++) {
+          container.appendChild(createProfileCard(profiles[i]));
+        }
+
+        // Initialize icons for the new elements
+        initIcons();
+      }
+
+      function renderSavedProfiles() {
+        const container = document.getElementById("saved-profiles-container");
+        container.innerHTML = "";
+
+        const savedProfiles = profiles.filter((profile) =>
+          appState.savedProfiles.includes(profile.id),
+        );
+
+        if (savedProfiles.length === 0) {
+          container.innerHTML = `
+          <div class="col-span-3 text-center py-10 text-gray-400">
+            No saved profiles yet. Browse and save profiles to view them here.
+          </div>
+        `;
+          return;
+        }
+
+        const startIndex = appState.currentIndex.savedProfiles;
+        const endIndex = Math.min(startIndex + 3, savedProfiles.length);
+
+        for (let i = startIndex; i < endIndex; i++) {
+          container.appendChild(createProfileCard(savedProfiles[i]));
+        }
+
+        // Initialize icons for the new elements
+        initIcons();
+      }
+
+      function renderEvents() {
+        const container = document.getElementById("events-container");
+        container.innerHTML = "";
+
+        const startIndex = appState.currentIndex.events;
+        const endIndex = Math.min(startIndex + 3, events.length);
+
+        for (let i = startIndex; i < endIndex; i++) {
+          container.appendChild(createEventCard(events[i]));
+        }
+
+        // Initialize icons for the new elements
+        initIcons();
+      }
+
+      // Initialize function
+      function init() {
+        // Initialize Lucide icons
+        initIcons();
+
+        // Render initial data
+        renderPosts();
+        renderRecentProfiles();
+        renderSavedProfiles();
+        renderEvents();
+
+        // Add event listeners for navigation
+        document.getElementById("posts-prev").addEventListener("click", () => {
+          if (appState.currentIndex.posts > 0) {
+            appState.currentIndex.posts = Math.max(
+              0,
+              appState.currentIndex.posts - 3,
+            );
+            renderPosts();
+          }
+        });
+
+        document.getElementById("posts-next").addEventListener("click", () => {
+          if (appState.currentIndex.posts + 3 < posts.length) {
+            appState.currentIndex.posts += 3;
+            renderPosts();
+          }
+        });
+
+        document
+          .getElementById("recent-profiles-prev")
+          .addEventListener("click", () => {
+            if (appState.currentIndex.recentProfiles > 0) {
+              appState.currentIndex.recentProfiles = Math.max(
+                0,
+                appState.currentIndex.recentProfiles - 3,
+              );
+              renderRecentProfiles();
+            }
+          });
+
+        document
+          .getElementById("recent-profiles-next")
+          .addEventListener("click", () => {
+            if (appState.currentIndex.recentProfiles + 3 < profiles.length) {
+              appState.currentIndex.recentProfiles += 3;
+              renderRecentProfiles();
+            }
+          });
+
+        document
+          .getElementById("saved-profiles-prev")
+          .addEventListener("click", () => {
+            if (appState.currentIndex.savedProfiles > 0) {
+              appState.currentIndex.savedProfiles = Math.max(
+                0,
+                appState.currentIndex.savedProfiles - 3,
+              );
+              renderSavedProfiles();
+            }
+          });
+
+        document
+          .getElementById("saved-profiles-next")
+          .addEventListener("click", () => {
+            const savedProfilesCount = profiles.filter((profile) =>
+              appState.savedProfiles.includes(profile.id),
+            ).length;
+            if (appState.currentIndex.savedProfiles + 3 < savedProfilesCount) {
+              appState.currentIndex.savedProfiles += 3;
+              renderSavedProfiles();
+            }
+          });
+
+        document.getElementById("events-prev").addEventListener("click", () => {
+          if (appState.currentIndex.events > 0) {
+            appState.currentIndex.events = Math.max(
+              0,
+              appState.currentIndex.events - 3,
+            );
+            renderEvents();
+          }
+        });
+
+        document.getElementById("events-next").addEventListener("click", () => {
+          if (appState.currentIndex.events + 3 < events.length) {
+            appState.currentIndex.events += 3;
+            renderEvents();
+          }
+        });
+
+        // Create post modal
+        const createPostBtn = document.getElementById("create-post-btn");
+        const createPostModal = document.getElementById("create-post-modal");
+        const closeCreatePostModalBtn = document.getElementById(
+          "close-create-post-modal",
+        );
+
+        createPostBtn.addEventListener("click", () => {
+          createPostModal.classList.remove("hidden");
+        });
+
+        closeCreatePostModalBtn.addEventListener("click", () => {
+          createPostModal.classList.add("hidden");
+        });
+
+        // Toggle post type
+        const toggleBg = document.querySelector(".toggle-bg");
+        const toggleButton = document.querySelector(".toggle-button");
+        const achievementOption = document.querySelector(".achievement-option");
+        const recruitmentOption = document.querySelector(".recruitment-option");
+        const postTypeInput = document.getElementById("post-type");
+        const recruitmentFields = document.getElementById("recruitment-fields");
+
+        toggleBg.addEventListener("click", () => {
+          toggleButton.classList.toggle("recruitment");
+
+          if (toggleButton.classList.contains("recruitment")) {
+            achievementOption.style.color = "#9ca3af"; // text-gray-400
+            recruitmentOption.style.color = "#ffffff"; // text-white
+            postTypeInput.value = "hiring"; // Changed from recruitment to hiring
+            recruitmentFields.classList.remove("hidden");
+          } else {
+            achievementOption.style.color = "#ffffff"; // text-white
+            recruitmentOption.style.color = "#9ca3af"; // text-gray-400
+            postTypeInput.value = "achievement";
+            recruitmentFields.classList.add("hidden");
+          }
+        });
+
+        // Image upload preview
+        const postImageInput = document.getElementById("post-image");
+        const imagePreview = document.getElementById("image-preview");
+
+        postImageInput.addEventListener("change", (e) => {
+          if (e.target.files && e.target.files[0]) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+              imagePreview.style.backgroundImage = `url('${e.target.result}')`;
+              imagePreview.classList.remove("hidden");
+            };
+            reader.readAsDataURL(e.target.files[0]);
+          } else {
+            imagePreview.classList.add("hidden");
+            imagePreview.style.backgroundImage = "";
+          }
+        });
+
+        // Form submission
+        document
+          .getElementById("create-post-form")
+          .addEventListener("submit", (e) => {
+            e.preventDefault();
+
+            const postType = document.getElementById("post-type").value;
+            const title = document.getElementById("post-title").value;
+            const description =
+              document.getElementById("post-description").value;
+
+            // New post data
+            const newPost = {
+              id: (posts.length + 1).toString(),
+              title,
+              description,
+              type: postType === "recruitment" ? "hiring" : postType, // Convert recruitment to hiring
+              image: imagePreview.style.backgroundImage.slice(5, -2), // Get URL from background-image
+              postedDate: new Date().toISOString().split("T")[0],
+            };
+
+            // Add job-specific fields if type is hiring
+            if (postType === "hiring") {
+              newPost.company = document.getElementById("company-name").value;
+              newPost.location = document.getElementById("job-location").value;
+              newPost.salary = document.getElementById("salary-range").value;
+              newPost.experience = document.getElementById(
+                "experience-required",
+              ).value;
+
+              // Parse requirements
+              const requirementsText =
+                document.getElementById("job-requirements").value;
+              if (requirementsText.trim()) {
+                newPost.requirements = requirementsText
+                  .split("\n")
+                  .filter((line) => line.trim() !== "");
+              }
+
+              // Parse responsibilities
+              const responsibilitiesText = document.getElementById(
+                "job-responsibilities",
+              ).value;
+              if (responsibilitiesText.trim()) {
+                newPost.responsibilities = responsibilitiesText
+                  .split("\n")
+                  .filter((line) => line.trim() !== "");
+              }
+            }
+
+            // Add post to array and render
+            posts.unshift(newPost);
+            renderPosts();
+
+            // Reset form and close modal
+            document.getElementById("create-post-form").reset();
+            imagePreview.classList.add("hidden");
+            imagePreview.style.backgroundImage = "";
+            recruitmentFields.classList.add("hidden");
+            toggleButton.classList.remove("recruitment");
+            achievementOption.style.color = "#ffffff";
+            recruitmentOption.style.color = "#9ca3af";
+            postTypeInput.value = "achievement";
+            createPostModal.classList.add("hidden");
+          });
+
+        // Initialize dropdown functionality
+        const profileBtn = document.getElementById("profileBtn");
+        const profileDropdown = document.getElementById("profileDropdown");
+        const notificationBtn = document.getElementById("notificationBtn");
+        const notificationDropdown = document.getElementById(
+          "notificationDropdown",
+        );
+
+        let activeDropdown = null;
+
+        // Toggle profile dropdown
+        profileBtn.addEventListener("click", function (e) {
+          e.stopPropagation();
+          if (activeDropdown && activeDropdown !== profileDropdown) {
+            activeDropdown.classList.remove("active");
+          }
+          profileDropdown.classList.toggle("active");
+          activeDropdown = profileDropdown.classList.contains("active")
+            ? profileDropdown
+            : null;
+
+          // Close notification dropdown if open
+          notificationDropdown.classList.remove("active");
+        });
+
+        // Toggle notification dropdown
+        notificationBtn.addEventListener("click", function (e) {
+          e.stopPropagation();
+          if (activeDropdown && activeDropdown !== notificationDropdown) {
+            activeDropdown.classList.remove("active");
+          }
+          notificationDropdown.classList.toggle("active");
+          activeDropdown = notificationDropdown.classList.contains("active")
+            ? notificationDropdown
+            : null;
+
+          // Close profile dropdown if open
+          profileDropdown.classList.remove("active");
+        });
+
+        // Close dropdowns when clicking outside
+        document.addEventListener("click", function () {
+          if (activeDropdown) {
+            activeDropdown.classList.remove("active");
+            activeDropdown = null;
+          }
+        });
+
+        // Prevent dropdown from closing when clicking inside
+        profileDropdown.addEventListener("click", function (e) {
+          e.stopPropagation();
+        });
+
+        notificationDropdown.addEventListener("click", function (e) {
+          e.stopPropagation();
+        });
+      }
+
+      // Initialize everything when the DOM is loaded
+      document.addEventListener("DOMContentLoaded", init);
+    </script>
+  </body>
+</html>

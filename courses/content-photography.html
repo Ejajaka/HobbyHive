@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HobbyHive - Discover Creative Hobbies</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23A78BFA' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='lucide lucide-palette-icon lucide-palette'%3E%3Cpath d='M12 22a1 1 0 0 1 0-20 10 9 0 0 1 10 9 5 5 0 0 1-5 5h-2.25a1.75 1.75 0 0 0-1.4 2.8l.3.4a1.75 1.75 0 0 1-1.4 2.8z'/%3E%3Ccircle cx='13.5' cy='6.5' r='.5' fill='%23A78BFA'/%3E%3Ccircle cx='17.5' cy='10.5' r='.5' fill='%23A78BFA'/%3E%3Ccircle cx='6.5' cy='12.5' r='.5' fill='%23A78BFA'/%3E%3Ccircle cx='8.5' cy='7.5' r='.5' fill='%23A78BFA'/%3E%3C/svg%3E" />
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: rgb(10, 17, 34);
+            color: white;
+            line-height: 1.5;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .header {
+            background-color: rgb(22, 29, 47);
+            padding: 1rem 1.5rem;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: white;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        
+        .back-link:hover {
+            color: #7c3aed;
+        }
+        
+        .arrow-left {
+            width: 24px;
+            height: 24px;
+        }
+        
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 1.5rem;
+            max-width: 80rem;
+            margin: 0 auto;
+            padding: 1.5rem;
+            flex: 1;
+        }
+        
+        .video-container {
+            background-color: rgb(22, 29, 47);
+            border-radius: 0.5rem;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        
+        .video-player {
+            position: relative;
+            background: black;
+            aspect-ratio: 16 / 9;
+        }
+        
+        .video-info {
+            padding: 1.25rem;
+        }
+        
+        .video-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: white;
+        }
+        
+        .video-stats {
+            display: flex;
+            gap: 1rem;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+        }
+        
+        .video-description {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.875rem;
+            line-height: 1.6;
+        }
+        
+        .recommendations {
+            min-width: 0;
+        }
+        
+        .recommendations h2 {
+            font-size: 1.25rem;
+            font-weight: 500;
+            margin-bottom: 1rem;
+        }
+        
+        .video-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .video-item {
+            display: grid;
+            grid-template-columns: 168px 1fr;
+            gap: 0.75rem;
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .video-item:hover {
+            background-color: rgb(22, 29, 47);
+        }
+        
+        .thumbnail-container {
+            position: relative;
+            aspect-ratio: 16 / 9;
+            border-radius: 0.25rem;
+            overflow: hidden;
+        }
+        
+        .thumbnail {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .duration {
+            position: absolute;
+            bottom: 0.25rem;
+            right: 0.25rem;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            font-size: 0.75rem;
+            padding: 0.125rem 0.25rem;
+            border-radius: 0.125rem;
+        }
+        
+        .video-item-info h3 {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: white;
+            margin-bottom: 0.25rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .video-item-stats {
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        .footer {
+            background-color: rgba(17, 24, 39, 0.8);
+            backdrop-filter: blur(8px);
+            border-top: 1px solid #1f2937;
+            padding: 3rem 1.5rem 1.5rem;
+        }
+        
+        .footer-container {
+            max-width: 80rem;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+        
+        .footer-section h3 {
+            color: white;
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        
+        .footer-section p {
+            color: #9ca3af;
+            line-height: 1.5;
+        }
+        
+        .footer-section ul {
+            list-style: none;
+        }
+        
+        .footer-section ul li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .footer-section ul li a {
+            color: #9ca3af;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        
+        .footer-section ul li a:hover {
+            color: #a855f7;
+        }
+        
+        .social-icons {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .social-icon {
+            color: #9ca3af;
+            transition: color 0.2s;
+        }
+        
+        .social-icon:hover {
+            color: #a855f7;
+        }
+        
+        .social-icon i {
+            width: 1.5rem;
+            height: 1.5rem;
+        }
+        
+        .footer-bottom {
+            max-width: 80rem;
+            margin: 2rem auto 0;
+            padding-top: 1.5rem;
+            border-top: 1px solid #374151;
+            text-align: center;
+            color: #9ca3af;
+            font-size: 0.875rem;
+        }
+        
+        @media (max-width: 1024px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+            .recommendations {
+                max-width: none;
+            }
+            .video-list {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+                gap: 1rem;
+            }
+            .footer-container {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header class="header">
+        <a href="https://singular-kringle-5f87fe.netlify.app/mycourse" class="back-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="arrow-left"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>            Go Back to My Course
+        </a>
+    </header>
+
+    <div class="container">
+        <main class="main-content">
+            <div class="video-container">
+                <div id="wistia-player" class="video-player"></div>
+                <div class="video-info">
+                    <h1 id="video-title" class="video-title"></h1>
+                    <div class="video-stats">
+                        <span id="view-count"></span>
+                        <span id="upload-date"></span>
+                    </div>
+                    <p id="video-description" class="video-description"></p>
+                </div>
+            </div>
+        </main>
+
+        <aside class="recommendations">
+            <h2>Recommended Videos</h2>
+            <div id="recommended-videos" class="video-list"></div>
+        </aside>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-section">
+                <h3>About HobbyHive</h3>
+                <p>Empowering creativity and skill development through interactive learning experiences.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="https://singular-kringle-5f87fe.netlify.app/aboutus%20after%20logginin" class="hover:text-purple-400">About Us</a></li>
+                    <li><a href="https://singular-kringle-5f87fe.netlify.app/freelancer%20home%20page" class="hover:text-purple-400">Home</a></li>
+                    <li><a href="https://singular-kringle-5f87fe.netlify.app/success%20stories%20after%20logging%20in" class="hover:text-purple-400">Success stories</a></li>
+                    <li><a href="https://singular-kringle-5f87fe.netlify.app/mycourse" class="hover:text-purple-400">My Courses</a></li>
+                    <li><a href="https://singular-kringle-5f87fe.netlify.app/howtobecomeinstructor" class="hover:text-purple-400">Become an Instructor</a></li>
+                    
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Support</h3>
+                <ul>
+                    <li><a href="https://singular-kringle-5f87fe.netlify.app/helpcenter" class="hover:text-purple-400">Help Center</a></li>
+            <li><a href="https://singular-kringle-5f87fe.netlify.app/community%20guidelines" class="hover:text-purple-400">Community Guidelines</a></li>
+            <li><a href="https://singular-kringle-5f87fe.netlify.app/terms%20and%20conditions" class="hover:text-purple-400">Terms And Conditions</a></li>
+                    
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Connect With Us</h3>
+                <div class="social-icons">
+                    <a href="https://www.facebook.com/hobby.hive/" class="social-icon"><i data-lucide="facebook"></i></a>
+                    <a href="https://x.com/Hobby_Hive" class="social-icon"><i data-lucide="twitter"></i></a>
+                    <a href="https://www.instagram.com/hobby_hive9/" class="social-icon"><i data-lucide="instagram"></i></a>
+
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 HobbyHive. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        const videos = [{
+            id: '1',
+            title: 'Mastering Landscape Photography',
+            description: 'Professional techniques for capturing stunning landscape photographs, including composition and lighting tips.',
+            thumbnailUrl: 'https://images.pexels.com/photos/1287145/pexels-photo-1287145.jpeg',
+            wistiaId: 'rl9adqi7dd',
+            views: 15420,
+            uploadDate: '2 weeks ago',
+            duration: '12:34'
+        }, {
+            id: '2',
+            title: 'Portrait Photography Lighting',
+            description: 'Essential lighting setups and techniques for creating professional portrait photography.',
+            thumbnailUrl: 'https://images.pexels.com/photos/3744162/pexels-photo-3744162.jpeg',
+            wistiaId: 'dtta7nx0pm',
+            views: 8743,
+            uploadDate: '3 days ago',
+            duration: '18:21'
+        }, {
+            id: '3',
+            title: 'Night Photography Guide',
+            description: 'Complete guide to capturing stunning night scenes and astrophotography.',
+            thumbnailUrl: 'https://images.pexels.com/photos/325521/pexels-photo-325521.jpeg',
+            wistiaId: 'epiwehsxjz',
+            views: 23567,
+            uploadDate: '1 month ago',
+            duration: '24:15'
+        }, {
+            id: '4',
+            title: 'Street Photography Essentials',
+            description: 'Capture the energy of urban life with these street photography techniques.',
+            thumbnailUrl: 'https://images.pexels.com/photos/792381/pexels-photo-792381.jpeg',
+            wistiaId: 'hwrrqleovl',
+            views: 12098,
+            uploadDate: '2 months ago',
+            duration: '15:47'
+        }];
+
+        class VideoPlayer {
+            constructor() {
+                this.currentVideoId = '1';
+                this.initializeWistiaPlayer();
+                this.renderRecommendedVideos();
+            }
+
+            initializeWistiaPlayer() {
+                const playerScript = document.createElement('script');
+                playerScript.src = 'https://fast.wistia.com/player.js';
+                playerScript.async = true;
+                document.head.appendChild(playerScript);
+
+                this.loadVideo(this.currentVideoId);
+            }
+
+            loadVideo(id) {
+                const video = videos.find(v => v.id === id);
+                if (!video) return;
+
+                this.currentVideoId = id;
+
+                const playerContainer = document.getElementById('wistia-player');
+                playerContainer.innerHTML = '';
+
+                const embedScript = document.createElement('script');
+                embedScript.src = `https://fast.wistia.com/embed/${video.wistiaId}.js`;
+                embedScript.async = true;
+                embedScript.type = 'module';
+                document.head.appendChild(embedScript);
+
+                const style = document.createElement('style');
+                style.textContent = `
+                    wistia-player[media-id='${video.wistiaId}']:not(:defined) {
+                        background: center / contain no-repeat url('https://fast.wistia.com/embed/medias/${video.wistiaId}/swatch');
+                        display: block;
+                        filter: blur(5px);
+                        padding-top: 56.25%;
+                    }
+                `;
+                playerContainer.appendChild(style);
+
+                const wistiaPlayer = document.createElement('wistia-player');
+                wistiaPlayer.setAttribute('media-id', video.wistiaId);
+                wistiaPlayer.setAttribute('aspect', '1.7777777777777777');
+                wistiaPlayer.className = 'w-full h-full';
+                playerContainer.appendChild(wistiaPlayer);
+
+                document.getElementById('video-title').textContent = video.title;
+                document.getElementById('view-count').textContent = this.formatViews(video.views);
+                document.getElementById('upload-date').textContent = video.uploadDate;
+                document.getElementById('video-description').textContent = video.description;
+
+                this.renderRecommendedVideos();
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            }
+
+            formatViews(views) {
+                if (views >= 1000000) {
+                    return `${(views / 1000000).toFixed(1)}M views`;
+                } else if (views >= 1000) {
+                    return `${(views / 1000).toFixed(1)}K views`;
+                }
+                return `${views} views`;
+            }
+
+            renderRecommendedVideos() {
+                const container = document.getElementById('recommended-videos');
+                const recommendedVideos = videos.filter(v => v.id !== this.currentVideoId);
+
+                container.innerHTML = recommendedVideos.map(video => `
+                    <div class="video-item" onclick="videoPlayer.loadVideo('${video.id}')">
+                        <div class="thumbnail-container">
+                            <img class="thumbnail" src="${video.thumbnailUrl}" alt="${video.title}">
+                            <div class="duration">${video.duration}</div>
+                        </div>
+                        <div class="video-item-info">
+                            <h3>${video.title}</h3>
+                            <div class="video-item-stats">
+                                ${this.formatViews(video.views)} • ${video.uploadDate}
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        // Initialize the video player when the page loads
+        const videoPlayer = new VideoPlayer();
+    </script>
+
+    <!-- Add Lucide Icons for the footer -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        // Initialize Lucide icons after the DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+        });
+    </script>
+</body>
+
+</html>

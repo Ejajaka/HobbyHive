@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23A78BFA' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='lucide lucide-palette-icon lucide-palette'%3E%3Cpath d='M12 22a1 1 0 0 1 0-20 10 9 0 0 1 10 9 5 5 0 0 1-5 5h-2.25a1.75 1.75 0 0 0-1.4 2.8l.3.4a1.75 1.75 0 0 1-1.4 2.8z'/%3E%3Ccircle cx='13.5' cy='6.5' r='.5' fill='%23A78BFA'/%3E%3Ccircle cx='17.5' cy='10.5' r='.5' fill='%23A78BFA'/%3E%3Ccircle cx='6.5' cy='12.5' r='.5' fill='%23A78BFA'/%3E%3Ccircle cx='8.5' cy='7.5' r='.5' fill='%23A78BFA'/%3E%3C/svg%3E" />
+
+  <title>Loading Dashboard</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+    }
+
+    .loading-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #0A1A2F;
+      z-index: 1000;
+    }
+
+    .loading-container {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .percentage-text {
+      position: relative;
+      height: 160px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .number-container {
+      position: relative;
+      height: 160px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .number-outline {
+      position: absolute;
+      color: rgba(255, 255, 255, 0.15);
+      z-index: 1;
+      display: flex;
+      align-items: center;
+    }
+
+    .number-fill {
+      position: absolute;
+      background: linear-gradient(90deg, 
+        rgb(178, 102, 255) 0%,
+        rgb(216, 102, 216) 50%,
+        rgb(255, 102, 178) 100%
+      );
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      z-index: 2;
+      clip-path: polygon(
+        0 100%,
+        100% 100%,
+        100% 100%,
+        0 100%
+      );
+      transition: clip-path 0.3s ease;
+      display: flex;
+      align-items: center;
+    }
+
+    .number-fill::before {
+      content: '';
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg,
+        rgba(178, 102, 255, 0.5) 0%,
+        rgba(216, 102, 216, 0.5) 50%,
+        rgba(255, 102, 178, 0.5) 100%
+      );
+      filter: blur(2px);
+      border-radius: 4px;
+    }
+
+    .number {
+      font-size: 8rem;
+      line-height: 1;
+      font-weight: 900;
+      display: inline-block;
+      letter-spacing: -0.02em;
+      min-width: 8ch;
+      text-align: right;
+    }
+
+    .percent {
+      font-size: 4rem;
+      font-weight: 700;
+      margin-left: -1rem;
+      margin-top: -2rem;
+    }
+
+    .content {
+      min-height: 100vh;
+      background-color: #f3f4f6;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .content-box {
+      background-color: white;
+      padding: 2rem;
+      border-radius: 0.5rem;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      text-align: center;
+    }
+
+    .content-box h1 {
+      font-size: 1.875rem;
+      font-weight: bold;
+      margin-bottom: 1rem;
+    }
+
+    .content-box p {
+      font-size: 1.125rem;
+      color: #4b5563;
+    }
+
+    .content-box button {
+      margin-top: 1.5rem;
+      padding: 0.5rem 1.5rem;
+      background-color: #4f46e5;
+      color: white;
+      border: none;
+      border-radius: 0.375rem;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    .content-box button:hover {
+      background-color: #4338ca;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .loading-text {
+      color: rgba(255, 255, 255, 0.7);
+      margin-top: 2rem;
+      font-size: 1.25rem;
+      letter-spacing: 0.05em;
+    }
+
+    @media (max-width: 640px) {
+      .number {
+        font-size: 6rem;
+        min-width: 6ch;
+      }
+      
+      .percent {
+        font-size: 3rem;
+        margin-left: -0.75rem;
+        margin-top: -1.5rem;
+      }
+      
+      .loading-text {
+        font-size: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="loading-screen">
+    <div class="loading-container">
+      <div class="percentage-text">
+        <div class="number-container">
+          <div class="number-outline">
+            <span class="number">0</span>
+            <span class="percent">%</span>
+          </div>
+          <div class="number-fill">
+            <span class="number">0</span>
+            <span class="percent">%</span>
+          </div>
+        </div>
+      </div>
+      <div class="loading-text">Preparing dashboard...</div>
+    </div>
+  </div>
+
+  <div class="content hidden">
+    <div class="content-box">
+      <h1>Redirecting...</h1>
+      <p>You will be redirected to the dashboard shortly.</p>
+    </div>
+  </div>
+
+  <script>
+    // Destination URL to redirect to after loading
+    const DASHBOARD_URL = "https://singular-kringle-5f87fe.netlify.app/recruiter%20dashboard";
+    
+    function animate(duration, onComplete) {
+      const startTime = Date.now();
+      const numberElements = document.querySelectorAll('.number');
+      const numberFill = document.querySelector('.number-fill');
+      
+      function updateNumber() {
+        const currentTime = Date.now();
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        
+        // Enhanced easing function for smoother, slower animation
+        const eased = 1 - Math.pow(1 - progress, 4);
+        const current = Math.min(100 * eased, 100);
+        
+        numberElements.forEach(el => {
+          el.textContent = Math.floor(current);
+        });
+        
+        numberFill.style.clipPath = `polygon(
+          0 ${100 - current}%,
+          100% ${100 - current}%,
+          100% 100%,
+          0 100%
+        )`;
+        
+        if (progress < 1) {
+          requestAnimationFrame(updateNumber);
+        } else {
+          onComplete();
+        }
+      }
+      
+      requestAnimationFrame(updateNumber);
+    }
+
+    function redirectToDashboard() {
+      // Redirect to the dashboard URL
+      window.location.href = DASHBOARD_URL;
+    }
+
+    // Start the initial animation and redirect when complete
+    animate(12000, redirectToDashboard);
+  </script>
+</body>
+</html>

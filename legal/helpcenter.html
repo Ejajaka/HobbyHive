@@ -1,0 +1,828 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Help Center</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23A78BFA' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='lucide lucide-palette-icon lucide-palette'%3E%3Cpath d='M12 22a1 1 0 0 1 0-20 10 9 0 0 1 10 9 5 5 0 0 1-5 5h-2.25a1.75 1.75 0 0 0-1.4 2.8l.3.4a1.75 1.75 0 0 1-1.4 2.8z'/%3E%3Ccircle cx='13.5' cy='6.5' r='.5' fill='%23A78BFA'/%3E%3Ccircle cx='17.5' cy='10.5' r='.5' fill='%23A78BFA'/%3E%3Ccircle cx='6.5' cy='12.5' r='.5' fill='%23A78BFA'/%3E%3Ccircle cx='8.5' cy='7.5' r='.5' fill='%23A78BFA'/%3E%3C/svg%3E" />
+
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        /* Custom styles */
+        
+        .gradient-text {
+            background: linear-gradient(to right, #9333ea, #ec4899);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        /* Animations */
+        
+        .fade-in {
+            animation: fadeIn 0.3s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        /* Modal animations */
+        
+        .modal-enter {
+            animation: modalEnter 0.3s ease-out;
+        }
+        
+        @keyframes modalEnter {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        /* Transitions */
+        
+        .transition-all {
+            transition: all 0.3s ease;
+        }
+        /* FAQ animations */
+        
+        .faq-content {
+            display: none;
+            transition: all 0.3s ease-out;
+        }
+        
+        .faq-content.active {
+            display: block;
+        }
+        /* Search Results */
+        
+        .search-highlight {
+            background-color: rgba(147, 51, 234, 0.3);
+            padding: 1px 0;
+        }
+        
+        .search-results {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+        
+        .search-results.active {
+            max-height: 600px;
+            transition: max-height 0.3s ease-in;
+        }
+        
+        .search-active .categories-section,
+        .search-active .popular-articles-section,
+        .search-active .faq-section {
+            display: none;
+        }
+        
+        .search-section {
+            position: relative;
+        }
+        /* Custom dark theme colors */
+        
+        .bg-dark-primary {
+            background-color: rgb(10, 17, 34);
+        }
+        
+        .bg-dark-container {
+            background-color: rgb(22, 29, 47);
+        }
+        
+        .border-dark {
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .hover-dark-highlight:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+        
+        .text-dark-primary {
+            color: rgba(255, 255, 255, 0.95);
+        }
+        
+        .text-dark-secondary {
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        .text-dark-tertiary {
+            color: rgba(255, 255, 255, 0.5);
+        }
+        .social-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    color: white;
+    transition: transform 0.3s ease;
+}
+
+.social-icon:hover {
+    transform: translateY(-3px);
+}
+    </style>
+</head>
+
+<body class="bg-dark-primary">
+    <div class="min-h-screen" id="mainContainer">
+        <!-- Hero Section -->
+        <div class="bg-dark-container py-16 text-center">
+            <h1 class="text-5xl font-bold mb-6 gradient-text">
+                HobbyHive Help Center
+            </h1>
+            <p class="text-dark-secondary max-w-2xl mx-auto px-4">
+                Find answers to your questions about skill swapping, earning, and learning on HobbyHive
+            </p>
+        </div>
+
+        <!-- Search Section -->
+        <div class="max-w-4xl mx-auto px-4 py-8 search-section">
+            <div class="relative">
+                <svg class="absolute left-4 top-3.5 h-5 w-5 text-dark-tertiary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                </svg>
+                <input type="text" id="searchInput" placeholder="Search for answers..." class="w-full pl-12 pr-4 py-3 rounded-lg bg-dark-container border border-dark text-dark-primary focus:outline-none focus:ring-2 focus:ring-purple-500">
+                <button id="clearSearch" class="absolute right-4 top-3.5 hidden text-dark-tertiary hover:text-dark-primary">
+                    <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Search Results -->
+            <div id="searchResults" class="search-results mt-2 bg-dark-container rounded-lg border border-dark shadow-sm overflow-hidden">
+                <div class="p-4">
+                    <div id="resultsContent"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Categories -->
+        <div class="max-w-4xl mx-auto px-4 py-8 categories-section">
+            <div class="grid md:grid-cols-3 gap-6" id="categories">
+                <!-- Categories will be populated by JavaScript -->
+            </div>
+        </div>
+
+        <!-- Popular Articles -->
+        <div class="max-w-4xl mx-auto px-4 py-8 popular-articles-section">
+            <div class="flex items-center gap-2 mb-6">
+                <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
+                </svg>
+                <h2 class="text-2xl font-semibold text-dark-primary">Popular Articles</h2>
+            </div>
+            <div class="grid md:grid-cols-3 gap-6" id="popularArticles">
+                <!-- Popular articles will be populated by JavaScript -->
+            </div>
+        </div>
+
+        <!-- FAQs -->
+        <div class="max-w-4xl mx-auto px-4 py-8 faq-section">
+            <h2 class="text-2xl font-semibold mb-6 text-dark-primary">Frequently Asked Questions</h2>
+            <div class="space-y-4" id="faqContainer">
+                <!-- FAQs will be populated by JavaScript -->
+            </div>
+        </div>
+
+        <!-- Contact Support -->
+<div class="max-w-4xl mx-auto px-4 py-8 mb-8">
+    <div class="bg-gradient-to-r from-purple-600 to-pink-500 rounded-lg p-8 text-center text-white">
+        <svg class="w-12 h-12 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+        <h2 class="text-2xl font-semibold mb-2">Still need help?</h2>
+        <p class="mb-6">Our support team is here to assist you with any questions</p>
+        <button onclick="showSocialModal()" class="bg-white text-purple-600 px-6 py-2 rounded-lg font-medium hover:bg-gray-100 transition-colors">
+            Contact Support
+        </button>
+        
+        <!-- Social Media Buttons -->
+        <div class="flex justify-center space-x-4">
+            <a href="#" class="text-white hover:text-gray-200 transition-colors">
+                
+            </a>
+            <a href="#" class="text-white hover:text-gray-200 transition-colors">
+                
+            </a>
+            <a href="#" class="text-white hover:text-gray-200 transition-colors">
+                
+            </a>
+        </div>
+    </div>
+</div>
+
+    <!-- Blog Modal -->
+    <div id="blogModal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-50 hidden">
+        <!-- Modal content will be populated by JavaScript -->
+    </div>
+
+    <script>
+        // Data
+        const blogPosts = {
+            'skill-swapping': {
+                title: 'The Art of Skill Swapping',
+                content: [
+                    "Skill swapping is the heart of HobbyHive's community. It's a revolutionary way to learn new skills while sharing your own expertise with others. Here's how it works and why it's so effective.",
+                    "When you join HobbyHive, you'll create a profile listing your skills and the skills you want to learn. Our matching system helps you find perfect swap partners - people who want to learn what you know, and know what you want to learn.",
+                    "The benefits of skill swapping are numerous. Not only do you learn new skills without any monetary investment, but you also get to practice teaching, which reinforces your own knowledge. Plus, you'll build meaningful connections with people who share your interests.",
+                    "Our platform provides all the tools you need to coordinate your swap sessions, including scheduling, video chat integration, and progress tracking. We also offer guidelines and best practices to ensure both parties get the most out of their exchange."
+                ],
+                image: "https://images.unsplash.com/photo-1515187029135-18ee286d815b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80",
+                category: "Skill Swapping",
+                readTime: "5 min read"
+            },
+            'earning': {
+                title: 'Monetize Your Skills',
+                content: [
+                    "Turn your expertise into income with HobbyHive's various monetization options. Whether you're a seasoned professional or just starting out, there's a way for you to earn while sharing your knowledge.",
+                    "Our platform supports multiple earning methods: one-on-one tutoring, group classes, pre-recorded courses, and written guides. You set your own rates and schedule, maintaining complete control over your teaching business.",
+                    "We provide tools to help you succeed, including payment processing, booking management, and analytics to track your earnings and student satisfaction. Plus, our rating system helps you build credibility and attract more students.",
+                    "Many of our top earners started as skill swap partners before transitioning to paid teaching. This organic growth helps you build confidence and refine your teaching style while building a loyal student base."
+                ],
+                image: "https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80",
+                category: "Earning",
+                readTime: "6 min read"
+            },
+            'learning': {
+                title: 'Your Learning Journey',
+                content: [
+                    "Learning on HobbyHive is a unique experience that combines the best aspects of traditional education with the flexibility and personalization of peer-to-peer learning.",
+                    "Browse through thousands of skills offered by our community members, from practical skills like coding and cooking to creative pursuits like painting and music. Filter by skill level, teaching style, and availability to find the perfect match.",
+                    "Our learning tools include progress tracking, skill assessments, and achievement badges to keep you motivated. You can maintain a learning journal, set goals, and celebrate milestones with our supportive community.",
+                    "Whether you prefer one-on-one sessions, group classes, or self-paced learning through recorded content, HobbyHive offers flexible options to suit your learning style and schedule."
+                ],
+                image: "https://images.unsplash.com/photo-1488190211105-8b0e65b80b4e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80",
+                category: "Learning",
+                readTime: "4 min read"
+            },
+            'popular-skills-2025': {
+                title: '5 Most Popular Skills to Learn in 2025',
+                content: [
+                    "As we move further into the digital age, the demand for certain skills continues to evolve. Here's our prediction for the top 5 most sought-after skills in 2025.",
+                    "1. Artificial Intelligence & Machine Learning",
+                    "2. Digital Content Creation",
+                    "3. Sustainable Technology",
+                    "4. Data Analytics:",
+                    "5. Cybersecurity",
+                ],
+                image: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80",
+                category: "Learning",
+                readTime: "2 min read"
+            },
+            'pricing-services': {
+                title: 'How to Price Your Teaching Services',
+                content: [
+                    "Setting the right price for your teaching services is crucial for success on HobbyHive. Here's a comprehensive guide to help you determine your optimal pricing strategy.",
+                    "Understanding Your Market Value: Research what others are charging for similar skills. Consider your experience level, expertise, and the demand for your skill.",
+                    "Factors to Consider When Pricing: Your preparation time, session duration, materials needed, and the complexity of the skill being taught should all factor into your pricing.",
+                    "Different Pricing Models: Explore various pricing structures such as per-hour rates, package deals, or subscription-based models. Each has its advantages depending on your teaching style and subject matter.",
+                    "Remember to factor in platform fees and taxes when setting your rates to ensure you're meeting your income goals while remaining competitive in the marketplace."
+                ],
+                image: "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80",
+                category: "Earning",
+                readTime: "5 min read"
+            },
+            'teaching-portfolio': {
+                title: 'Building Your Teaching Portfolio',
+                content: [
+                    "A strong teaching portfolio is essential for success on HobbyHive. Learn how to showcase your expertise and attract more students.",
+                    "Showcase Your Success: Include testimonials from previous students, success stories, and concrete examples of student progress.",
+                    "Visual Content: Add high-quality photos or videos of your teaching sessions (with permission) to give potential students a better idea of your teaching style.",
+                    "Regular Updates: Keep your portfolio fresh by adding new achievements, skills, and student testimonials as you gain more experience.",
+                    "Remember, your portfolio is often the first impression potential students have of you, so make it professional, engaging, and representative of your teaching style."
+                ],
+                image: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80",
+                category: "Skill Swapping",
+                readTime: "5 min read"
+            }
+        };
+
+        const categories = [{
+            icon: `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>`,
+            title: "Skill Swapping",
+            description: "Learn how to exchange skills with other members",
+            key: "skill-swapping"
+        }, {
+            icon: `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>`,
+            title: "Earning",
+            description: "Monetize your expertise and teach others",
+            key: "earning"
+        }, {
+            icon: `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>`,
+            title: "Learning",
+            description: "Discover new skills and grow your knowledge",
+            key: "learning"
+        }];
+
+        const popularArticles = [{
+            title: "5 Most Popular Skills to Learn in 2025",
+            category: "Learning",
+            image: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80",
+            readTime: "2 min read",
+            key: "popular-skills-2025"
+        }, {
+            title: "How to Price Your Teaching Services",
+            category: "Earning",
+            image: "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80",
+            readTime: "5 min read",
+            key: "pricing-services"
+        }, {
+            title: "Building Your Teaching Portfolio",
+            category: "Skill Swapping",
+            image: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80",
+            readTime: "5 min read",
+            key: "teaching-portfolio"
+        }];
+
+        const faqs = [{
+            question: "How does skill swapping work on HobbyHive?",
+            answer: "Skill swapping on HobbyHive is simple! You can list your skills and connect with others who have skills you want to learn. Arrange mutual teaching sessions where both parties benefit by learning from each other.",
+            category: "Skill Swapping"
+        }, {
+            question: "Can I earn money through HobbyHive?",
+            answer: "Yes! You can monetize your skills by offering paid tutoring sessions, creating online courses, or providing one-on-one coaching. Set your own rates and schedule while helping others learn.",
+            category: "Earning"
+        }, {
+            question: "What types of skills can I learn?",
+            answer: "HobbyHive supports a wide range of skills including arts & crafts, music, programming, languages, cooking, photography, and much more. If someone can teach it, you can learn it!",
+            category: "Learning"
+        }, {
+            question: "How do I get started?",
+            answer: "Begin by creating a profile and listing your skills. Then browse other members' profiles to find skills you'd like to learn. You can initiate contact through our messaging system to arrange skill swaps or lessons.",
+            category: "Getting Started"
+        }, {
+            question: "Is there a rating system?",
+            answer: "Yes, HobbyHive has a peer review system where both teachers and learners can rate their experience. This helps maintain quality and trust within our community.",
+            category: "Platform Features"
+        }, {
+            question: "How do I ensure a safe learning environment?",
+            answer: "HobbyHive prioritizes user safety. All users undergo verification, sessions can be recorded for security, and our community guidelines ensure respectful interactions. We also provide a reporting system for any concerns.",
+            category: "Safety"
+        }, {
+            question: "What happens if I need to cancel a session?",
+            answer: "We understand plans change. You can cancel a session up to 24 hours in advance without penalty. Last-minute cancellations may affect your profile rating. Always communicate with your learning partner about schedule changes.",
+            category: "Policies"
+        }, {
+            question: "Can I teach or learn in groups?",
+            answer: "Absolutely! HobbyHive supports both one-on-one and group sessions. You can create or join group learning sessions, which are great for skills that benefit from collaborative learning.",
+            category: "Learning"
+        }, {
+            question: "How are payments handled?",
+            answer: "All payments are processed securely through our platform. We use industry-standard encryption and trusted payment processors. Funds are held in escrow until the session is completed to protect both parties.",
+            category: "Payments"
+        }, {
+            question: "What equipment do I need?",
+            answer: "Basic requirements include a reliable internet connection and a device with a camera for video sessions. Specific equipment needs vary by skill - instructors typically list required materials in their session descriptions.",
+            category: "Getting Started"
+        }];
+
+        // DOM Elements
+        const searchInput = document.getElementById('searchInput');
+        const clearSearchBtn = document.getElementById('clearSearch');
+        const searchResults = document.getElementById('searchResults');
+        const resultsContent = document.getElementById('resultsContent');
+        const faqContainer = document.getElementById('faqContainer');
+        const categoriesContainer = document.getElementById('categories');
+        const popularArticlesContainer = document.getElementById('popularArticles');
+        const blogModal = document.getElementById('blogModal');
+        const mainContainer = document.getElementById('mainContainer');
+
+        // Initialize the page
+        function init() {
+            renderCategories();
+            renderPopularArticles();
+            renderFAQs();
+            setupSearch();
+        }
+
+        // Render Categories
+        function renderCategories() {
+            categoriesContainer.innerHTML = categories.map((category, index) => `
+        <div class="bg-dark-container p-6 rounded-lg shadow-sm border border-dark hover:shadow-md transition-shadow hover-dark-highlight">
+            <div class="text-purple-500 mb-4">${category.icon}</div>
+            <h3 class="text-lg font-semibold mb-2 text-dark-primary">${category.title}</h3>
+            <p class="text-dark-secondary">${category.description}</p>
+            <button
+                onclick="showBlog('${category.key}')"
+                class="mt-4 text-purple-500 flex items-center text-sm hover:text-purple-400"
+            >
+                Learn more
+                <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                </svg>
+            </button>
+        </div>
+    `).join('');
+        }
+
+        // Render Popular Articles
+        function renderPopularArticles() {
+            popularArticlesContainer.innerHTML = popularArticles.map((article, index) => `
+        <div class="bg-dark-container rounded-lg overflow-hidden border border-dark hover:shadow-md transition-shadow hover-dark-highlight">
+            <img
+                src="${article.image}"
+                alt="${article.title}"
+                class="w-full h-48 object-cover"
+            />
+            <div class="p-4">
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="bg-purple-900 text-purple-300 px-2 py-1 rounded-full text-xs">
+                        ${article.category}
+                    </span>
+                    <span class="text-dark-tertiary text-xs">${article.readTime}</span>
+                </div>
+                <h3 class="font-semibold text-dark-primary mb-2">${article.title}</h3>
+                <button 
+                    onclick="showBlog('${article.key}')"
+                    class="text-purple-500 text-sm hover:text-purple-400 flex items-center"
+                >
+                    Read more
+                    <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    `).join('');
+        }
+
+        // Render FAQs
+        function renderFAQs(filteredFaqs = faqs) {
+            faqContainer.innerHTML = filteredFaqs.map((faq, index) => `
+        <div class="bg-dark-container rounded-lg border border-dark overflow-hidden">
+            <button
+                class="w-full px-6 py-4 text-left flex justify-between items-center hover-dark-highlight"
+                onclick="toggleFAQ(${index})"
+            >
+                <span class="font-medium text-dark-primary">${faq.question}</span>
+                <svg class="w-5 h-5 text-dark-tertiary transform transition-transform faq-chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                </svg>
+            </button>
+            <div class="faq-content px-6 py-4 bg-dark-primary border-t border-dark">
+                <p class="text-dark-secondary">${faq.answer}</p>
+            </div>
+        </div>
+    `).join('');
+        }
+
+        // Highlight search terms in text
+        function highlightMatch(text, searchTerm) {
+            if (!searchTerm) return text;
+
+            const regex = new RegExp(`(${searchTerm})`, 'gi');
+            return text.replace(regex, '<span class="search-highlight">$1</span>');
+        }
+
+        // Search functionality
+        function setupSearch() {
+            searchInput.addEventListener('input', (e) => {
+                const searchQuery = e.target.value.toLowerCase().trim();
+
+                if (searchQuery === '') {
+                    clearSearch();
+                    return;
+                }
+
+                // Show the clear button when search has input
+                clearSearchBtn.classList.remove('hidden');
+
+                // Search in all content
+                const results = performSearch(searchQuery);
+                displaySearchResults(results, searchQuery);
+            });
+
+            clearSearchBtn.addEventListener('click', clearSearch);
+        }
+
+        // Perform search across all content
+        function performSearch(query) {
+            if (!query) return null;
+
+            const results = {
+                articles: [],
+                faqs: [],
+                categories: []
+            };
+
+            // Search in blog posts
+            Object.keys(blogPosts).forEach(key => {
+                const post = blogPosts[key];
+                const contentText = post.content.join(' ').toLowerCase();
+
+                if (post.title.toLowerCase().includes(query) || contentText.includes(query)) {
+                    results.articles.push({
+                        ...post,
+                        key,
+                        relevance: post.title.toLowerCase().includes(query) ? 2 : 1
+                    });
+                }
+            });
+
+            // Search in FAQs
+            faqs.forEach(faq => {
+                if (faq.question.toLowerCase().includes(query) || faq.answer.toLowerCase().includes(query)) {
+                    results.faqs.push({
+                        ...faq,
+                        relevance: faq.question.toLowerCase().includes(query) ? 2 : 1
+                    });
+                }
+            });
+
+            // Search in categories
+            categories.forEach(category => {
+                if (category.title.toLowerCase().includes(query) || category.description.toLowerCase().includes(query)) {
+                    results.categories.push({
+                        ...category,
+                        relevance: category.title.toLowerCase().includes(query) ? 2 : 1
+                    });
+                }
+            });
+
+            // Sort results by relevance
+            results.articles.sort((a, b) => b.relevance - a.relevance);
+            results.faqs.sort((a, b) => b.relevance - a.relevance);
+            results.categories.sort((a, b) => b.relevance - a.relevance);
+
+            return results;
+        }
+
+        // Display search results
+        function displaySearchResults(results, query) {
+            if (!results || (results.articles.length === 0 && results.faqs.length === 0 && results.categories.length === 0)) {
+                resultsContent.innerHTML = `
+            <div class="text-center py-8">
+                <svg class="w-12 h-12 mx-auto mb-4 text-dark-tertiary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <p class="text-dark-primary text-lg">No results found for "${query}"</p>
+                <p class="text-dark-tertiary mt-2">Try different keywords or check your spelling</p>
+            </div>
+        `;
+            } else {
+                let html = '';
+
+                // Add articles section if there are matches
+                if (results.articles.length > 0) {
+                    html += `
+                <div class="mb-6">
+                    <h3 class="text-lg font-medium mb-3 text-dark-primary">Articles</h3>
+                    <div class="space-y-3">
+            `;
+
+                    results.articles.forEach(article => {
+                        html += `
+                    <div class="bg-dark-primary p-3 rounded hover-dark-highlight transition-colors">
+                        <div class="flex items-start gap-3">
+                            <img src="${article.image}" alt="${article.title}" class="w-16 h-16 object-cover rounded" />
+                            <div>
+                                <h4 class="font-medium text-dark-primary">${highlightMatch(article.title, query)}</h4>
+                                <p class="text-sm text-dark-secondary line-clamp-2">${highlightMatch(article.content[0].substring(0, 100) + '...', query)}</p>
+                                <button 
+                                    onclick="showBlog('${article.key}'); clearSearch();"
+                                    class="text-purple-500 text-sm hover:text-purple-400 flex items-center mt-1"
+                                >
+                                    Read more
+                                    <svg class="w-3 h-3 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                    });
+
+                    html += `
+                    </div>
+                </div>
+            `;
+                }
+
+                // Add FAQs section if there are matches
+                if (results.faqs.length > 0) {
+                    html += `
+                <div class="mb-6">
+                    <h3 class="text-lg font-medium mb-3 text-dark-primary">Frequently Asked Questions</h3>
+                    <div class="space-y-3">
+            `;
+
+                    results.faqs.forEach(faq => {
+                        html += `
+                    <div class="bg-dark-primary p-3 rounded hover-dark-highlight transition-colors">
+                        <h4 class="font-medium mb-1 text-dark-primary">${highlightMatch(faq.question, query)}</h4>
+                        <p class="text-sm text-dark-secondary">${highlightMatch(faq.answer.substring(0, 150) + (faq.answer.length > 150 ? '...' : ''), query)}</p>
+                    </div>
+                `;
+                    });
+
+                    html += `
+                    </div>
+                </div>
+            `;
+                }
+
+                // Add categories section if there are matches
+                if (results.categories.length > 0) {
+                    html += `
+                <div>
+                    <h3 class="text-lg font-medium mb-3 text-dark-primary">Categories</h3>
+                    <div class="grid md:grid-cols-2 gap-3">
+            `;
+
+                    results.categories.forEach(category => {
+                        html += `
+                    <div class="bg-dark-primary p-3 rounded hover-dark-highlight transition-colors">
+                        <div class="flex items-center gap-2 mb-1">
+                            <div class="text-purple-500">${category.icon}</div>
+                            <h4 class="font-medium text-dark-primary">${highlightMatch(category.title, query)}</h4>
+                        </div>
+                        <p class="text-sm text-dark-secondary">${highlightMatch(category.description, query)}</p>
+                        <button
+                            onclick="showBlog('${category.key}'); clearSearch();"
+                            class="mt-2 text-purple-500 flex items-center text-sm hover:text-purple-400"
+                        >
+                            Learn more
+                            <svg class="w-3 h-3 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                            </svg>
+                        </button>
+                    </div>
+                `;
+                    });
+
+                    html += `
+                    </div>
+                </div>
+            `;
+                }
+
+                resultsContent.innerHTML = html;
+            }
+
+            // Show search results
+            searchResults.classList.add('active');
+            mainContainer.classList.add('search-active');
+        }
+
+        // Clear search
+        function clearSearch() {
+            searchInput.value = '';
+            clearSearchBtn.classList.add('hidden');
+            searchResults.classList.remove('active');
+            mainContainer.classList.remove('search-active');
+        }
+
+        // Toggle FAQ
+        function toggleFAQ(index) {
+            const faqContents = document.querySelectorAll('.faq-content');
+            const faqChevrons = document.querySelectorAll('.faq-chevron');
+
+            faqContents.forEach((content, i) => {
+                if (i === index) {
+                    content.classList.toggle('active');
+                    faqChevrons[i].style.transform = content.classList.contains('active') ? 'rotate(180deg)' : '';
+                } else {
+                    content.classList.remove('active');
+                    faqChevrons[i].style.transform = '';
+                }
+            });
+        }
+
+        // Show Blog
+        function showBlog(key) {
+            const blog = blogPosts[key];
+            if (!blog) return;
+
+            const modalContent = `
+        <div class="bg-dark-container rounded-lg max-w-2xl w-full max-h-[70vh] overflow-y-auto modal-enter mx-4">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-bold text-dark-primary">${blog.title}</h2>
+                    <button
+                        onclick="closeBlogModal()"
+                        class="text-dark-tertiary hover:text-dark-primary p-2 rounded-full hover-dark-highlight"
+                    >
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                    </button>
+                </div>
+                <img
+                    src="${blog.image}"
+                    alt="${blog.title}"
+                    class="w-full h-[250px] object-cover rounded-lg mb-4"
+                />
+                <div class="flex items-center gap-4 mb-4">
+                    <span class="bg-purple-900 text-purple-300 px-3 py-1 rounded-full text-sm">
+                        ${blog.category}
+                    </span>
+                    <span class="text-dark-tertiary text-sm">
+                        ${blog.readTime}
+                    </span>
+                </div>
+                <div class="space-y-4 text-sm">
+                    ${blog.content.map(paragraph => `
+                        <p class="text-dark-secondary leading-relaxed">${paragraph}</p>
+                    `).join('')}
+                </div>
+                <div class="mt-6 flex justify-end">
+                    <button
+                        onclick="closeBlogModal()"
+                        class="text-dark-secondary hover:text-dark-primary px-4 py-2 rounded-lg hover-dark-highlight"
+                    >
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+
+    blogModal.innerHTML = modalContent;
+    blogModal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+}
+
+// Close Blog Modal
+function closeBlogModal() {
+    blogModal.classList.add('hidden');
+    document.body.style.overflow = '';
+}
+
+// Close modal when clicking outside
+blogModal.addEventListener('click', (e) => {
+    if (e.target === blogModal) {
+        closeBlogModal();
+    }
+});
+
+// Initialize the page
+init();
+// Show Social Media Modal
+function showSocialModal() {
+    socialModal.classList.remove('hidden');
+    socialModal.classList.add('modal-enter');
+    document.body.style.overflow = 'hidden';
+}
+
+// Close Social Media Modal
+function closeSocialModal() {
+    socialModal.classList.add('hidden');
+    document.body.style.overflow = '';
+}
+
+// Close modal when clicking outside
+socialModal.addEventListener('click', (e) => {
+    if (e.target === socialModal) {
+        closeSocialModal();
+    }
+});
+    </script>
+<!-- Social Media Modal -->
+<div id="socialModal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-50 hidden">
+    <div class="bg-dark-container rounded-lg max-w-md w-full p-6 modal-enter">
+        <div class="flex justify-between items-center mb-6">
+            <h3 class="text-xl font-semibold text-dark-primary">Connect With Us</h3>
+            <button onclick="closeSocialModal()" class="text-dark-tertiary hover:text-dark-primary">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+        </div>
+        <p class="text-dark-secondary mb-6">Follow us on social media for updates and support</p>
+        <div class="flex justify-center gap-6">
+            <a href="https://www.instagram.com/hobby_hive9/" class="social-icon bg-gradient-to-br from-pink-600 to-purple-600">
+                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                </svg>
+            </a>
+            <a href="https://www.facebook.com/hobby.hive/" class="social-icon bg-blue-600">
+                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M22.675 0h-21.35c-.732 0-1.325.593-1.325 1.325v21.351c0 .731.593 1.324 1.325 1.324h11.495v-9.294h-3.128v-3.622h3.128v-2.671c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.795.143v3.24l-1.918.001c-1.504 0-1.795.715-1.795 1.763v2.313h3.587l-.467 3.622h-3.12v9.293h6.116c.73 0 1.323-.593 1.323-1.325v-21.35c0-.732-.593-1.325-1.325-1.325z"/>
+                </svg>
+            </a>
+            <a href="https://x.com/Hobby_Hive" class="social-icon bg-blue-400">
+                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
+                </svg>
+            </a>
+        </div>
+    </div>
+</div>
+</body>
+
+</html>

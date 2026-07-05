@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About Us</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23A78BFA' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='lucide lucide-palette-icon lucide-palette'%3E%3Cpath d='M12 22a1 1 0 0 1 0-20 10 9 0 0 1 10 9 5 5 0 0 1-5 5h-2.25a1.75 1.75 0 0 0-1.4 2.8l.3.4a1.75 1.75 0 0 1-1.4 2.8z'/%3E%3Ccircle cx='13.5' cy='6.5' r='.5' fill='%23A78BFA'/%3E%3Ccircle cx='17.5' cy='10.5' r='.5' fill='%23A78BFA'/%3E%3Ccircle cx='6.5' cy='12.5' r='.5' fill='%23A78BFA'/%3E%3Ccircle cx='8.5' cy='7.5' r='.5' fill='%23A78BFA'/%3E%3C/svg%3E" />
+
+  
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <style>
+    /* Custom animations and styles */
+    .animate-fade-in {
+      animation: fadeIn 0.5s ease-in-out forwards;
+    }
+    
+    @keyframes fadeIn {
+      0% { opacity: 0; transform: translateY(10px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+    
+    /* Normal scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    
+    ::-webkit-scrollbar-track {
+      background: rgba(30, 41, 59, 0.2);
+    }
+    
+    ::-webkit-scrollbar-thumb {
+      background: #555;
+      border-radius: 4px;
+    }
+    
+    ::-webkit-scrollbar-thumb:hover {
+      background: #777;
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-[rgb(10,17,34)] text-white">
+  <!-- Header -->
+  <header class="fixed top-0 left-0 right-0 z-50 py-5 transition-all duration-300 bg-[rgb(10,17,34)]/80 backdrop-blur-sm">
+    <div class="container mx-auto px-4 flex justify-between items-center">
+      <h1 class="text-2xl font-bold bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent">
+        <a href="https://singular-kringle-5f87fe.netlify.app/homepage">HobbyHive</a>
+      </h1>
+
+      <button class="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white py-2 px-6 rounded-lg transition-colors shadow-md shadow-pink-200/20"onclick="window.location.href='https://startling-selkie-4a9e88.netlify.app/sign-up'">
+        Sign Up
+      </button>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="pt-32 pb-16">
+    <div class="container mx-auto px-4 text-center">
+      <div class="inline-flex items-center justify-center mb-4 bg-purple-500/10 px-4 py-2 rounded-full">
+        <i data-lucide="heart" class="mr-2 text-fuchsia-400" size="20"></i>
+        <span class="text-fuchsia-400 font-medium">About Us</span>
+      </div>
+      
+      <h1 class="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-white to-fuchsia-200 bg-clip-text text-transparent">
+        Empowering Hobbyists to <br />
+        Become Professionals
+      </h1>
+      
+      <p class="text-lg md:text-xl text-gray-400 max-w-3xl mx-auto mb-10">
+        HobbyHive is a revolutionary platform where passion meets opportunity. 
+        Learn, share, and monetize your skills in a vibrant community of creators.
+      </p>
+      
+      <div class="relative mt-12">
+        <img 
+          src="https://images.pexels.com/photos/7433822/pexels-photo-7433822.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" 
+          alt="Community Learning"
+          class="rounded-xl shadow-2xl w-full max-w-4xl mx-auto"
+        />
+        <div class="absolute inset-0 bg-gradient-to-t from-[rgb(10,17,34)] via-transparent to-transparent"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Grid -->
+  <section class="py-16">
+    <div class="container mx-auto px-4">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="bg-[rgb(22,29,47)] p-8 rounded-2xl hover:transform hover:-translate-y-2 transition-all duration-300">
+          <div class="w-12 h-12 bg-purple-500/10 rounded-lg flex items-center justify-center mb-6">
+            <i data-lucide="graduation-cap" class="text-fuchsia-400" size="24"></i>
+          </div>
+          <h3 class="text-xl font-semibold mb-4">Skill Courses</h3>
+          <p class="text-gray-400 mb-4">
+            Access expert-led courses designed to transform your hobby into a professional skill. Learn at your own pace with structured content.
+          </p>
+          <div class="relative mt-6 rounded-lg overflow-hidden">
+            <img 
+              src="https://images.pexels.com/photos/4050315/pexels-photo-4050315.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" 
+              alt="Online Learning"
+              class="w-full h-48 object-cover transform hover:scale-110 transition-transform duration-500"
+            />
+          </div>
+        </div>
+
+        <div class="bg-[rgb(22,29,47)] p-8 rounded-2xl hover:transform hover:-translate-y-2 transition-all duration-300">
+          <div class="w-12 h-12 bg-purple-500/10 rounded-lg flex items-center justify-center mb-6">
+            <i data-lucide="shuffle" class="text-fuchsia-400" size="24"></i>
+          </div>
+          <h3 class="text-xl font-semibold mb-4">Skill Swap</h3>
+          <p class="text-gray-400 mb-4">
+            Exchange skills with other creators in our community. Teach what you know, learn what you don't.
+          </p>
+          <div class="relative mt-6 rounded-lg overflow-hidden">
+            <img 
+              src="https://images.pexels.com/photos/7437489/pexels-photo-7437489.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" 
+              alt="Skill Exchange"
+              class="w-full h-48 object-cover transform hover:scale-110 transition-transform duration-500"
+            />
+          </div>
+        </div>
+
+        <div class="bg-[rgb(22,29,47)] p-8 rounded-2xl hover:transform hover:-translate-y-2 transition-all duration-300">
+          <div class="w-12 h-12 bg-purple-500/10 rounded-lg flex items-center justify-center mb-6">
+            <i data-lucide="briefcase" class="text-fuchsia-400" size="24"></i>
+          </div>
+          <h3 class="text-xl font-semibold mb-4">Skill Gig</h3>
+          <p class="text-gray-400 mb-4">
+            Get hired for temporary projects that match your skills. Build your portfolio while earning.
+          </p>
+          <div class="relative mt-6 rounded-lg overflow-hidden">
+            <img 
+              src="https://images.pexels.com/photos/3184465/pexels-photo-3184465.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" 
+              alt="Project Work"
+              class="w-full h-48 object-cover transform hover:scale-110 transition-transform duration-500"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats Section -->
+  <section class="py-16 bg-[rgb(22,29,47)]">
+    <div class="container mx-auto px-4">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div class="text-center">
+          <div class="text-4xl font-bold text-white mb-2">12,000+</div>
+          <div class="text-gray-400">Active Members</div>
+        </div>
+        <div class="text-center">
+          <div class="text-4xl font-bold text-white mb-2">500+</div>
+          <div class="text-gray-400">Expert Instructors</div>
+        </div>
+        <div class="text-center">
+          <div class="text-4xl font-bold text-white mb-2">1,200+</div>
+          <div class="text-gray-400">Skills Exchanged</div>
+        </div>
+        <div class="text-center">
+          <div class="text-4xl font-bold text-white mb-2">98%</div>
+          <div class="text-gray-400">Satisfaction Rate</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Become an Instructor -->
+  <section class="py-16">
+    <div class="container mx-auto px-4">
+      <div class="bg-[rgb(22,29,47)] rounded-3xl overflow-hidden">
+        <div class="p-8 md:p-12">
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div>
+              <div class="inline-flex items-center justify-center mb-4 bg-purple-500/10 px-4 py-2 rounded-full">
+                <i data-lucide="award" class="mr-2 text-fuchsia-400" size="20"></i>
+                <span class="text-fuchsia-400 font-medium">Become an Instructor</span>
+              </div>
+              
+              <h2 class="text-3xl md:text-4xl font-bold mb-6 leading-tight">
+                Share Your Expertise & <br />
+                <span class="text-fuchsia-400">Earn While Teaching</span>
+              </h2>
+              
+              <p class="text-gray-400 mb-8">
+                Join our community of expert instructors and help others transform their hobbies into professional skills. Create courses, mentor learners, and build your personal brand.
+              </p>
+              
+              <div class="space-y-6">
+                <div class="flex items-start">
+                  <div class="mt-1 mr-4 p-2 bg-purple-500/10 rounded-full text-fuchsia-400">
+                    <i data-lucide="target" size="18"></i>
+                  </div>
+                  <div>
+                    <h3 class="font-medium text-white mb-1">Set Your Schedule</h3>
+                    <p class="text-gray-400">Teach when it suits you, from anywhere in the world</p>
+                  </div>
+                </div>
+                
+                <div class="flex items-start">
+                  <div class="mt-1 mr-4 p-2 bg-purple-500/10 rounded-full text-fuchsia-400">
+                    <i data-lucide="users" size="18"></i>
+                  </div>
+                  <div>
+                    <h3 class="font-medium text-white mb-1">Build Your Following</h3>
+                    <p class="text-gray-400">Connect with learners who value your expertise</p>
+                  </div>
+                </div>
+                
+                <div class="flex items-start">
+                  <div class="mt-1 mr-4 p-2 bg-purple-500/10 rounded-full text-fuchsia-400">
+                    <i data-lucide="clock" size="18"></i>
+                  </div>
+                  <div>
+                    <h3 class="font-medium text-white mb-1">Earn Consistently</h3>
+                    <p class="text-gray-400">Get paid for your knowledge and time</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="relative">
+              <img 
+                src="https://images.pexels.com/photos/3183150/pexels-photo-3183150.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" 
+                alt="Teaching"
+                class="rounded-xl shadow-xl"
+              />
+              <div class="absolute inset-0 bg-gradient-to-tr from-[rgb(22,29,47)]/50 to-transparent rounded-xl"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+
+  <!-- Initialize Lucide icons -->
+  <script>
+    // Initialize all icons when the DOM is loaded
+    document.addEventListener('DOMContentLoaded', function() {
+      lucide.createIcons();
+      
+      // Add scroll event listener for header background
+      const header = document.querySelector('header');
+      window.addEventListener('scroll', function() {
+        if (window.scrollY > 10) {
+          header.classList.add('shadow-md');
+        } else {
+          header.classList.remove('shadow-md');
+        }
+      });
+      
+      // Add click event for Sign In button
+      const signInButton = document.querySelector('header button');
+      signInButton.addEventListener('click', function() {
+        alert('Sign in functionality would open here in the full application.');
+      });
+    });
+  </script>
+</body>
+</html>

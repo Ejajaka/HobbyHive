@@ -1,0 +1,1663 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23A78BFA' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='lucide lucide-palette-icon lucide-palette'%3E%3Cpath d='M12 22a1 1 0 0 1 0-20 10 9 0 0 1 10 9 5 5 0 0 1-5 5h-2.25a1.75 1.75 0 0 0-1.4 2.8l.3.4a1.75 1.75 0 0 1-1.4 2.8z'/%3E%3Ccircle cx='13.5' cy='6.5' r='.5' fill='%23A78BFA'/%3E%3Ccircle cx='17.5' cy='10.5' r='.5' fill='%23A78BFA'/%3E%3Ccircle cx='6.5' cy='12.5' r='.5' fill='%23A78BFA'/%3E%3Ccircle cx='8.5' cy='7.5' r='.5' fill='%23A78BFA'/%3E%3C/svg%3E" />
+
+    <title>Skill Course</title>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      @tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom Styles */
+.course-card {
+  transition: transform 0.3s ease;
+}
+.course-card:hover {
+  transform: translateY(-5px);
+}
+.topic-button {
+  transition: all 0.3s ease;
+}
+.topic-button:hover {
+  transform: scale(1.05);
+}
+.instructor-card {
+  transition: transform 0.3s ease;
+}
+.instructor-card:hover {
+  transform: translateY(-5px);
+}
+.scroll-container {
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+}
+.scroll-content {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: calc(33.333% - 1rem);
+  gap: 1.5rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.scroll-content::-webkit-scrollbar {
+  display: none;
+}
+/* Modal styles */
+.modal {
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+.modal-content {
+  transition: transform 0.3s ease;
+}
+.modal[aria-hidden="true"] {
+  opacity: 0;
+  visibility: hidden;
+}
+.modal[aria-hidden="true"] .modal-content {
+  transform: translateY(20px);
+}
+.modal[aria-hidden="false"] {
+  opacity: 1;
+  visibility: visible;
+}
+.modal[aria-hidden="false"] .modal-content {
+  transform: translateY(0);
+}
+/* Payment input styles */
+.payment-input {
+  background-color: #2d374850;
+  border: 1px solid #4a5568;
+  color: white;
+  padding: 0.75rem 1rem;
+  border-radius: 0.375rem;
+  width: 100%;
+  transition: border-color 0.2s;
+}
+.payment-input:focus {
+  outline: none;
+  border-color: #9f7aea;
+  box-shadow: 0 0 0 1px #9f7aea;
+}
+.payment-label {
+  display: block;
+  color: #a0aec0;
+  font-size: 0.875rem;
+  margin-bottom: 0.5rem;
+}
+.expiry-cvv {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+.active-topic {
+  background: linear-gradient(to right, #8b5cf6, #ec4899) !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+@media (max-width: 768px) {
+  .scroll-content {
+    grid-auto-columns: calc(100% - 1rem);
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .scroll-content {
+    grid-auto-columns: calc(50% - 1rem);
+  }
+}
+nav {
+            background-color: rgba(17, 24, 39, 0.8);
+            backdrop-filter: blur(12px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .dropdown {
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+        }
+        
+        .dropdown.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        
+        .dropdown-item:hover {
+            background-color: rgba(126, 34, 206, 0.1);
+        }
+
+/* Search results styles */
+.search-results {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: rgba(31, 41, 55, 0.95);
+    backdrop-filter: blur(12px);
+    border-radius: 0.5rem;
+    border: 1px solid rgba(75, 85, 99, 0.4);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    margin-top: 0.5rem;
+    max-height: 70vh;
+    overflow-y: auto;
+    z-index: 50;
+    display: none;
+    animation: fadeIn 0.2s ease;
+}
+
+.search-results.active {
+    display: block;
+}
+
+.search-result-item {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid rgba(75, 85, 99, 0.4);
+    transition: all 0.2s ease;
+}
+
+.search-result-item:hover {
+    background-color: rgba(126, 34, 206, 0.1);
+}
+
+.search-result-item:last-child {
+    border-bottom: none;
+}
+
+.search-highlight {
+    color: #a78bfa;
+    font-weight: 500;
+}
+
+.search-section-title {
+    background-color: rgba(55, 65, 81, 0.7);
+    padding: 0.5rem 1rem;
+    font-weight: 600;
+    color: #e5e7eb;
+    border-bottom: 1px solid rgba(75, 85, 99, 0.4);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.search-image {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 0.25rem;
+    object-fit: cover;
+}
+
+.search-empty {
+    padding: 3rem 1rem;
+    text-align: center;
+    color: #9ca3af;
+}
+    </style>
+  </head>
+  <body class="min-h-screen bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900">
+    <!-- Navigation Bar -->
+    <nav class="fixed w-full bg-gray-900/80 backdrop-blur-md shadow-lg z-50">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-16">
+          <!-- Logo -->
+          <div class="flex items-center space-x-2">
+            <i data-lucide="palette" class="h-8 w-8 text-purple-400"></i>
+            <span class="text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+              <a href="https://singular-kringle-5f87fe.netlify.app/freelancer%20home%20page">HobbyHive</a>
+            </span>
+          </div>
+
+          <!-- Search Bar -->
+          <div class="flex-1 max-w-2xl mx-8">
+            <div class="relative">
+              <input 
+                id="searchInput"
+                type="text" 
+                placeholder="Search for courses, topics, or instructors..." 
+                class="w-full bg-gray-800/50 text-gray-200 placeholder-gray-400 rounded-full py-2 pl-10 pr-4 focus:outline-none focus:ring-2 focus:ring-purple-400/50"
+              >
+              <i data-lucide="search" class="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400"></i>
+              
+              <!-- Search Results Dropdown -->
+              <div id="searchResults" class="search-results">
+                <!-- Search results will be dynamically inserted here -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Navigation Icons -->
+          <div class="flex items-center space-x-6">
+            <button class="text-purple-400 hover:text-purple-300" onclick="window.location.href='https://singular-kringle-5f87fe.netlify.app/skillgig'">
+                <i data-lucide="dollar-sign" class="h-6 w-6"></i>
+            </button>
+            <button class="text-purple-400 hover:text-purple-300" onclick="window.location.href='https://singular-kringle-5f87fe.netlify.app/skillswap'">
+                <i data-lucide="repeat" class="h-6 w-6"></i>
+            </button>
+            <button class="text-purple-400 hover:text-purple-300" onclick="window.location.href='https://singular-kringle-5f87fe.netlify.app/skill%20course%20page'">
+                <i data-lucide="graduation-cap" class="h-6 w-6"></i>
+            </button>
+            <div class="h-6 w-px bg-gray-700"></div>
+            <!-- Notification Icon with Dropdown -->
+            <div class="relative">
+                <button id="notificationBtn" class="text-purple-400 hover:text-purple-300 relative">
+                    <i data-lucide="bell" class="h-6 w-6"></i>
+                    <span class="absolute -top-1 -right-1 bg-pink-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">3</span>
+                </button>
+                <div id="notificationDropdown" class="dropdown absolute right-0 mt-2 w-80 bg-gray-800 rounded-lg shadow-lg border border-gray-700 py-2 z-50">
+                    <div class="px-4 py-3 border-b border-gray-700">
+                        <h3 class="text-lg font-semibold" style="color: white;">Notifications</h3>
+                    </div>
+                    <div class="max-h-96 overflow-y-auto">
+                        <a href="#" class="dropdown-item block px-4 py-3 hover:bg-purple-900/10 border-b border-gray-700">
+                            <p class="font-medium" style="color: white;">New course available: Advanced Painting</p>
+                            <p class="text-sm text-gray-400 mt-1">2h ago</p>
+                        </a>
+                        <a href="#" class="dropdown-item block px-4 py-3 hover:bg-purple-900/10 border-b border-gray-700">
+                            <p class="font-medium" style="color: white;">Your progress in Digital Art is outstanding!</p>
+                            <p class="text-sm text-gray-400 mt-1">5h ago</p>
+                        </a>
+                        <a href="#" class="dropdown-item block px-4 py-3 hover:bg-purple-900/10">
+                            <p class="font-medium" style="color: white;">Offer from Boracle!</p>
+                            <p class="text-sm text-gray-400 mt-1">1d ago</p>
+                        </a>
+                    </div>
+                    
+                </div>
+            </div>
+            
+            <!-- Heart Icon -->
+            <button class="text-purple-400 hover:text-purple-300" onclick="window.location.href='https://singular-kringle-5f87fe.netlify.app/wishlist'">
+                <i data-lucide="heart" class="h-6 w-6"></i>
+            </button>
+            
+            <!-- Profile Icon with Dropdown -->
+            <div class="relative">
+                <button id="profileBtn" class="text-purple-400 hover:text-purple-300">
+                    <i data-lucide="user" class="h-6 w-6"></i>
+                </button>
+                <div id="profileDropdown" class="dropdown absolute right-0 mt-2 w-56 bg-gray-800 rounded-lg shadow-lg border border-gray-700 py-2 z-50">
+                    
+                    <div class="py-1">
+                        <a href="https://singular-kringle-5f87fe.netlify.app/freelancers%20profile%20page" class="dropdown-item block px-4 py-2 hover:bg-purple-900/10" style="color: white;">My Profile</a>
+                        <a href="https://singular-kringle-5f87fe.netlify.app/mycourse" class="dropdown-item block px-4 py-2 hover:bg-purple-900/10" style="color: white;">My Courses</a>
+                        <a href="https://singular-kringle-5f87fe.netlify.app/helpcenter" class="dropdown-item block px-4 py-2 hover:bg-purple-900/10" style="color: white;">Help Center</a>
+                    </div>
+                    <div class="py-1 border-t border-gray-700">
+                        <a href="https://singular-kringle-5f87fe.netlify.app/homepage" class="dropdown-item block px-4 py-2 hover:bg-purple-900/10 text-red-400">Logout</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div>
+    </nav>
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // Dropdown functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const profileBtn = document.getElementById('profileBtn');
+            const profileDropdown = document.getElementById('profileDropdown');
+            const notificationBtn = document.getElementById('notificationBtn');
+            const notificationDropdown = document.getElementById('notificationDropdown');
+            
+            let activeDropdown = null;
+
+            // Toggle profile dropdown
+            profileBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                if (activeDropdown && activeDropdown !== profileDropdown) {
+                    activeDropdown.classList.remove('active');
+                }
+                profileDropdown.classList.toggle('active');
+                activeDropdown = profileDropdown.classList.contains('active') ? profileDropdown : null;
+                
+                // Close notification dropdown if open
+                notificationDropdown.classList.remove('active');
+            });
+
+            // Toggle notification dropdown
+            notificationBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                if (activeDropdown && activeDropdown !== notificationDropdown) {
+                    activeDropdown.classList.remove('active');
+                }
+                notificationDropdown.classList.toggle('active');
+                activeDropdown = notificationDropdown.classList.contains('active') ? notificationDropdown : null;
+                
+                // Close profile dropdown if open
+                profileDropdown.classList.remove('active');
+            });
+
+            // Close dropdowns when clicking outside
+            document.addEventListener('click', function() {
+                if (activeDropdown) {
+                    activeDropdown.classList.remove('active');
+                    activeDropdown = null;
+                }
+            });
+
+            // Prevent dropdown from closing when clicking inside
+            profileDropdown.addEventListener('click', function(e) {
+                e.stopPropagation();
+            });
+
+            notificationDropdown.addEventListener('click', function(e) {
+                e.stopPropagation();
+            });
+        });
+    </script>
+    <!-- Main Content -->
+    <div class="pt-24 px-4 pb-12">
+      <div class="max-w-7xl mx-auto">
+        <div class="flex flex-col md:flex-row gap-8">
+          <!-- Filters Sidebar -->
+          <div class="w-full md:w-64 bg-gray-800/50 p-6 rounded-lg h-fit sticky top-24">
+            <h3 class="text-xl font-semibold text-white mb-6">Filters</h3>
+
+            <!-- Ratings Filter -->
+            <div class="mb-6">
+              <button class="toggle-btn flex justify-between items-center w-full text-purple-400 font-medium mb-3" data-target="filterRatings">
+                Ratings
+                <i data-lucide="chevron-down" class="w-5 h-5 toggle-arrow transition-transform"></i>
+              </button>
+              <div class="space-y-2 filter-content" id="filterRatings">
+                <label class="flex items-center text-gray-300">
+                  <input type="checkbox" class="form-checkbox text-purple-500 rounded mr-2" name="rating" value="4.5"> 4.5 & above
+                </label>
+                <label class="flex items-center text-gray-300">
+                  <input type="checkbox" class="form-checkbox text-purple-500 rounded mr-2" name="rating" value="4.0"> 4.0 & above
+                </label>
+                <label class="flex items-center text-gray-300">
+                  <input type="checkbox" class="form-checkbox text-purple-500 rounded mr-2" name="rating" value="3.5"> 3.5 & above
+                </label>
+              </div>
+            </div>
+
+            <!-- Video Duration Filter -->
+            <div class="mb-6">
+              <button class="toggle-btn flex justify-between items-center w-full text-purple-400 font-medium mb-3" data-target="filterDuration">
+                Video Duration
+                <i data-lucide="chevron-down" class="w-5 h-5 toggle-arrow transition-transform"></i>
+              </button>
+              <div class="space-y-2 filter-content" id="filterDuration">
+                <label class="flex items-center text-gray-300">
+                  <input type="checkbox" class="form-checkbox text-purple-500 rounded mr-2" name="duration" value="0-2"> 0-2 Hours
+                </label>
+                <label class="flex items-center text-gray-300">
+                  <input type="checkbox" class="form-checkbox text-purple-500 rounded mr-2" name="duration" value="2-5"> 2-5 Hours
+                </label>
+                <label class="flex items-center text-gray-300">
+                  <input type="checkbox" class="form-checkbox text-purple-500 rounded mr-2" name="duration" value="5+"> 5+ Hours
+                </label>
+              </div>
+            </div>
+
+            <!-- Topics Filter -->
+            <div class="mb-6">
+              <button class="toggle-btn flex justify-between items-center w-full text-purple-400 font-medium mb-3" data-target="filterTopics">
+                Topics
+                <i data-lucide="chevron-down" class="w-5 h-5 toggle-arrow transition-transform"></i>
+              </button>
+              <div class="space-y-2 filter-content" id="filterTopics">
+                <label class="flex items-center text-gray-300">
+                  <input type="checkbox" class="form-checkbox text-purple-500 rounded mr-2" name="topic" value="Photography"> Photography
+                </label>
+                <label class="flex items-center text-gray-300">
+                  <input type="checkbox" class="form-checkbox text-purple-500 rounded mr-2" name="topic" value="Digital Art"> Digital Art
+                </label>
+                <label class="flex items-center text-gray-300">
+                  <input type="checkbox" class="form-checkbox text-purple-500 rounded mr-2" name="topic" value="Music"> Music
+                </label>
+                <label class="flex items-center text-gray-300">
+                  <input type="checkbox" class="form-checkbox text-purple-500 rounded mr-2" name="topic" value="Cooking"> Cooking
+                </label>
+              </div>
+            </div>
+
+            <!-- Price Filter -->
+            <div class="mb-6">
+              <button class="toggle-btn flex justify-between items-center w-full text-purple-400 font-medium mb-3" data-target="filterPrice">
+                Price
+                <i data-lucide="chevron-down" class="w-5 h-5 toggle-arrow transition-transform"></i>
+              </button>
+              <div class="space-y-2 filter-content" id="filterPrice">
+                <label class="flex items-center text-gray-300">
+                  <input type="checkbox" class="form-checkbox text-purple-500 rounded mr-2" name="price" value="free"> Free
+                </label>
+                <label class="flex items-center text-gray-300">
+                  <input type="checkbox" class="form-checkbox text-purple-500 rounded mr-2" name="price" value="under20"> Under $20
+                </label>
+                <label class="flex items-center text-gray-300">
+                  <input type="checkbox" class="form-checkbox text-purple-500 rounded mr-2" name="price" value="20-50"> $20 - $50
+                </label>
+                <label class="flex items-center text-gray-300">
+                  <input type="checkbox" class="form-checkbox text-purple-500 rounded mr-2" name="price" value="50+"> $50+
+                </label>
+              </div>
+            </div>
+
+            <!-- Apply Filters Button -->
+            <button id="applyFilters" class="w-full py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors mt-4">
+              Apply Filters
+            </button>
+            <button id="resetFilters" class="w-full py-2 border border-purple-400 text-purple-400 rounded-lg hover:bg-purple-400/10 transition-colors mt-2">
+              Reset Filters
+            </button>
+          </div>
+
+          <!-- Main Content Area -->
+          <div class="flex-1">
+            <h1 class="text-4xl font-bold text-white mb-8">Courses to Get You Started</h1>
+
+            <!-- Course Thumbnails -->
+            <div class="mb-12">
+              <div class="flex items-center justify-between mb-6">
+                <h2 class="text-2xl font-semibold text-white">Featured Courses</h2>
+                <div class="flex space-x-2">
+                  <button onclick="scrollSection('coursesScroll', -1)" class="p-2 text-purple-400 hover:bg-purple-400/10 rounded-full">
+                    <i data-lucide="chevron-left" class="h-6 w-6"></i>
+                  </button>
+                  <button onclick="scrollSection('coursesScroll', 1)" class="p-2 text-purple-400 hover:bg-purple-400/10 rounded-full">
+                    <i data-lucide="chevron-right" class="h-6 w-6"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="scroll-container">
+                <div id="coursesScroll" class="scroll-content">
+                  <!-- Course Cards will be dynamically inserted here -->
+                </div>
+              </div>
+            </div>
+
+            <!-- Popular Topics -->
+            <div class="mb-12">
+              <div class="flex items-center justify-between mb-6">
+                <h2 class="text-2xl font-semibold text-white">Popular Topics</h2>
+                <div class="flex space-x-2">
+                  <button onclick="scrollSection('topicsScroll', -1)" class="p-2 text-purple-400 hover:bg-purple-400/10 rounded-full">
+                    <i data-lucide="chevron-left" class="h-6 w-6"></i>
+                  </button>
+                  <button onclick="scrollSection('topicsScroll', 1)" class="p-2 text-purple-400 hover:bg-purple-400/10 rounded-full">
+                    <i data-lucide="chevron-right" class="h-6 w-6"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="scroll-container">
+                <div id="topicsScroll" class="scroll-content">
+                  <!-- Topic buttons will be dynamically inserted here -->
+                </div>
+              </div>
+            </div>
+
+            <!-- Popular Instructors -->
+            <div>
+              <div class="flex items-center justify-between mb-6">
+                <h2 class="text-2xl font-semibold text-white">Popular Instructors</h2>
+                <div class="flex space-x-2">
+                  <button onclick="scrollSection('instructorsScroll', -1)" class="p-2 text-purple-400 hover:bg-purple-400/10 rounded-full">
+                    <i data-lucide="chevron-left" class="h-6 w-6"></i>
+                  </button>
+                  <button onclick="scrollSection('instructorsScroll', 1)" class="p-2 text-purple-400 hover:bg-purple-400/10 rounded-full">
+                    <i data-lucide="chevron-right" class="h-6 w-6"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="scroll-container">
+                <div id="instructorsScroll" class="scroll-content">
+                  <!-- Instructor Cards will be dynamically inserted here -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Course Details Modal -->
+    <div id="courseModal" class="modal fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-70" aria-hidden="true">
+      <div class="modal-content bg-gray-800 rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+        <!-- Course modal content will be dynamically inserted here -->
+      </div>
+    </div>
+
+    <!-- Instructor Details Modal -->
+    <div id="instructorModal" class="modal fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-70" aria-hidden="true">
+      <div class="modal-content bg-gray-800 rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+        <!-- Instructor modal content will be dynamically inserted here -->
+      </div>
+    </div>
+
+    <!-- Payment Modal -->
+    <div id="paymentModal" class="modal fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-70" aria-hidden="true">
+      <div class="modal-content bg-gray-800 rounded-lg max-w-md w-full">
+        <!-- Payment modal content will be dynamically inserted here -->
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 border-t border-gray-800">
+      <div class="max-w-7xl mx-auto px-4 py-12">
+        <div class="grid md:grid-cols-4 gap-8">
+          <div class="space-y-4">
+            <div class="flex items-center space-x-2">
+            </div>
+
+            <div><h3 class="text-white font-semibold mb-4">About HobbyHive</h3><p class="text-gray-400">Empowering creativity and skill development through interactive learning experiences.</p>
+          </div>
+        </div>
+        <div>
+          <h3 class="text-white font-semibold mb-4">Quick Links</h3>
+          <ul class="space-y-2 text-gray-400">
+
+            <li><a href="https://singular-kringle-5f87fe.netlify.app/aboutus%20after%20logginin" class="hover:text-purple-400">About Us</a></li>
+            <li><a href="https://singular-kringle-5f87fe.netlify.app/freelancer%20home%20page" class="hover:text-purple-400">Home</a></li>
+            <li><a href="https://singular-kringle-5f87fe.netlify.app/success%20stories%20after%20logging%20in" class="hover:text-purple-400">Success stories</a></li>
+            <li><a href="https://singular-kringle-5f87fe.netlify.app/mycourse" class="hover:text-purple-400">My Courses</a></li>
+            <li><a href="https://singular-kringle-5f87fe.netlify.app/howtobecomeinstructor" class="hover:text-purple-400">Become an Instructor</a></li>
+
+
+          </ul>
+        </div>
+        <div>
+          <h4 class="text-white font-semibold mb-4">Support</h4>
+          <ul class="space-y-2 text-gray-400">
+            <li><a href="https://singular-kringle-5f87fe.netlify.app/helpcenter" class="hover:text-purple-400">Help Center</a></li>
+            <li><a href="https://singular-kringle-5f87fe.netlify.app/community%20guidelines" class="hover:text-purple-400">Community Guidelines</a></li>
+            <li><a href="https://singular-kringle-5f87fe.netlify.app/terms%20and%20conditions" class="hover:text-purple-400">Terms And Conditions</a></li>
+
+          </ul>
+        </div>
+        <div>
+          <h4 class="text-white font-semibold mb-4">Connect With Us</h4>
+          <div class="flex space-x-4">
+            <a href="https://www.facebook.com/hobby.hive/" class="text-gray-400 hover:text-purple-400">
+              <i data-lucide="facebook" class="h-6 w-6"></i>
+            </a>
+            <a href="https://x.com/Hobby_Hive" class="text-gray-400 hover:text-purple-400">
+              <i data-lucide="twitter" class="h-6 w-6"></i>
+            </a>
+            <a href="https://www.instagram.com/hobby_hive9/" class="text-gray-400 hover:text-purple-400">
+              <i data-lucide="instagram" class="h-6 w-6"></i>
+            </a>
+            
+          </div>
+        </div>
+        </div>
+        <div class="mt-12 pt-8 border-t border-gray-800 text-center text-gray-400">
+          <p>&copy; <span id="currentYear"></span> HobbyHive. All rights reserved.</p>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      // Initialize Lucide icons
+lucide.createIcons();
+
+// Set current year in footer
+document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+// Course data
+const courses = {
+  'photography': {
+    id: 'photography',
+    title: 'Photography Basics',
+    category: 'Photography',
+    price: 29.99,
+    duration: '6.5 hours',
+    rating: 4.8,
+    reviews: 2300,
+    instructor: 'Sarah Johnson',
+    instructorImage: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330',
+    description: 'Learn the fundamentals of photography from composition to lighting. This course will take you from complete beginner to confident photographer with hands-on projects and expert feedback.',
+    image: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32',
+    syllabus: [
+      'Introduction to Camera Settings',
+      'Understanding Exposure Triangle',
+      'Composition Techniques',
+      'Natural Lighting vs Artificial Lighting',
+      'Portrait Photography Basics',
+      'Landscape Photography',
+      'Editing in Lightroom',
+      'Final Project Review'
+    ],
+    requirements: [
+      'Any camera (DSLR, mirrorless, or smartphone)',
+      'No prior experience needed',
+      'Adobe Lightroom (optional)'
+    ]
+  },
+  'digital-art': {
+    id: 'digital-art',
+    title: 'Digital Art Fundamentals',
+    category: 'Digital Art',
+    price: 24.99,
+    duration: '4.5 hours',
+    rating: 4.7,
+    reviews: 1800,
+    instructor: 'Michael Chen',
+    instructorImage: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d',
+    description: 'Master the basics of digital art with this comprehensive course. Learn about brushes, layers, color theory, and digital painting techniques used by professionals.',
+    image: 'https://images.unsplash.com/photo-1513364776144-60967b0f800f',
+    syllabus: [
+      'Introduction to Digital Tools',
+      'Brush Settings and Techniques',
+      'Understanding Layers',
+      'Color Theory for Digital Artists',
+      'Basic Shading and Lighting',
+      'Character Design Basics',
+      'Creating Backgrounds',
+      'Final Artwork Creation'
+    ],
+    requirements: [
+      'Tablet and stylus recommended',
+      'Digital art software (Photoshop, Procreate, etc.)',
+      'Basic drawing skills helpful but not required'
+    ]
+  },
+  'music-production': {
+    id: 'music-production',
+    title: 'Music Production Masterclass',
+    category: 'Music',
+    price: 34.99,
+    duration: '8.0 hours',
+    rating: 4.9,
+    reviews: 3100,
+    instructor: 'Emma Davis',
+    instructorImage: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80',
+    description: 'From beat making to mixing and mastering, this course covers everything you need to start producing professional-quality music in your home studio.',
+    image: 'https://images.unsplash.com/photo-1511379938547-c1f69419868d',
+    syllabus: [
+      'Introduction to DAWs',
+      'Beat Making Fundamentals',
+      'MIDI Programming',
+      'Audio Recording Techniques',
+      'Mixing Essentials',
+      'Mastering Basics',
+      'Sound Design',
+      'Publishing Your Music'
+    ],
+    requirements: [
+      'Computer with DAW software (FL Studio, Ableton, etc.)',
+      'Basic audio interface and headphones',
+      'No prior music theory knowledge required'
+    ]
+  },
+  'cooking': {
+    id: 'cooking',
+    title: 'Cooking Essentials 101',
+    category: 'Cooking',
+    price: 19.99,
+    duration: '5.5 hours',
+    rating: 4.6,
+    reviews: 2700,
+    instructor: 'James Wilson',
+    instructorImage: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e',
+    description: 'Learn essential cooking techniques that will transform you from a kitchen novice to a confident home cook. Master knife skills, cooking methods, and 20+ delicious recipes.',
+    image: 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f',
+    syllabus: [
+      'Knife Skills and Safety',
+      'Essential Cooking Techniques',
+      'Building Flavor Foundations',
+      'Breakfast Classics',
+      'Pasta from Scratch',
+      'Protein Cooking Methods',
+      'Vegetable Side Dishes',
+      'Dessert Basics'
+    ],
+    requirements: [
+      'Basic kitchen equipment',
+      'No prior cooking experience needed',
+      'Ingredients for recipes (list provided)'
+    ]
+  }
+};
+
+// Instructor data
+const instructors = {
+  'sarah-johnson': {
+    id: 'sarah-johnson',
+    name: 'Sarah Johnson',
+    title: 'Photography Expert',
+    bio: 'Sarah is an award-winning photographer with over 15 years of experience in portrait and landscape photography. Her work has been featured in National Geographic and Time Magazine. She specializes in teaching beginners how to master their camera settings and develop their unique photographic style.',
+    rating: 4.9,
+    students: 1200,
+    courses: 8,
+    image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330',
+    coursesTaught: [
+      'Photography Basics',
+      'Advanced Portrait Photography',
+      'Landscape Photography Masterclass',
+      'Mobile Photography for Social Media'
+    ],
+    social: {
+      instagram: '@sarahjphoto',
+      twitter: '@sarahjphotog',
+      website: 'sarahjohnsonphotography.com'
+    }
+  },
+  'michael-chen': {
+    id: 'michael-chen',
+    name: 'Michael Chen',
+    title: 'Digital Art Master',
+    bio: 'Michael is a professional digital artist and illustrator with a background in animation. He has worked with major studios like Pixar and DreamWorks, and now focuses on teaching aspiring artists the fundamentals of digital creation. His patient teaching style makes complex concepts easy to understand.',
+    rating: 4.8,
+    students: 950,
+    courses: 6,
+    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d',
+    coursesTaught: [
+      'Digital Art Fundamentals',
+      'Character Design Workshop',
+      'Digital Painting Techniques',
+      'Procreate for Beginners'
+    ],
+    social: {
+      instagram: '@michaelchenart',
+      twitter: '@mchen_digital',
+      website: 'michaelchenart.com'
+    }
+  },
+  'emma-davis': {
+    id: 'emma-davis',
+    name: 'Emma Davis',
+    title: 'Music Producer',
+    bio: 'Emma is a Grammy-nominated music producer and sound engineer who has worked with top artists across multiple genres. She brings her industry experience into the classroom, teaching practical music production skills that you can apply immediately to your own projects.',
+    rating: 4.7,
+    students: 800,
+    courses: 5,
+    image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80',
+    coursesTaught: [
+      'Music Production Masterclass',
+      'Ableton Live Crash Course',
+      'Mixing and Mastering Essentials',
+      'Electronic Music Production'
+    ],
+    social: {
+      instagram: '@emmadmusic',
+      twitter: '@emmadproductions',
+      website: 'emmadmusic.com'
+    }
+  },
+  'james-wilson': {
+    id: 'james-wilson',
+    name: 'James Wilson',
+    title: 'Culinary Arts Instructor',
+    bio: 'Chef James brings 20 years of professional cooking experience from Michelin-starred restaurants to your kitchen. His teaching philosophy focuses on mastering fundamental techniques that will elevate all your cooking, whether you\'re making a simple omelet or an elaborate dinner party menu.',
+    rating: 4.9,
+    students: 1500,
+    courses: 7,
+    image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e',
+    coursesTaught: [
+      'Cooking Essentials 101',
+      'French Cuisine at Home',
+      'Baking Fundamentals',
+      'Plant-Based Cooking'
+    ],
+    social: {
+      instagram: '@chefjameswilson',
+      twitter: '@chefjamesw',
+      website: 'chefjameswilson.com'
+    }
+  }
+};
+
+// Defined topics for searching
+const topics = ['Photography', 'Music', 'Digital Art', 'Cooking', 'Gardening', 'Writing'];
+
+// Current course for payment
+let currentPaymentCourse = null;
+// Current active topic filter
+let activeTopicFilter = null;
+// Track followed instructors
+let followedInstructors = new Set();
+// Track liked courses
+let likedCourses = new Set();
+
+// Initialize the page
+function initializePage() {
+  initializeCourses();
+  initializeTopics();
+  initializeInstructors();
+  initializeFilterToggles();
+  setupEventListeners();
+  initializeSearch();
+}
+
+// Initialize courses
+function initializeCourses() {
+  const coursesContainer = document.getElementById('coursesScroll');
+  coursesContainer.innerHTML = '';
+  
+  Object.values(courses).forEach(course => {
+    const courseCard = createCourseCard(course);
+    coursesContainer.appendChild(courseCard);
+  });
+  
+  lucide.createIcons();
+}
+
+// Initialize topics
+function initializeTopics() {
+  const topicsContainer = document.getElementById('topicsScroll');
+  
+  topics.forEach(topic => {
+    const button = document.createElement('button');
+    button.className = `topic-button bg-gradient-to-r from-purple-500 to-pink-500 text-white p-4 rounded-lg font-medium`;
+    button.textContent = topic;
+    button.onclick = () => filterByTopic(topic);
+    topicsContainer.appendChild(button);
+  });
+}
+
+// Initialize instructors
+function initializeInstructors() {
+  const instructorsContainer = document.getElementById('instructorsScroll');
+  instructorsContainer.innerHTML = '';
+  
+  Object.values(instructors).forEach(instructor => {
+    const instructorCard = createInstructorCard(instructor);
+    instructorsContainer.appendChild(instructorCard);
+  });
+  
+  lucide.createIcons();
+}
+
+// Initialize search functionality
+function initializeSearch() {
+  const searchInput = document.getElementById('searchInput');
+  const searchResults = document.getElementById('searchResults');
+  
+  // Add event listeners for search
+  searchInput.addEventListener('input', performSearch);
+  
+  // Close search results when clicking outside
+  document.addEventListener('click', function(e) {
+    if (e.target !== searchInput && !searchResults.contains(e.target)) {
+      searchResults.classList.remove('active');
+    }
+  });
+  
+  // Focus on input to show results again if they exist
+  searchInput.addEventListener('focus', function() {
+    if (searchInput.value.trim().length > 0) {
+      searchResults.classList.add('active');
+    }
+  });
+}
+
+// Perform search based on input
+function performSearch() {
+  const searchInput = document.getElementById('searchInput');
+  const searchResults = document.getElementById('searchResults');
+  const query = searchInput.value.trim().toLowerCase();
+  
+  // If query is empty, hide results
+  if (query.length === 0) {
+    searchResults.classList.remove('active');
+    return;
+  }
+  
+  // Show results container
+  searchResults.classList.add('active');
+  
+  // Search in courses
+  const matchedCourses = Object.values(courses).filter(course => 
+    course.title.toLowerCase().includes(query) ||
+    course.description.toLowerCase().includes(query) ||
+    course.category.toLowerCase().includes(query) ||
+    course.instructor.toLowerCase().includes(query)
+  );
+  
+  // Search in instructors
+  const matchedInstructors = Object.values(instructors).filter(instructor => 
+    instructor.name.toLowerCase().includes(query) ||
+    instructor.title.toLowerCase().includes(query) ||
+    instructor.bio.toLowerCase().includes(query)
+  );
+  
+  // Search in topics
+  const matchedTopics = topics.filter(topic => 
+    topic.toLowerCase().includes(query)
+  );
+  
+  // Generate HTML for search results
+  let resultsHTML = '';
+  
+  // Check if there are any results
+  if (matchedCourses.length === 0 && matchedInstructors.length === 0 && matchedTopics.length === 0) {
+    resultsHTML = `
+      <div class="search-empty">
+        <i data-lucide="search-x" class="h-12 w-12 mx-auto mb-4 opacity-50"></i>
+        <p class="text-xl mb-1">No results found for "${query}"</p>
+        <p>Try a different search term or browse our categories</p>
+      </div>
+    `;
+  } else {
+    // Add courses section if there are matched courses
+    if (matchedCourses.length > 0) {
+      resultsHTML += `<div class="search-section-title">Courses</div>`;
+      matchedCourses.forEach(course => {
+        resultsHTML += `
+          <div class="search-result-item flex items-center space-x-3 cursor-pointer" onclick="openCourseModal('${course.id}')">
+            <img src="${course.image}" alt="${course.title}" class="search-image">
+            <div>
+              <p class="text-white font-medium">${highlightMatch(course.title, query)}</p>
+              <p class="text-gray-400 text-sm">${course.category} • ${course.duration}</p>
+              <div class="flex items-center mt-1">
+                <i data-lucide="star" class="h-3 w-3 text-yellow-400"></i>
+                <span class="text-gray-300 text-xs ml-1">${course.rating.toFixed(1)}</span>
+                <span class="text-purple-400 text-xs ml-3">$${course.price.toFixed(2)}</span>
+              </div>
+            </div>
+          </div>
+        `;
+      });
+    }
+    
+    // Add instructors section if there are matched instructors
+    if (matchedInstructors.length > 0) {
+      resultsHTML += `<div class="search-section-title">Instructors</div>`;
+      matchedInstructors.forEach(instructor => {
+        resultsHTML += `
+          <div class="search-result-item flex items-center space-x-3 cursor-pointer" onclick="openInstructorModal('${instructor.id}')">
+            <img src="${instructor.image}" alt="${instructor.name}" class="search-image rounded-full">
+            <div>
+              <p class="text-white font-medium">${highlightMatch(instructor.name, query)}</p>
+              <p class="text-purple-400 text-sm">${instructor.title}</p>
+              <div class="flex items-center mt-1">
+                <i data-lucide="user" class="h-3 w-3 text-gray-400"></i>
+                <span class="text-gray-300 text-xs ml-1">${instructor.students.toLocaleString()} students</span>
+                <i data-lucide="star" class="h-3 w-3 text-yellow-400 ml-3"></i>
+                <span class="text-gray-300 text-xs ml-1">${instructor.rating.toFixed(1)}</span>
+              </div>
+            </div>
+          </div>
+        `;
+      });
+    }
+    
+    // Add topics section if there are matched topics
+    if (matchedTopics.length > 0) {
+      resultsHTML += `<div class="search-section-title">Topics</div>`;
+      resultsHTML += `<div class="search-result-item grid grid-cols-2 sm:grid-cols-3 gap-2 p-3">`;
+      matchedTopics.forEach(topic => {
+        resultsHTML += `
+          <button onclick="filterByTopicAndCloseSearch('${topic}')" class="topic-button bg-gray-700 hover:bg-purple-500 text-white p-2 rounded-lg font-medium transition-colors text-center">
+            ${highlightMatch(topic, query)}
+          </button>
+        `;
+      });
+      resultsHTML += `</div>`;
+    }
+  }
+  
+  // Update search results
+  searchResults.innerHTML = resultsHTML;
+  
+  // Re-initialize Lucide icons for the newly created elements
+  lucide.createIcons();
+}
+
+// Highlight matching text
+function highlightMatch(text, query) {
+  const regex = new RegExp(`(${query})`, 'gi');
+  return text.replace(regex, '<span class="search-highlight">$1</span>');
+}
+
+// Filter by topic and close search
+function filterByTopicAndCloseSearch(topic) {
+  filterByTopic(topic);
+  document.getElementById('searchResults').classList.remove('active');
+  document.getElementById('searchInput').value = '';
+}
+
+// Create a course card element
+function createCourseCard(course) {
+  const card = document.createElement('div');
+  card.className = 'course-card bg-gray-800/50 rounded-lg overflow-hidden cursor-pointer';
+  card.onclick = () => openCourseModal(course.id);
+  
+  card.innerHTML = `
+    <img src="${course.image}" alt="${course.title}" class="w-full h-48 object-cover">
+    <div class="p-4">
+      <div class="flex items-center justify-between mb-2">
+        <span class="text-purple-400">${course.category}</span>
+        <span class="text-white">$${course.price.toFixed(2)}</span>
+      </div>
+      <h3 class="text-lg font-semibold text-white mb-2">${course.title}</h3>
+      <div class="flex items-center text-gray-300 text-sm mb-4">
+        <i data-lucide="clock" class="h-4 w-4 mr-1"></i>
+        <span>${course.duration}</span>
+        <i data-lucide="star" class="h-4 w-4 text-yellow-400 ml-4 mr-1"></i>
+        <span>${course.rating.toFixed(1)} (${course.reviews.toLocaleString()} reviews)</span>
+      </div>
+      <button class="w-full py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors">
+        Learn More
+      </button>
+    </div>
+  `;
+  
+  return card;
+}
+
+// Create an instructor card element
+function createInstructorCard(instructor) {
+  const card = document.createElement('div');
+  card.className = 'instructor-card bg-gray-800/50 p-4 rounded-lg cursor-pointer';
+  card.onclick = () => openInstructorModal(instructor.id);
+  
+  card.innerHTML = `
+    <div class="flex items-center space-x-4">
+      <img src="${instructor.image}" alt="${instructor.name}" class="w-16 h-16 rounded-full object-cover">
+      <div>
+        <h3 class="text-lg font-semibold text-white">${instructor.name}</h3>
+        <p class="text-purple-400">${instructor.title}</p>
+        <div class="flex items-center mt-1">
+          <i data-lucide="star" class="h-4 w-4 text-yellow-400"></i>
+          <span class="text-gray-300 ml-1">${instructor.rating.toFixed(1)}</span>
+          <span class="text-gray-400 ml-2">(${instructor.students.toLocaleString()} students)</span>
+        </div>
+      </div>
+    </div>
+  `;
+  
+  return card;
+}
+
+// Initialize filter toggles
+function initializeFilterToggles() {
+  document.querySelectorAll('.toggle-btn').forEach(button => {
+    const targetId = button.dataset.target;
+    const content = document.getElementById(targetId);
+    const arrow = button.querySelector('.toggle-arrow');
+    
+    content.style.display = 'none';
+    
+    button.addEventListener('click', () => {
+      const isOpen = content.style.display === 'block';
+      content.style.display = isOpen ? 'none' : 'block';
+      arrow.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(180deg)';
+    });
+  });
+}
+
+// Setup event listeners
+function setupEventListeners() {
+  document.getElementById('applyFilters').addEventListener('click', filterCourses);
+  document.getElementById('resetFilters').addEventListener('click', resetFilters);
+  
+  // Close modals when clicking outside
+  document.querySelectorAll('.modal').forEach(modal => {
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        closeAllModals();
+      }
+    });
+  });
+  
+  // Close modals with Escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      closeAllModals();
+    }
+  });
+}
+
+// Scroll functionality for sections
+function scrollSection(elementId, direction) {
+  const container = document.getElementById(elementId);
+  const scrollAmount = container.offsetWidth * 0.8 * direction;
+  container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+}
+
+// Filter courses based on selected filters
+function filterCourses() {
+  const selectedRatings = Array.from(document.querySelectorAll('input[name="rating"]:checked')).map(el => parseFloat(el.value));
+  const selectedDurations = Array.from(document.querySelectorAll('input[name="duration"]:checked')).map(el => el.value);
+  const selectedTopics = Array.from(document.querySelectorAll('input[name="topic"]:checked')).map(el => el.value);
+  const selectedPrices = Array.from(document.querySelectorAll('input[name="price"]:checked')).map(el => el.value);
+  
+  const filteredCourses = Object.values(courses).filter(course => {
+    let shouldShow = true;
+    
+    // Rating filter
+    if (selectedRatings.length > 0) {
+      shouldShow = selectedRatings.some(minRating => course.rating >= minRating);
+    }
+    
+    // Duration filter
+    if (shouldShow && selectedDurations.length > 0) {
+      const hours = parseFloat(course.duration.split(' ')[0]);
+      shouldShow = selectedDurations.some(range => {
+        if (range === '0-2') return hours <= 2;
+        if (range === '2-5') return hours > 2 && hours <= 5;
+        if (range === '5+') return hours > 5;
+        return false;
+      });
+    }
+    
+    // Topic filter
+    if (shouldShow && (selectedTopics.length > 0 || activeTopicFilter)) {
+      if (activeTopicFilter) {
+        shouldShow = course.category === activeTopicFilter;
+      } else {
+        shouldShow = selectedTopics.includes(course.category);
+      }
+    }
+    
+    // Price filter
+    if (shouldShow && selectedPrices.length > 0) {
+      shouldShow = selectedPrices.some(range => {
+        if (range === 'free') return course.price === 0;
+        if (range === 'under20') return course.price > 0 && course.price < 20;
+        if (range === '20-50') return course.price >= 20 && course.price <= 50;
+        if (range === '50+') return course.price > 50;
+        return false;
+      });
+    }
+    
+    return shouldShow;
+  });
+  
+  const coursesContainer = document.getElementById('coursesScroll');
+  coursesContainer.innerHTML = '';
+  
+  filteredCourses.forEach(course => {
+    const courseCard = createCourseCard(course);
+    coursesContainer.appendChild(courseCard);
+  });
+  
+  lucide.createIcons();
+}
+
+// Filter courses by topic
+function filterByTopic(topic) {
+  document.querySelectorAll('.topic-button').forEach(button => {
+    button.classList.remove('active-topic');
+    if (button.textContent.trim() === topic) {
+      button.classList.toggle('active-topic');
+    }
+  });
+  
+  if (activeTopicFilter === topic) {
+    activeTopicFilter = null;
+  } else {
+    activeTopicFilter = topic;
+  }
+  
+  document.querySelectorAll('input[name="topic"]').forEach(checkbox => {
+    checkbox.checked = false;
+  });
+  
+  filterCourses();
+}
+
+// Reset all filters
+function resetFilters() {
+  document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+    checkbox.checked = false;
+  });
+  
+  activeTopicFilter = null;
+  document.querySelectorAll('.topic-button').forEach(button => {
+    button.classList.remove('active-topic');
+  });
+  
+  initializeCourses();
+}
+
+// Open course modal
+function openCourseModal(courseId) {
+  const course = courses[courseId];
+  currentPaymentCourse = courseId;
+  const modal = document.getElementById('courseModal');
+  
+  modal.querySelector('.modal-content').innerHTML = `
+    <div class="relative">
+      <button onclick="closeAllModals()" class="absolute top-4 right-4 text-gray-400 hover:text-white bg-gray-700 rounded-full p-2 z-10">
+        <i data-lucide="x" class="h-6 w-6"></i>
+      </button>
+      
+      <div>
+        <div class="relative">
+          <img src="${course.image}" alt="${course.title}" class="w-full h-64 object-cover">
+          <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-gray-900 to-transparent h-32"></div>
+        </div>
+        
+        <div class="p-6">
+          <div class="flex flex-col md:flex-row gap-8">
+            <div class="md:w-2/3">
+              <div class="flex items-center justify-between mb-4">
+                <span class="text-purple-400 font-medium">${course.category}</span>
+                <span class="text-2xl font-bold text-white">$${course.price.toFixed(2)}</span>
+              </div>
+              <h2 class="text-3xl font-bold text-white mb-4">${course.title}</h2>
+              
+              <div class="flex items-center space-x-6 mb-6">
+                <div class="flex items-center text-gray-300">
+                  <i data-lucide="clock" class="h-5 w-5 mr-2"></i>
+                  <span>${course.duration}</span>
+                </div>
+                <div class="flex items-center text-gray-300">
+                  <i data-lucide="star" class="h-5 w-5 text-yellow-400 mr-2"></i>
+                  <span>${course.rating.toFixed(1)} (${course.reviews.toLocaleString()} reviews)</span>
+                </div>
+              </div>
+              
+              <div class="mb-8">
+                <h3 class="text-xl font-semibold text-white mb-3">About This Course</h3>
+                <p class="text-gray-300">${course.description}</p>
+              </div>
+              
+              <div class="mb-8">
+                <h3 class="text-xl font-semibold text-white mb-3">What You'll Learn</h3>
+                <ul class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  ${course.syllabus.map(item => `
+                    <li class="flex items-start text-gray-300">
+                      <i data-lucide="check" class="h-5 w-5 text-purple-400 mr-2 mt-0.5"></i>
+                      <span>${item}</span>
+                    </li>
+                  `).join('')}
+                </ul>
+              </div>
+              
+              <div class="mb-8">
+                <h3 class="text-xl font-semibold text-white mb-3">Requirements</h3>
+                <ul class="space-y-2">
+                  ${course.requirements.map(item => `
+                    <li class="flex items-start text-gray-300">
+                      <i data-lucide="check" class="h-5 w-5 text-purple-400 mr-2 mt-0.5"></i>
+                      <span>${item}</span>
+                    </li>
+                  `).join('')}
+                </ul>
+              </div>
+            </div>
+            
+            <div class="md:w-1/3">
+              <div class="bg-gray-700/50 rounded-lg p-6 sticky top-6">
+                <div class="flex items-center space-x-4 mb-6">
+                  <img src="${course.instructorImage}" alt="${course.instructor}" class="w-12 h-12 rounded-full object-cover">
+                  <div>
+                    <h4 class="text-white font-medium">Instructor</h4>
+                    <p class="text-purple-400">${course.instructor}</p>
+                  </div>
+                </div>
+                
+                <div class="space-y-4">
+                  <button onclick="openPaymentModal('${courseId}')" class="w-full py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg font-medium hover:from-purple-600 hover:to-pink-600 transition-all">
+                    Enroll Now - $${course.price.toFixed(2)}
+                  </button>
+                  
+                  <button onclick="toggleLikeCourse('${courseId}')" class="w-full py-3 border border-purple-400 text-purple-400 rounded-lg font-medium hover:bg-purple-400/10 transition-colors">
+                    ${likedCourses.has(courseId) ? 'Remove from Wishlist' : 'Add to Wishlist'}
+                  </button>
+                  
+                  <div class="pt-4 border-t border-gray-600">
+                    <div class="flex items-center justify-between text-gray-300 mb-2">
+                      <span>Duration</span>
+                      <span>${course.duration}</span>
+                    </div>
+                    <div class="flex items-center justify-between text-gray-300 mb-2">
+                      <span>Skill Level</span>
+                      <span>Beginner</span>
+                    </div>
+                    <div class="flex items-center justify-between text-gray-300">
+                      <span>Language</span>
+                      <span>English</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+  
+  modal.setAttribute('aria-hidden', 'false');
+  document.body.style.overflow = 'hidden';
+  
+  lucide.createIcons();
+}
+
+// Open instructor modal
+function openInstructorModal(instructorId) {
+  const instructor = instructors[instructorId];
+  const modal = document.getElementById('instructorModal');
+  const isFollowed = followedInstructors.has(instructorId);
+  
+  modal.querySelector('.modal-content').innerHTML = `
+    <div class="relative">
+      <button onclick="closeAllModals()" class="absolute top-4 right-4 text-gray-400 hover:text-white bg-gray-700 rounded-full p-2 z-10">
+        <i data-lucide="x" class="h-6 w-6"></i>
+      </button>
+      
+      <div>
+        <div class="relative">
+          <div class="w-full h-64 bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center">
+            <img src="${instructor.image}" alt="${instructor.name}" class="w-32 h-32 rounded-full object-cover border-4 border-white">
+          </div>
+        </div>
+        
+        <div class="p-6">
+          <div class="flex flex-col md:flex-row gap-8">
+            <div class="md:w-2/3">
+              <h2 class="text-3xl font-bold text-white mb-2">${instructor.name}</h2>
+              <p class="text-purple-400 text-xl mb-6">${instructor.title}</p>
+              
+              <div class="flex items-center space-x-6 mb-6">
+                <div class="flex items-center text-gray-300">
+                  <i data-lucide="star" class="h-5 w-5 text-yellow-400 mr-2"></i>
+                  <span>${instructor.rating.toFixed(1)} Rating</span>
+                </div>
+                <div class="flex items-center text-gray-300">
+                  <i data-lucide="users" class="h-5 w-5 text-purple-400 mr-2"></i>
+                  <span>${instructor.students.toLocaleString()} Students</span>
+                </div>
+                <div class="flex items-center text-gray-300">
+                  <i data-lucide="book-open" class="h-5 w-5 text-purple-400 mr-2"></i>
+                  <span>${instructor.courses} Courses</span>
+                </div>
+              </div>
+              
+              <div class="mb-8">
+                <h3 class="text-xl font-semibold text-white mb-3">About ${instructor.name.split(' ')[0]}</h3>
+                <p class="text-gray-300">${instructor.bio}</p>
+              </div>
+              
+              <div class="mb-8">
+                <h3 class="text-xl font-semibold text-white mb-3">Courses by ${instructor.name.split(' ')[0]}</h3>
+                <ul class="space-y-3">
+                  ${instructor.coursesTaught.map(course => `
+                    <li class="flex items-start text-gray-300">
+                      <i data-lucide="play-circle" class="h-5 w-5 text-purple-400 mr-2 mt-0.5"></i>
+                      <span>${course}</span>
+                    </li>
+                  `).join('')}
+                </ul>
+              </div>
+            </div>
+            
+            <div class="md:w-1/3">
+              <div class="bg-gray-700/50 rounded-lg p-6 sticky top-6">
+                <h3 class="text-xl font-semibold text-white mb-4">Connect</h3>
+                
+                <div class="space-y-4">
+                  <div class="flex items-center text-gray-300">
+                    <i data-lucide="instagram" class="h-5 w-5 text-purple-400 mr-3"></i>
+                    <span>${instructor.social.instagram}</span>
+                  </div>
+                  <div class="flex items-center text-gray-300">
+                    <i data-lucide="twitter" class="h-5 w-5 text-purple-400 mr-3"></i>
+                    <span>${instructor.social.twitter}</span>
+                  </div>
+                  <div class="flex items-center text-gray-300">
+                    <i data-lucide="globe" class="h-5 w-5 text-purple-400 mr-3"></i>
+                    <span>${instructor.social.website}</span>
+                  </div>
+                  
+                  <div class="pt-4 border-t border-gray-600 mt-4">
+                    <button onclick="showInstructorCourses('${instructorId}')" class="w-full py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg font-medium hover:from-purple-600 hover:to-pink-600 transition-all mb-3">
+                      View All Courses
+                    </button>
+                    <button onclick="toggleFollowInstructor('${instructorId}')" class="w-full py-3 border rounded-lg font-medium transition-all ${
+                      isFollowed 
+                        ? 'border-purple-400 bg-purple-400/10 text-purple-400' 
+                        : 'border-purple-400 text-purple-400 hover:bg-purple-400/10'
+                    }">
+                      ${isFollowed ? 'Following' : 'Follow Instructor'}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+  
+  modal.setAttribute('aria-hidden', 'false');
+  document.body.style.overflow = 'hidden';
+  
+  lucide.createIcons();
+}
+
+// Show instructor's courses
+function showInstructorCourses(instructorId) {
+  const instructor = instructors[instructorId];
+  const modal = document.getElementById('instructorModal');
+  const instructorCourses = Object.values(courses).filter(course => 
+    course.instructor === instructor.name
+  );
+  
+  modal.querySelector('.modal-content').innerHTML = `
+    <div class="p-6">
+      <div class="flex items-center mb-6">
+        <button onclick="openInstructorModal('${instructorId}')" class="mr-4 text-gray-400 hover:text-white bg-gray-700 rounded-full p-2">
+          <i data-lucide="x" class="h-5 w-5"></i>
+        </button>
+        <h2 class="text-2xl font-bold text-white">
+          Courses by ${instructor.name}
+        </h2>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        ${instructorCourses.map(course => `
+          <div class="course-card bg-gray-700/50 rounded-lg overflow-hidden">
+            <img src="${course.image}" alt="${course.title}" class="w-full h-48 object-cover">
+            <div class="p-4">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-purple-400">${course.category}</span>
+                <span class="text-white">$${course.price.toFixed(2)}</span>
+              </div>
+              <h3 class="text-lg font-semibold text-white mb-2">${course.title}</h3>
+              <div class="flex items-center text-gray-300 text-sm mb-4">
+                <i data-lucide="clock" class="h-4 w-4 mr-1"></i>
+                <span>${course.duration}</span>
+                <i data-lucide="star" class="h-4 w-4 text-yellow-400 ml-4 mr-1"></i>
+                <span>${course.rating.toFixed(1)} (${course.reviews.toLocaleString()} reviews)</span>
+              </div>
+              <p class="text-gray-300 text-sm mb-4 line-clamp-2">${course.description}</p>
+              
+              <div class="flex items-center space-x-3 mt-4">
+                <button onclick="openPaymentModal('${course.id}')" class="flex-1 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg font-medium hover:from-purple-600 hover:to-pink-600 transition-all">
+                  Enroll Now
+                </button>
+                <button onclick="toggleLikeCourse('${course.id}')" class="p-2 text-purple-400 border border-purple-400 rounded-lg hover:bg-purple-400/10">
+                  <i data-lucide="heart" class="h-5 w-5 ${likedCourses.has(course.id) ? 'fill-current' : ''}"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        `).join('')}
+        
+        ${instructorCourses.length === 0 ? `
+          <div class="col-span-2 py-10 text-center text-gray-400">
+            <i data-lucide="book-open" class="h-12 w-12 mx-auto mb-4 opacity-50"></i>
+            <p class="text-xl">No courses available yet</p>
+          </div>
+        ` : ''}
+      </div>
+    </div>
+  `;
+  
+  lucide.createIcons();
+}
+
+// Open payment modal
+function openPaymentModal(courseId) {
+  const course = courses[courseId];
+  currentPaymentCourse = courseId;
+  const modal = document.getElementById('paymentModal');
+  
+  modal.querySelector('.modal-content').innerHTML = `
+    <div class="relative">
+      <button onclick="closeAllModals()" class="absolute top-4 right-4 text-gray-400 hover:text-white bg-gray-700 rounded-full p-2 z-10">
+        <i data-lucide="x" class="h-6 w-6"></i>
+      </button>
+      
+      <div class="p-6">
+        <h2 class="text-2xl font-bold text-white mb-6">Payment Details</h2>
+        
+        <div class="mb-6 p-4 bg-gray-700/50 rounded-lg">
+          <h3 class="text-lg font-semibold text-white mb-1">${course.title}</h3>
+          <div class="flex justify-between items-center">
+            <span class="text-purple-400 text-sm">${course.category}</span>
+            <span class="text-xl font-bold text-white">$${course.price.toFixed(2)}</span>
+          </div>
+        </div>
+        
+        <form id="paymentForm" class="space-y-4">
+          <div>
+            <label for="cardNumber" class="payment-label">Card Number</label>
+            <input 
+              type="text" 
+              id="cardNumber" 
+              placeholder="1234 5678 9012 3456" 
+              class="payment-input"
+              maxlength="19"
+              oninput="formatCardNumber(this)"
+            >
+          </div>
+          
+          <div class="expiry-cvv">
+            <div>
+              <label for="expiryDate" class="payment-label">Expiry Date</label>
+              <input 
+                type="text" 
+                id="expiryDate" 
+                placeholder="MM/YY" 
+                class="payment-input"
+                maxlength="5"
+                oninput="formatExpiryDate(this)"
+              >
+            </div>
+            <div>
+              <label for="cvv" class="payment-label">CVV</label>
+              <input 
+                type="text" 
+                id="cvv" 
+                placeholder="123" 
+                class="payment-input"
+                maxlength="3"
+              >
+            </div>
+          </div>
+          
+          <div>
+            <label for="cardName" class="payment-label">Cardholder Name</label>
+            <input 
+              type="text" 
+              id="cardName" 
+              placeholder="John Doe" 
+              class="payment-input"
+            >
+          </div>
+          
+          <button 
+            type="button" 
+            onclick="processPayment()"
+            class="w-full py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg font-medium hover:from-purple-600 hover:to-pink-600 transition-all mt-6"
+          >
+            Pay $${course.price.toFixed(2)}
+          </button>
+        </form>
+      </div>
+    </div>
+  `;
+  
+  modal.setAttribute('aria-hidden', 'false');
+  document.body.style.overflow = 'hidden';
+  
+  lucide.createIcons();
+}
+
+// Toggle instructor follow status
+function toggleFollowInstructor(instructorId) {
+  if (followedInstructors.has(instructorId)) {
+    followedInstructors.delete(instructorId);
+  } else {
+    followedInstructors.add(instructorId);
+  }
+  
+  openInstructorModal(instructorId);
+}
+
+// Toggle course like status
+function toggleLikeCourse(courseId) {
+  if (likedCourses.has(courseId)) {
+    likedCourses.delete(courseId);
+  } else {
+    likedCourses.add(courseId);
+  }
+  
+  if (document.getElementById('courseModal').getAttribute('aria-hidden') === 'false') {
+    openCourseModal(courseId);
+  }
+}
+
+// Format card number with spaces
+function formatCardNumber(input) {
+  let value = input.value.replace(/\D/g, '');
+  value = value.replace(/(\d{4})(?=\d)/g, '$1 ');
+  input.value = value.substring(0, 19);
+}
+
+// Format expiry date as MM/YY
+function formatExpiryDate(input) {
+  let value = input.value.replace(/\D/g, '');
+  if (value.length > 2) {
+    value = value.substring(0, 2) + '/' + value.substring(2, 4);
+  }
+  input.value = value.substring(0, 5);
+}
+
+// Process payment
+function processPayment() {
+  const cardNumber = document.getElementById('cardNumber').value;
+  const expiryDate = document.getElementById('expiryDate').value;
+  const cvv = document.getElementById('cvv').value;
+  const cardName = document.getElementById('cardName').value;
+  
+  if (!cardNumber || !expiryDate || !cvv || !cardName) {
+    alert('Please fill in all payment details');
+    return;
+  }
+  
+  alert(`Payment successful for ${courses[currentPaymentCourse].title}!`);
+  window.location.href = "https://singular-kringle-5f87fe.netlify.app/mycourse";
+  closeAllModals();
+}
+
+// Close all modals
+function closeAllModals() {
+  document.querySelectorAll('.modal').forEach(modal => {
+    modal.setAttribute('aria-hidden', 'true');
+  });
+  document.body.style.overflow = 'auto';
+}
+
+// Initialize the page when DOM is loaded
+document.addEventListener('DOMContentLoaded', initializePage);
+    </script>
+  </body>
+</html>

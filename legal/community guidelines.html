@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Community Guidelines</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23A78BFA' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='lucide lucide-palette-icon lucide-palette'%3E%3Cpath d='M12 22a1 1 0 0 1 0-20 10 9 0 0 1 10 9 5 5 0 0 1-5 5h-2.25a1.75 1.75 0 0 0-1.4 2.8l.3.4a1.75 1.75 0 0 1-1.4 2.8z'/%3E%3Ccircle cx='13.5' cy='6.5' r='.5' fill='%23A78BFA'/%3E%3Ccircle cx='17.5' cy='10.5' r='.5' fill='%23A78BFA'/%3E%3Ccircle cx='6.5' cy='12.5' r='.5' fill='%23A78BFA'/%3E%3Ccircle cx='8.5' cy='7.5' r='.5' fill='%23A78BFA'/%3E%3C/svg%3E" />
+
+    <style>
+      /* Base styles */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family:
+          system-ui,
+          -apple-system,
+          sans-serif;
+        color: #e2e8f0;
+        line-height: 1.5;
+      }
+
+      .min-h-screen {
+        min-height: 100vh;
+        background-color: rgb(10, 17, 34);
+      }
+
+      .container {
+        max-width: 896px;
+        margin: 0 auto;
+        padding: 3rem 1rem;
+      }
+
+      /* Header styles */
+      .header {
+        text-align: center;
+        margin-bottom: 3rem;
+      }
+
+      .header h1 {
+        font-size: 2.25rem;
+        font-weight: bold;
+        margin-bottom: 1rem;
+      }
+
+      .subtitle {
+        font-size: 1.125rem;
+        color: #a0aec0;
+      }
+
+      /* Section styles */
+      .sections {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+      }
+
+      .section-card {
+        background: rgb(22, 29, 47);
+        border-radius: 1rem;
+        padding: 2rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        transition:
+          transform 0.2s ease,
+          box-shadow 0.2s ease;
+      }
+
+      .section-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+      }
+
+      /* Grid layout */
+      .grid-2 {
+        display: grid;
+        gap: 1.5rem;
+      }
+
+      @media (min-width: 768px) {
+        .grid-2 {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+      /* Typography */
+      .gradient-text {
+        background: linear-gradient(to right, #a855f7, #ec4899);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+
+      .section-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      /* Icons */
+      .icon {
+        width: 20px;
+        height: 20px;
+      }
+
+      .icon.purple {
+        color: #d946ef;
+      }
+
+      .icon.pink {
+        color: #f472b6;
+      }
+
+      /* Value items */
+      .value-item {
+        margin-bottom: 1rem;
+      }
+
+      .value-header {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: #e879f9;
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+      }
+
+      /* Rules list */
+      .rules-list {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+      }
+
+      .rule-item {
+        border-left: 4px solid #d946ef;
+        padding-left: 1rem;
+      }
+
+      .rule-item h3 {
+        color: #d1d5db;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+      }
+
+      /* Lists */
+      .bullet-list {
+        list-style-type: disc;
+        padding-left: 1.5rem;
+        margin-top: 0.5rem;
+      }
+
+      .bullet-list li {
+        margin-bottom: 0.5rem;
+      }
+
+      /* Subsection titles */
+      .subsection-title {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: #d1d5db;
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+      }
+
+      /* Footer */
+      .footer {
+        margin-top: 3rem;
+        text-align: center;
+        color: #a0aec0;
+      }
+    </style>
+    <script src="https://unpkg.com/lucide@latest"></script>
+  </head>
+  <body>
+    <div class="min-h-screen">
+      <div class="container">
+        <header class="header">
+          <h1 class="gradient-text">HobbyHive Community Guidelines</h1>
+          <p class="subtitle">
+            Building a safe and enriching environment for skill sharing and
+            learning
+          </p>
+        </header>
+
+        <div class="sections">
+          <!-- Core Values Section -->
+          <section class="section-card">
+            <h2 class="section-title gradient-text">
+              <i data-lucide="heart" class="icon pink"></i>
+              Our Core Values
+            </h2>
+            <div class="grid-2">
+              <div class="value-item">
+                <div class="value-header">
+                  <i data-lucide="hand-shake" class="icon purple"></i>
+                  <h3>Mutual Respect</h3>
+                </div>
+                <p>
+                  Treat all community members with respect, regardless of skill
+                  level or background.
+                </p>
+              </div>
+              <div class="value-item">
+                <div class="value-header">
+                  <i data-lucide="book-open" class="icon purple"></i>
+                  <h3>Continuous Learning</h3>
+                </div>
+                <p>
+                  Embrace a growth mindset and be open to learning from others.
+                </p>
+              </div>
+            </div>
+          </section>
+
+          <!-- Community Rules -->
+          <section class="section-card">
+            <h2 class="section-title gradient-text">
+              <i data-lucide="shield" class="icon purple"></i>
+              Community Rules
+            </h2>
+            <div class="rules-list">
+              <div class="rule-item">
+                <h3>1. Honest Representation</h3>
+                <p>
+                  Be truthful about your skills and experience.
+                  Misrepresentation damages trust and learning opportunities.
+                </p>
+              </div>
+              <div class="rule-item">
+                <h3>2. Fair Exchange</h3>
+                <p>
+                  When charging for services, maintain transparent and
+                  reasonable pricing. Remember, we're here to help each other
+                  grow.
+                </p>
+              </div>
+              <div class="rule-item">
+                <h3>3. Constructive Communication</h3>
+                <p>
+                  Provide feedback respectfully and constructively. Focus on
+                  helping others improve.
+                </p>
+              </div>
+            </div>
+          </section>
+
+          <!-- Safety & Trust -->
+          <section class="section-card">
+            <h2 class="section-title gradient-text">
+              <i data-lucide="alert-triangle" class="icon purple"></i>
+              Safety & Trust
+            </h2>
+            <div class="grid-2">
+              <div>
+                <h3 class="subsection-title">
+                  <i data-lucide="users" class="icon purple"></i>
+                  Member Protection
+                </h3>
+                <ul class="bullet-list">
+                  <li>Never share personal financial information</li>
+                  <li>Report suspicious behavior immediately</li>
+                  <li>Use platform messaging for communication</li>
+                </ul>
+              </div>
+              <div>
+                <h3 class="subsection-title">
+                  <i data-lucide="scale" class="icon purple"></i>
+                  Dispute Resolution
+                </h3>
+                <ul class="bullet-list">
+                  <li>Contact moderators for mediation</li>
+                  <li>Document all agreements clearly</li>
+                  <li>Follow platform refund policies</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <!-- Monetization Guidelines -->
+          <section class="section-card">
+            <h2 class="section-title gradient-text">
+              <i data-lucide="dollar-sign" class="icon purple"></i>
+              Monetization Guidelines
+            </h2>
+            <p>When charging for your services:</p>
+            <ul class="bullet-list">
+              <li>Set clear expectations about what learners will receive</li>
+              <li>Provide detailed pricing structures upfront</li>
+              <li>Maintain professional standards in service delivery</li>
+              <li>Honor scheduled commitments and time slots</li>
+            </ul>
+          </section>
+
+          <!-- Communication Standards -->
+          <section class="section-card">
+            <h2 class="section-title gradient-text">
+              <i data-lucide="message-circle" class="icon purple"></i>
+              Communication Standards
+            </h2>
+            <p>To maintain a positive learning environment:</p>
+            <ul class="bullet-list">
+              <li>Use appropriate and professional language</li>
+              <li>Respond to messages within 24 hours</li>
+              <li>Be clear and specific in your communication</li>
+              <li>Respect others' time and boundaries</li>
+            </ul>
+          </section>
+        </div>
+
+        <footer class="footer">
+          <p>
+            These guidelines are subject to updates. Last updated:
+            <span id="lastUpdated"></span>
+          </p>
+        </footer>
+      </div>
+    </div>
+    <script>
+      // Initialize Lucide icons
+      lucide.createIcons();
+
+      // Set the last updated date
+      document.getElementById("lastUpdated").textContent =
+        new Date().toLocaleDateString();
+    </script>
+  </body>
+</html>

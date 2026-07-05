@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wishlist</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23A78BFA' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='lucide lucide-palette-icon lucide-palette'%3E%3Cpath d='M12 22a1 1 0 0 1 0-20 10 9 0 0 1 10 9 5 5 0 0 1-5 5h-2.25a1.75 1.75 0 0 0-1.4 2.8l.3.4a1.75 1.75 0 0 1-1.4 2.8z'/%3E%3Ccircle cx='13.5' cy='6.5' r='.5' fill='%23A78BFA'/%3E%3Ccircle cx='17.5' cy='10.5' r='.5' fill='%23A78BFA'/%3E%3Ccircle cx='6.5' cy='12.5' r='.5' fill='%23A78BFA'/%3E%3Ccircle cx='8.5' cy='7.5' r='.5' fill='%23A78BFA'/%3E%3C/svg%3E" />
+
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #1f2937;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #4b5563;
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #6b7280;
+    }
+
+    /* Animations */
+    .fade-in {
+      animation: fadeIn 0.3s ease-in;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .item-card {
+      transition: all 0.3s ease;
+    }
+
+    .item-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 4px 20px rgba(139, 92, 246, 0.1);
+    }
+
+    /* Close Button Animation */
+    .close-btn {
+      transition: all 0.2s ease;
+    }
+
+    .close-btn:hover {
+      background-color: rgba(139, 92, 246, 0.15);
+      transform: rotate(90deg);
+    }
+
+    /* Footer Styles */
+    .footer {
+      background-color: rgba(17, 24, 39, 0.8);
+      backdrop-filter: blur(8px);
+      border-top: 1px solid #1f2937;
+      padding: 3rem 1.5rem 1.5rem;
+      margin-top: auto;
+    }
+
+    .footer-container {
+      max-width: 80rem;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+    }
+
+    .footer-section h3 {
+      color: white;
+      font-size: 1.125rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+
+    .footer-section p {
+      color: #9ca3af;
+      line-height: 1.5;
+    }
+
+    .footer-section ul {
+      list-style: none;
+    }
+
+    .footer-section ul li {
+      margin-bottom: 0.5rem;
+    }
+
+    .footer-section ul li a {
+      color: #9ca3af;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer-section ul li a:hover {
+      color: #a855f7;
+    }
+
+    .social-icons {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .social-icon {
+      color: #9ca3af;
+      transition: color 0.2s;
+    }
+
+    .social-icon:hover {
+      color: #a855f7;
+    }
+
+    .social-icon i {
+      width: 1.5rem;
+      height: 1.5rem;
+    }
+
+    .footer-bottom {
+      max-width: 80rem;
+      margin: 2rem auto 0;
+      padding-top: 1.5rem;
+      border-top: 1px solid #374151;
+      text-align: center;
+      color: #9ca3af;
+      font-size: 0.875rem;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      min-height: 100vh;
+      background: linear-gradient(to bottom, #111827, #1f2937, #111827);
+      color: white;
+    }
+
+    .bg-gradient-text {
+      background: linear-gradient(to right, #a78bfa, #ec4899);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background-color: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(4px);
+      z-index: 100;
+      overflow-y: auto;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal.show {
+      display: flex;
+    }
+
+    /* Navigation and dropdown styles */
+    nav {
+      background-color: rgba(17, 24, 39, 0.8);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    }
+    
+    .dropdown {
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-10px);
+      transition: all 0.3s ease;
+    }
+    
+    .dropdown.active {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+    
+    .dropdown-item:hover {
+      background-color: rgba(126, 34, 206, 0.1);
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar with Dropdowns -->
+  <nav class="fixed w-full z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <!-- Logo -->
+        <div class="flex items-center space-x-2">
+          <i data-lucide="palette" class="h-8 w-8 text-purple-400"></i>
+          <span class="text-2xl font-bold bg-gradient-text">
+            <a href="https://singular-kringle-5f87fe.netlify.app/freelancer%20home%20page">HobbyHive</a>
+          </span>
+        </div>
+
+        <!-- Search Bar -->
+        <div class="hidden md:block flex-1 max-w-2xl mx-8">
+          <div class="relative">
+            <input 
+              type="text" 
+              placeholder="Search for courses, topics, or instructors..." 
+              class="w-full bg-gray-800 bg-opacity-50 text-gray-200 placeholder-gray-400 rounded-full py-2 pl-10 pr-4 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:ring-opacity-50"
+            />
+            <i data-lucide="search" class="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400"></i>
+          </div>
+        </div>
+
+        <!-- Navigation Icons -->
+        <div class="flex items-center space-x-4">
+          <button class="text-purple-400 hover:text-purple-300 transition-colors" onclick="window.location.href='https://singular-kringle-5f87fe.netlify.app/skillgig'">
+            <i data-lucide="dollar-sign" class="h-6 w-6"></i>
+          </button>
+          <button class="text-purple-400 hover:text-purple-300 transition-colors" onclick="window.location.href='https://singular-kringle-5f87fe.netlify.app/skillswap'">
+            <i data-lucide="repeat" class="h-6 w-6"></i>
+          </button>
+          <button class="text-purple-400 hover:text-purple-300 transition-colors" onclick="window.location.href='https://singular-kringle-5f87fe.netlify.app/skill%20course%20page'">
+            <i data-lucide="graduation-cap" class="h-6 w-6"></i>
+          </button>
+          <div class="h-6 w-px bg-gray-700"></div>
+          
+          <!-- Notification Icon with Dropdown -->
+          <div class="relative">
+            <button id="notificationBtn" class="text-purple-400 hover:text-purple-300 relative transition-colors">
+              <i data-lucide="bell" class="h-6 w-6"></i>
+              <span class="absolute -top-1 -right-1 bg-pink-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">3</span>
+            </button>
+            <div id="notificationDropdown" class="dropdown absolute right-0 mt-2 w-80 bg-gray-800 rounded-lg shadow-lg border border-gray-700 py-2 z-50">
+              <div class="px-4 py-3 border-b border-gray-700">
+                <h3 class="text-lg font-semibold">Notifications</h3>
+              </div>
+              <div class="max-h-96 overflow-y-auto">
+                <a href="#" class="dropdown-item block px-4 py-3 hover:bg-purple-900/10 border-b border-gray-700">
+                  <p class="font-medium">New course available: Advanced Painting</p>
+                  <p class="text-sm text-gray-400 mt-1">2h ago</p>
+                </a>
+                <a href="#" class="dropdown-item block px-4 py-3 hover:bg-purple-900/10 border-b border-gray-700">
+                  <p class="font-medium">Your progress in Digital Art is outstanding!</p>
+                  <p class="text-sm text-gray-400 mt-1">5h ago</p>
+                </a>
+                <a href="#" class="dropdown-item block px-4 py-3 hover:bg-purple-900/10">
+                  <p class="font-medium">Offer from Boracle!</p>
+                  <p class="text-sm text-gray-400 mt-1">1d ago</p>
+                </a>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Heart Icon -->
+          <button class="text-purple-400 hover:text-purple-300 transition-colors" onclick="window.location.href='https://singular-kringle-5f87fe.netlify.app/wishlist'">
+            <i data-lucide="heart" class="h-6 w-6"></i>
+          </button>
+          
+          <!-- Profile Icon with Dropdown -->
+          <div class="relative">
+            <button id="profileBtn" class="text-purple-400 hover:text-purple-300 transition-colors">
+              <i data-lucide="user" class="h-6 w-6"></i>
+            </button>
+            <div id="profileDropdown" class="dropdown absolute right-0 mt-2 w-56 bg-gray-800 rounded-lg shadow-lg border border-gray-700 py-2 z-50">
+              <div class="py-1">
+                <a href="https://singular-kringle-5f87fe.netlify.app/freelancers%20profile%20page" class="dropdown-item block px-4 py-2 hover:bg-purple-900/10">My Profile</a>
+                <a href="https://singular-kringle-5f87fe.netlify.app/mycourse" class="dropdown-item block px-4 py-2 hover:bg-purple-900/10">My Courses</a>
+                <a href="https://singular-kringle-5f87fe.netlify.app/helpcenter" class="dropdown-item block px-4 py-2 hover:bg-purple-900/10">Help Center</a>
+              </div>
+              <div class="py-1 border-t border-gray-700">
+                <a href="https://singular-kringle-5f87fe.netlify.app/homepage" class="dropdown-item block px-4 py-2 hover:bg-purple-900/10 text-red-400">Logout</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="container mx-auto px-4 py-8 pt-24">
+    <!-- Wishlist Header -->
+    <div class="mb-8">
+      <div class="flex flex-col sm:flex-row justify-between items-center mb-4">
+        <div class="flex items-center mb-4 sm:mb-0">
+          <h1 class="text-3xl font-bold text-white mr-4">Your Wishlist <span id="item-count" class="text-lg font-normal text-gray-400">(6 items)</span></h1>
+        </div>
+        <div class="flex items-center space-x-4">
+          <div class="flex items-center space-x-2">
+            <i data-lucide="filter" class="h-5 w-5 text-purple-400"></i>
+            <select 
+              id="filter-select"
+              class="bg-gray-800 text-white border border-gray-700 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-400"
+            >
+              <option value="All">All Items</option>
+              <option value="High">High Priority</option>
+              <option value="Medium">Medium Priority</option>
+              <option value="Low">Low Priority</option>
+            </select>
+          </div>
+          <div class="flex items-center space-x-2">
+            <i data-lucide="sort-asc" class="h-5 w-5 text-purple-400"></i>
+            <select
+              id="sort-select"
+              class="bg-gray-800 text-white border border-gray-700 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-400"
+            >
+              <option value="date-added">Date (Newest)</option>
+              <option value="price-asc">Price (Low to High)</option>
+              <option value="price-desc">Price (High to Low)</option>
+              <option value="priority">Priority</option>
+            </select>
+          </div>
+          <button 
+            id="purchase-all-btn"
+            class="px-6 py-2 bg-purple-600 hover:bg-purple-500 text-white rounded-lg transition flex items-center space-x-2"
+          >
+            <i data-lucide="credit-card" class="h-5 w-5"></i>
+            <span>Purchase All</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Wishlist Grid -->
+    <div id="wishlist-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <!-- Item cards will be dynamically inserted here -->
+    </div>
+
+    <!-- Empty Wishlist Message -->
+    <div id="empty-wishlist" class="hidden text-center py-16">
+      <i data-lucide="shopping-bag" class="h-16 w-16 mx-auto text-gray-500 mb-4"></i>
+      <h2 class="text-2xl font-bold text-white mb-2">Your wishlist is empty</h2>
+      <p class="text-gray-400 mb-6">When you add items to your wishlist, they'll appear here.</p>
+      <button class="px-6 py-3 bg-purple-600 hover:bg-purple-500 text-white rounded-lg transition">
+        Explore Categories
+      </button>
+    </div>
+  </div>
+
+  <!-- Item Details Modal -->
+  <div id="item-details-modal" class="modal">
+    <div class="bg-gray-800 rounded-lg w-full max-w-2xl mx-4 overflow-hidden shadow-xl">
+      <div id="item-details-content" class="relative">
+        <!-- Content will be dynamically inserted here -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Payment Modal -->
+  <div id="payment-modal" class="modal">
+    <div class="bg-gray-800 rounded-lg w-full max-w-md mx-4 overflow-hidden shadow-xl relative">
+      <button id="payment-close-btn" class="close-btn absolute right-4 top-4 text-gray-400 hover:text-white p-1.5 rounded-full z-10">
+        <i data-lucide="x" class="h-6 w-6"></i>
+      </button>
+      <div class="p-6">
+        <h2 class="text-2xl font-bold text-white mb-6">Payment Details</h2>
+        
+        <div id="payment-item-info" class="bg-gray-700 bg-opacity-50 rounded-lg p-4 mb-6">
+          <!-- Item info will be inserted here -->
+        </div>
+
+        <form id="payment-form" class="space-y-4">
+          <div>
+            <label class="block text-sm text-gray-300 mb-1">Card Number</label>
+            <input
+              type="text"
+              name="cardNumber"
+              placeholder="1234 5678 9012 3456"
+              class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-purple-400"
+              required
+            />
+          </div>
+
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm text-gray-300 mb-1">Expiry Date</label>
+              <input
+                type="text"
+                name="expiryDate"
+                placeholder="MM/YY"
+                class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-purple-400"
+                required
+              />
+            </div>
+            <div>
+              <label class="block text-sm text-gray-300 mb-1">CVV</label>
+              <input
+                type="text"
+                name="cvv"
+                placeholder="123"
+                class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-purple-400"
+                required
+              />
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-sm text-gray-300 mb-1">Cardholder Name</label>
+            <input
+              type="text"
+              name="cardName"
+              placeholder="John Doe"
+              class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-purple-400"
+              required
+            />
+          </div>
+
+          <button
+            type="submit"
+            id="payment-submit-btn"
+            class="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg py-3 font-medium hover:opacity-90 transition-all"
+          >
+            Pay $0.00
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer mt-10">
+    <div class="footer-container">
+      <div class="footer-section">
+        <h3>About HobbyHive</h3>
+        <p>Empowering creativity and skill development through interactive learning experiences.</p>
+      </div>
+      <div class="footer-section">
+        <h3>Quick Links</h3>
+        <ul>
+          <li><a href="https://singular-kringle-5f87fe.netlify.app/aboutus%20after%20logginin">About Us</a></li>
+            <li><a href="https://singular-kringle-5f87fe.netlify.app/freelancer%20home%20page" >Home</a></li>
+            <li><a href="https://singular-kringle-5f87fe.netlify.app/success%20stories%20after%20logging%20in" >Success stories</a></li>
+            <li><a href="https://singular-kringle-5f87fe.netlify.app/mycourse" >My Courses</a></li>
+            <li><a href="https://singular-kringle-5f87fe.netlify.app/howtobecomeinstructor">Become an Instructor</a></li>
+         
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h3>Support</h3>
+        <ul>
+          <li><a href="https://singular-kringle-5f87fe.netlify.app/helpcenter" >Help Center</a></li>
+            <li><a href="https://singular-kringle-5f87fe.netlify.app/community%20guidelines" >Community Guidelines</a></li>
+            <li><a href="https://singular-kringle-5f87fe.netlify.app/terms%20and%20conditions" >Terms And Conditions</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h3>Connect With Us</h3>
+        <div class="social-icons">
+          <a href="https://www.facebook.com/hobby.hive/" class="social-icon">
+            <i data-lucide="facebook" aria-hidden="true"></i>
+          </a>
+          <a href="https://x.com/Hobby_Hive" class="social-icon">
+            <i data-lucide="twitter" aria-hidden="true"></i>
+          </a>
+          <a href="https://www.instagram.com/hobby_hive9/" class="social-icon">
+            <i data-lucide="instagram" aria-hidden="true"></i>
+          </a>
+        
+        </div>
+        
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2023 HobbyHive. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- Script for wishlist functionality and dropdown menus -->
+  <script>
+    // Initialize Lucide icons
+    lucide.createIcons();
+
+    // Dropdown functionality
+    document.addEventListener('DOMContentLoaded', function() {
+      const profileBtn = document.getElementById('profileBtn');
+      const profileDropdown = document.getElementById('profileDropdown');
+      const notificationBtn = document.getElementById('notificationBtn');
+      const notificationDropdown = document.getElementById('notificationDropdown');
+      
+      let activeDropdown = null;
+
+      // Toggle profile dropdown
+      profileBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        if (activeDropdown && activeDropdown !== profileDropdown) {
+          activeDropdown.classList.remove('active');
+        }
+        profileDropdown.classList.toggle('active');
+        activeDropdown = profileDropdown.classList.contains('active') ? profileDropdown : null;
+        
+        // Close notification dropdown if open
+        notificationDropdown.classList.remove('active');
+      });
+
+      // Toggle notification dropdown
+      notificationBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        if (activeDropdown && activeDropdown !== notificationDropdown) {
+          activeDropdown.classList.remove('active');
+        }
+        notificationDropdown.classList.toggle('active');
+        activeDropdown = notificationDropdown.classList.contains('active') ? notificationDropdown : null;
+        
+        // Close profile dropdown if open
+        profileDropdown.classList.remove('active');
+      });
+
+      // Close dropdowns when clicking outside
+      document.addEventListener('click', function() {
+        if (activeDropdown) {
+          activeDropdown.classList.remove('active');
+          activeDropdown = null;
+        }
+      });
+
+      // Prevent dropdown from closing when clicking inside
+      profileDropdown.addEventListener('click', function(e) {
+        e.stopPropagation();
+      });
+
+      notificationDropdown.addEventListener('click', function(e) {
+        e.stopPropagation();
+      });
+
+      // Sample wishlist data
+      const wishlistItems = [
+        {
+          id: 1,
+          name: "Digital Art Fundamentals",
+          image: "https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=400&h=300&fit=crop&crop=entropy",
+          instructor: "Sarah Johnson",
+          originalPrice: 89.99,
+          salePrice: 49.99,
+          rating: 4.7,
+          reviews: 453,
+          tags: ["Digital", "Art", "Beginner"],
+          priority: "High",
+          dateAdded: new Date(2023, 0, 15)
+        },
+        {
+          id: 2,
+          name: "Advanced Pottery Techniques",
+          image: "https://images.unsplash.com/photo-1610701596007-11502861dcfa?w=400&h=300&fit=crop&crop=entropy",
+          instructor: "Michael Chen",
+          originalPrice: 129.99,
+          salePrice: 79.99,
+          rating: 4.9,
+          reviews: 256,
+          tags: ["Pottery", "Intermediate", "Crafts"],
+          priority: "Medium",
+          dateAdded: new Date(2023, 1, 3)
+        },
+        {
+          id: 3,
+          name: "Watercolor Painting for Beginners",
+          image: "https://images.unsplash.com/photo-1605721911519-3dfeb3be25e7?w=400&h=300&fit=crop&crop=entropy",
+          instructor: "Emma Davis",
+          originalPrice: 69.99,
+          salePrice: 34.99,
+          rating: 4.5,
+          reviews: 312,
+          tags: ["Painting", "Watercolor", "Beginner"],
+          priority: "Low",
+          dateAdded: new Date(2023, 2, 12)
+        },
+        {
+          id: 4,
+          name: "Guitar Mastery: From Beginner to Advanced",
+          image: "https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=400&h=300&fit=crop&crop=entropy",
+          instructor: "David Martinez",
+          originalPrice: 149.99,
+          salePrice: 79.99,
+          rating: 4.8,
+          reviews: 785,
+          tags: ["Music", "Guitar", "All Levels"],
+          priority: "High",
+          dateAdded: new Date(2023, 3, 5)
+        },
+        {
+          id: 5,
+          name: "Photography Essentials",
+          image: "https://images.unsplash.com/photo-1554048612-b6a482bc67e5?w=400&h=300&fit=crop&crop=entropy",
+          instructor: "Jessica Wong",
+          originalPrice: 99.99,
+          salePrice: 59.99,
+          rating: 4.6,
+          reviews: 521,
+          tags: ["Photography", "Beginner", "Digital"],
+          priority: "Medium",
+          dateAdded: new Date(2023, 4, 20)
+        },
+        {
+          id: 6,
+          name: "Gourmet Cooking at Home",
+          image: "https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=400&h=300&fit=crop&crop=entropy",
+          instructor: "Thomas Harris",
+          originalPrice: 119.99,
+          salePrice: 69.99,
+          rating: 4.9,
+          reviews: 632,
+          tags: ["Cooking", "Intermediate", "Food"],
+          priority: "Low",
+          dateAdded: new Date(2023, 5, 8)
+        }
+      ];
+
+      // DOM Elements
+      const wishlistGrid = document.getElementById('wishlist-grid');
+      const emptyWishlist = document.getElementById('empty-wishlist');
+      const itemCount = document.getElementById('item-count');
+      const filterSelect = document.getElementById('filter-select');
+      const sortSelect = document.getElementById('sort-select');
+      const purchaseAllBtn = document.getElementById('purchase-all-btn');
+      const itemDetailsModal = document.getElementById('item-details-modal');
+      const itemDetailsContent = document.getElementById('item-details-content');
+      const paymentModal = document.getElementById('payment-modal');
+      const paymentCloseBtn = document.getElementById('payment-close-btn');
+      const paymentItemInfo = document.getElementById('payment-item-info');
+      const paymentSubmitBtn = document.getElementById('payment-submit-btn');
+      const paymentForm = document.getElementById('payment-form');
+
+      // Generate star rating HTML
+      function generateStarRating(rating) {
+        const fullStars = Math.floor(rating);
+        const halfStar = rating % 1 >= 0.5;
+        const emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
+        
+        let starsHTML = '';
+        
+        // Full stars
+        for (let i = 0; i < fullStars; i++) {
+          starsHTML += '<i data-lucide="star" class="h-4 w-4 text-yellow-400 fill-current"></i>';
+        }
+        
+        // Half star
+        if (halfStar) {
+          starsHTML += '<i data-lucide="star-half" class="h-4 w-4 text-yellow-400 fill-current"></i>';
+        }
+        
+        // Empty stars
+        for (let i = 0; i < emptyStars; i++) {
+          starsHTML += '<i data-lucide="star" class="h-4 w-4 text-gray-400"></i>';
+        }
+        
+        return starsHTML;
+      }
+
+      // Generate priority badge HTML
+      function generatePriorityBadge(priority) {
+        let colorClass = '';
+        
+        switch(priority) {
+          case 'High':
+            colorClass = 'bg-red-500';
+            break;
+          case 'Medium':
+            colorClass = 'bg-yellow-500';
+            break;
+          case 'Low':
+            colorClass = 'bg-green-500';
+            break;
+          default:
+            colorClass = 'bg-gray-500';
+        }
+        
+        return `<span class="${colorClass} text-white text-xs font-semibold px-2 py-1 rounded">${priority}</span>`;
+      }
+
+      // Display wishlist items
+      function displayWishlistItems(items) {
+        if (items.length === 0) {
+          wishlistGrid.classList.add('hidden');
+          emptyWishlist.classList.remove('hidden');
+          itemCount.textContent = '(0 items)';
+          return;
+        }
+        
+        wishlistGrid.classList.remove('hidden');
+        emptyWishlist.classList.add('hidden');
+        itemCount.textContent = `(${items.length} items)`;
+        
+        wishlistGrid.innerHTML = '';
+        
+        items.forEach(item => {
+          const discountPercentage = Math.round(((item.originalPrice - item.salePrice) / item.originalPrice) * 100);
+          
+          const itemCard = document.createElement('div');
+          itemCard.className = 'item-card bg-gray-800 rounded-lg overflow-hidden shadow-lg fade-in';
+          itemCard.innerHTML = `
+            <div class="relative">
+              <img src="${item.image}" alt="${item.name}" class="w-full h-48 object-cover">
+              <div class="absolute top-2 right-2 flex space-x-2">
+                ${generatePriorityBadge(item.priority)}
+                <span class="bg-purple-600 text-white text-xs font-semibold px-2 py-1 rounded">${discountPercentage}% OFF</span>
+              </div>
+              <button class="item-remove-btn absolute top-2 left-2 bg-gray-800 bg-opacity-70 text-gray-300 hover:text-white p-1.5 rounded-full transition" data-id="${item.id}">
+                <i data-lucide="trash-2" class="h-4 w-4"></i>
+              </button>
+            </div>
+            <div class="p-5">
+              <h3 class="text-lg font-semibold text-white mb-2 line-clamp-2">${item.name}</h3>
+              <p class="text-sm text-gray-400 mb-2">Instructor: ${item.instructor}</p>
+              <div class="flex items-center mb-3">
+                <div class="flex mr-2">
+                  ${generateStarRating(item.rating)}
+                </div>
+                <span class="text-sm text-gray-400">(${item.reviews})</span>
+              </div>
+              <div class="flex items-center justify-between mb-4">
+                <div>
+                  <span class="text-xl font-bold text-white">$${item.salePrice.toFixed(2)}</span>
+                  <span class="text-sm text-gray-400 line-through ml-2">$${item.originalPrice.toFixed(2)}</span>
+                </div>
+                <div class="flex space-x-2">
+                  <button class="item-details-btn bg-gray-700 hover:bg-gray-600 text-white p-2 rounded transition" data-id="${item.id}">
+                    <i data-lucide="info" class="h-4 w-4"></i>
+                  </button>
+                  <button class="item-purchase-btn bg-purple-600 hover:bg-purple-500 text-white p-2 rounded transition" data-id="${item.id}">
+                    <i data-lucide="shopping-cart" class="h-4 w-4"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="flex flex-wrap gap-2">
+                ${item.tags.map(tag => `<span class="text-xs bg-gray-700 text-gray-300 px-2 py-1 rounded">${tag}</span>`).join('')}
+              </div>
+            </div>
+          `;
+          
+          wishlistGrid.appendChild(itemCard);
+        });
+        
+        // Reinitialize Lucide icons for newly added elements
+        lucide.createIcons();
+        
+        // Add event listeners for buttons
+        document.querySelectorAll('.item-details-btn').forEach(btn => {
+          btn.addEventListener('click', () => showItemDetails(parseInt(btn.dataset.id)));
+        });
+        
+        document.querySelectorAll('.item-purchase-btn').forEach(btn => {
+          btn.addEventListener('click', () => showPaymentModal(parseInt(btn.dataset.id)));
+        });
+        
+        document.querySelectorAll('.item-remove-btn').forEach(btn => {
+          btn.addEventListener('click', () => removeItem(parseInt(btn.dataset.id)));
+        });
+      }
+
+      // Filter and sort items based on user selections
+      function filterAndSortItems() {
+        let filteredItems = [...wishlistItems];
+        
+        // Filter by priority
+        const priorityFilter = filterSelect.value;
+        if (priorityFilter !== 'All') {
+          filteredItems = filteredItems.filter(item => item.priority === priorityFilter);
+        }
+        
+        // Sort items
+        const sortOption = sortSelect.value;
+        switch(sortOption) {
+          case 'date-added':
+            filteredItems.sort((a, b) => b.dateAdded - a.dateAdded);
+            break;
+          case 'price-asc':
+            filteredItems.sort((a, b) => a.salePrice - b.salePrice);
+            break;
+          case 'price-desc':
+            filteredItems.sort((a, b) => b.salePrice - a.salePrice);
+            break;
+          case 'priority':
+            const priorityOrder = { 'High': 1, 'Medium': 2, 'Low': 3 };
+            filteredItems.sort((a, b) => priorityOrder[a.priority] - priorityOrder[b.priority]);
+            break;
+        }
+        
+        displayWishlistItems(filteredItems);
+      }
+
+      // Show item details modal
+      function showItemDetails(itemId) {
+        const item = wishlistItems.find(item => item.id === itemId);
+        if (!item) return;
+        
+        const discountPercentage = Math.round(((item.originalPrice - item.salePrice) / item.originalPrice) * 100);
+        
+        itemDetailsContent.innerHTML = `
+          <button id="details-close-btn" class="close-btn absolute right-4 top-4 text-gray-400 hover:text-white p-1.5 rounded-full z-10">
+            <i data-lucide="x" class="h-6 w-6"></i>
+          </button>
+          <div class="flex flex-col md:flex-row">
+            <div class="md:w-1/2">
+              <img src="${item.image}" alt="${item.name}" class="w-full h-64 md:h-full object-cover">
+            </div>
+            <div class="md:w-1/2 p-6">
+              <h2 class="text-2xl font-bold text-white mb-2">${item.name}</h2>
+              <p class="text-gray-400 mb-4">By ${item.instructor}</p>
+              
+              <div class="flex items-center mb-4">
+                <div class="flex mr-2">
+                  ${generateStarRating(item.rating)}
+                </div>
+                <span class="text-sm text-gray-400">(${item.reviews} reviews)</span>
+              </div>
+              
+              <div class="mb-4">
+                <span class="text-2xl font-bold text-white">$${item.salePrice.toFixed(2)}</span>
+                <span class="text-lg text-gray-400 line-through ml-2">$${item.originalPrice.toFixed(2)}</span>
+                <span class="bg-purple-600 text-white text-xs font-semibold px-2 py-1 rounded ml-2">${discountPercentage}% OFF</span>
+              </div>
+              
+              <div class="mb-4">
+                <span class="block text-gray-300 font-medium mb-2">Priority:</span>
+                ${generatePriorityBadge(item.priority)}
+              </div>
+              
+              <div class="mb-6">
+                <span class="block text-gray-300 font-medium mb-2">Tags:</span>
+                <div class="flex flex-wrap gap-2">
+                  ${item.tags.map(tag => `<span class="text-xs bg-gray-700 text-gray-300 px-2 py-1 rounded">${tag}</span>`).join('')}
+                </div>
+              </div>
+              
+              <p class="text-gray-300 mb-6">
+                This comprehensive course will take you through all aspects of ${item.name.toLowerCase()}. 
+                Join instructor ${item.instructor} for an immersive experience designed for 
+                ${item.tags.includes('Beginner') ? 'beginners' : item.tags.includes('Intermediate') ? 'intermediate students' : 'all skill levels'}.
+              </p>
+              
+              <div class="flex space-x-4">
+                <button id="modal-purchase-btn" class="flex-1 bg-purple-600 hover:bg-purple-500 text-white py-2 px-4 rounded transition flex items-center justify-center space-x-2">
+                  <i data-lucide="shopping-cart" class="h-5 w-5"></i>
+                  <span>Purchase Now</span>
+                </button>
+                <button id="modal-remove-btn" class="bg-gray-700 hover:bg-gray-600 text-white py-2 px-4 rounded transition flex items-center justify-center">
+                  <i data-lucide="trash-2" class="h-5 w-5"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+        
+        // Reinitialize Lucide icons
+        lucide.createIcons();
+        
+        // Show modal
+        itemDetailsModal.classList.add('show');
+        
+        // Add event listeners
+        document.getElementById('details-close-btn').addEventListener('click', () => {
+          itemDetailsModal.classList.remove('show');
+        });
+        
+        document.getElementById('modal-purchase-btn').addEventListener('click', () => {
+          itemDetailsModal.classList.remove('show');
+          showPaymentModal(itemId);
+        });
+        
+        document.getElementById('modal-remove-btn').addEventListener('click', () => {
+          itemDetailsModal.classList.remove('show');
+          removeItem(itemId);
+        });
+      }
+
+      // Show payment modal
+      function showPaymentModal(itemId) {
+        const item = wishlistItems.find(item => item.id === itemId);
+        if (!item) return;
+        
+        paymentItemInfo.innerHTML = `
+          <div class="flex items-center">
+            <img src="${item.image}" alt="${item.name}" class="w-20 h-20 object-cover rounded">
+            <div class="ml-4">
+              <h3 class="font-medium text-white">${item.name}</h3>
+              <p class="text-sm text-gray-400">By ${item.instructor}</p>
+              <div class="flex items-center mt-1">
+                <span class="text-lg font-bold text-white">$${item.salePrice.toFixed(2)}</span>
+                <span class="text-sm text-gray-400 line-through ml-2">$${item.originalPrice.toFixed(2)}</span>
+              </div>
+            </div>
+          </div>
+        `;
+        
+        // Update payment button text
+        paymentSubmitBtn.textContent = `Pay $${item.salePrice.toFixed(2)}`;
+        
+        // Show modal
+        paymentModal.classList.add('show');
+        
+        // Store item ID in the form for submission
+        paymentForm.dataset.itemId = itemId;
+      }
+
+      // Remove item from wishlist
+      function removeItem(itemId) {
+        const index = wishlistItems.findIndex(item => item.id === itemId);
+        if (index !== -1) {
+          wishlistItems.splice(index, 1);
+          filterAndSortItems();
+        }
+      }
+
+      // Purchase all items
+      function purchaseAll() {
+        if (wishlistItems.length === 0) return;
+        
+        // Calculate total price
+        const totalPrice = wishlistItems.reduce((sum, item) => sum + item.salePrice, 0);
+        
+        paymentItemInfo.innerHTML = `
+          <div>
+            <h3 class="font-medium text-white mb-2">Purchasing All Items (${wishlistItems.length})</h3>
+            <ul class="text-sm text-gray-400 mb-3">
+              ${wishlistItems.map(item => `<li>• ${item.name} - $${item.salePrice.toFixed(2)}</li>`).join('')}
+            </ul>
+            <div class="flex justify-between items-center pt-2 border-t border-gray-600">
+              <span class="font-medium text-white">Total:</span>
+              <span class="text-lg font-bold text-white">$${totalPrice.toFixed(2)}</span>
+            </div>
+          </div>
+        `;
+        
+        // Update payment button text
+        paymentSubmitBtn.textContent = `Pay $${totalPrice.toFixed(2)}`;
+        
+        // Show modal
+        paymentModal.classList.add('show');
+        
+        // Store 'all' in the form for submission
+        paymentForm.dataset.itemId = 'all';
+      }
+
+      // Process payment
+      function processPayment(event) {
+        event.preventDefault();
+        
+        // Show loading state
+        const originalBtnText = paymentSubmitBtn.textContent;
+        paymentSubmitBtn.innerHTML = `
+          <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+          Processing...
+        `;
+        
+        // Simulate payment processing
+        setTimeout(() => {
+          // Get item ID from form data
+          const itemId = paymentForm.dataset.itemId;
+          
+          // Remove purchased item(s) from wishlist
+          if (itemId === 'all') {
+            wishlistItems.length = 0;
+          } else {
+            removeItem(parseInt(itemId));
+          }
+          
+          // Reset form
+          paymentForm.reset();
+          
+          // Hide modal
+          paymentModal.classList.remove('show');
+          
+          // Reset button text
+          paymentSubmitBtn.innerHTML = originalBtnText;
+          
+          // Show success message
+          alert('Payment successful! Your purchase has been completed.');
+          window.location.href = "https://singular-kringle-5f87fe.netlify.app/mycourse";
+          
+          // Update wishlist display
+          filterAndSortItems();
+        }, 1500);
+      }
+
+      // Event listeners
+      filterSelect.addEventListener('change', filterAndSortItems);
+      sortSelect.addEventListener('change', filterAndSortItems);
+      purchaseAllBtn.addEventListener('click', purchaseAll);
+      paymentCloseBtn.addEventListener('click', () => paymentModal.classList.remove('show'));
+      paymentForm.addEventListener('submit', processPayment);
+
+      // Close modals when clicking outside
+      window.addEventListener('click', (e) => {
+        if (e.target === itemDetailsModal) {
+          itemDetailsModal.classList.remove('show');
+        }
+        if (e.target === paymentModal) {
+          paymentModal.classList.remove('show');
+        }
+      });
+
+      // Initialize wishlist display
+      filterAndSortItems();
+    });
+  </script>
+</body>
+</html>

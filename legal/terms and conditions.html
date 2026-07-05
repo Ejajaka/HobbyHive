@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Terms and Conditions</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23A78BFA' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='lucide lucide-palette-icon lucide-palette'%3E%3Cpath d='M12 22a1 1 0 0 1 0-20 10 9 0 0 1 10 9 5 5 0 0 1-5 5h-2.25a1.75 1.75 0 0 0-1.4 2.8l.3.4a1.75 1.75 0 0 1-1.4 2.8z'/%3E%3Ccircle cx='13.5' cy='6.5' r='.5' fill='%23A78BFA'/%3E%3Ccircle cx='17.5' cy='10.5' r='.5' fill='%23A78BFA'/%3E%3Ccircle cx='6.5' cy='12.5' r='.5' fill='%23A78BFA'/%3E%3Ccircle cx='8.5' cy='7.5' r='.5' fill='%23A78BFA'/%3E%3C/svg%3E" />
+
+  <!-- Include Tailwind CSS via CDN for development -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Include Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <style>
+    :root {
+      color-scheme: dark;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      background-color: rgb(10, 17, 34);
+      color: rgb(229, 231, 235);
+    }
+    
+    /* Customize scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    
+    ::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 4px;
+    }
+    
+    ::-webkit-scrollbar-thumb {
+      background: rgba(156, 163, 175, 0.5);
+      border-radius: 4px;
+    }
+    
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(156, 163, 175, 0.8);
+    }
+    
+    /* Custom animations */
+    @keyframes scale-in {
+      0% {
+        transform: scale(0);
+        opacity: 0;
+      }
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+    
+    @keyframes fade-in {
+      0% {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    .animate-scale-in {
+      animation: scale-in 0.3s ease-out forwards;
+    }
+    
+    .animate-fade-in {
+      animation: fade-in 0.5s ease-out forwards;
+    }
+    
+    /* Custom classes */
+    .active-section {
+      background: linear-gradient(to right, rgba(171, 71, 255, 0.15), rgba(255, 64, 180, 0.15));
+      color: #f55ee3; /* Brighter purple */
+      font-weight: 500;
+    }
+    
+    .active-section .indicator {
+      background: linear-gradient(to right, #b366ff, #ff3eb8);
+    }
+    
+    .inactive-section .indicator {
+      background-color: rgb(55, 65, 81);
+    }
+    
+    .expanded-content {
+      max-height: 1000px;
+      opacity: 1;
+    }
+    
+    .collapsed-content {
+      max-height: 0;
+      opacity: 0;
+    }
+    
+    .purple-pink-gradient {
+      background-image: linear-gradient(to right, #b366ff, #ff3eb8);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+    
+    .purple-pink-border {
+      border-image: linear-gradient(to right, #b366ff, #ff3eb8) 1;
+    }
+    
+    /* Print styles */
+    @media print {
+      body {
+        background-color: white !important;
+        color: black !important;
+      }
+      
+      .bg-\[rgb\(10\,17\,34\)\], 
+      .bg-\[rgb\(22\,29\,47\)\] {
+        background-color: white !important;
+        color: black !important;
+        box-shadow: none !important;
+      }
+      
+      button, 
+      aside {
+        display: none !important;
+      }
+      
+      main {
+        width: 100% !important;
+      }
+      
+      h1, h2, h3, p {
+        color: black !important;
+      }
+    
+      .border-purple-400,
+      .border-purple-500,
+      .border-yellow-500,
+      .border-red-500,
+      .border-gray-700,
+      .border-purple-500,
+      .border-pink-500 {
+        border-color: #666 !important;
+      }
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-[rgb(10,17,34)] text-gray-100">
+  <div class="max-w-7xl mx-auto px-4 py-10 sm:px-6 lg:px-8">
+    <!-- Header -->
+    <header class="mb-10 text-center">
+      <div class="flex justify-center items-center mb-4">
+        <i data-lucide="layers" class="text-violet-500 h-10 w-10 mr-2"></i>
+        <h1 class="text-4xl font-bold bg-gradient-to-r from-violet-500 to-fuchsia-500 bg-clip-text text-transparent">
+          HobbyHive Terms and Conditions
+        </h1>
+      </div>
+      <p class="text-gray-400 max-w-2xl mx-auto text-lg">
+        Please read these terms carefully before using our platform for skill learning, 
+        swapping, and temporary recruitment.
+      </p>
+    </header>
+
+    <div class="flex flex-col lg:flex-row gap-6">
+      <!-- Sidebar Navigation -->
+      <aside class="lg:w-1/4">
+        <div class="bg-[rgb(22,29,47)] rounded-xl p-6 sticky top-8 shadow-lg transform transition-all duration-300 hover:shadow-purple-900/20">
+          <h2 class="text-xl font-semibold mb-4 flex items-center">
+            <i data-lucide="file-check" class="mr-2 h-5 w-5 text-violet-500"></i>
+            <span>Sections</span>
+          </h2>
+          
+          <nav>
+            <ul class="space-y-2" id="sectionNav">
+              <!-- Navigation items will be added dynamically via JavaScript -->
+            </ul>
+          </nav>
+          
+          <div class="mt-8 pt-6 border-t border-gray-700">
+            <div class="flex items-center mb-4">
+              <i data-lucide="award" class="h-5 w-5 text-fuchsia-400 mr-2"></i>
+              <h3 class="text-lg font-medium">Highlights</h3>
+            </div>
+            <ul class="space-y-2 text-sm text-gray-400">
+              <li class="flex items-start">
+                <span class="h-5 w-5 rounded-full bg-purple-900 flex items-center justify-center text-pink-400 text-xs mr-2 mt-0.5">1</span>
+                <span>Learn new skills from experts</span>
+              </li>
+              <li class="flex items-start">
+                <span class="h-5 w-5 rounded-full bg-purple-900 flex items-center justify-center text-pink-400 text-xs mr-2 mt-0.5">2</span>
+                <span>Swap skills with other members</span>
+              </li>
+              <li class="flex items-start">
+                <span class="h-5 w-5 rounded-full bg-purple-900 flex items-center justify-center text-pink-400 text-xs mr-2 mt-0.5">3</span>
+                <span>Get temporary recruitment</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="lg:w-3/4">
+        <div class="bg-[rgb(22,29,47)] rounded-xl p-8 shadow-lg">
+          <div class="space-y-8" id="termsContent">
+            <!-- Terms content will be added dynamically via JavaScript -->
+          </div>
+          
+          <div class="mt-10 border-t border-gray-700 pt-6">
+            <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
+              <div class="flex items-center">
+                <i data-lucide="users" class="h-5 w-5 text-fuchsia-400 mr-2"></i>
+                <span class="text-gray-400">Last updated: June 1, 2025</span>
+              </div>
+              <div class="flex flex-wrap gap-4">
+                <button 
+                  id="printBtn"
+                  class="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors duration-200 text-sm"
+                >
+                  Print / Save
+                </button>
+                
+               
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    // Terms Data
+    const termsData = [
+      {
+        id: 'introduction',
+        title: 'Introduction',
+        icon: 'book-open',
+        content: `
+          <div class="space-y-4">
+            <p>
+              Welcome to HobbyHive, a platform where users can learn new skills, swap their skills with others, and get temporarily recruited for short-term projects. These Terms and Conditions ("Terms") govern your access to and use of the HobbyHive website, mobile applications, and services (collectively, the "Platform").
+            </p>
+            <p>
+              By accessing or using our Platform, you agree to be bound by these Terms and our Privacy Policy. If you do not agree to these Terms, please do not access or use our Platform. We reserve the right to modify these Terms at any time, and such modifications shall be effective immediately upon posting on our Platform. Your continued use of the Platform following any modifications indicates your acceptance of the modified Terms.
+            </p>
+            <div class="bg-purple-900/20 p-4 rounded-lg border-l-4 border-pink-500 mt-6">
+              <p class="font-medium text-fuchsia-300">Important Note:</p>
+              <p class="text-sm mt-1">
+                HobbyHive is a platform that connects individuals for skill learning, swapping, and temporary recruitment. We do not employ any of the users on our Platform. Any arrangements made between users are solely between those users, and HobbyHive is not a party to such arrangements.
+              </p>
+            </div>
+          </div>
+        `
+      },
+      {
+        id: 'account-registration',
+        title: 'Account Registration',
+        icon: 'user-plus',
+        content: `
+          <div class="space-y-4">
+            <p>
+              To access certain features of the Platform, you must register for an account. You agree to provide accurate, current, and complete information during the registration process and to update such information to keep it accurate, current, and complete.
+            </p>
+            <p>
+              You are responsible for safeguarding your password and for all activities that occur under your account. You agree to notify us immediately of any unauthorized use of your account or any other breach of security. We will not be liable for any loss or damage arising from your failure to comply with these requirements.
+            </p>
+            <p>
+              You may not use as a username the name of another person or entity that is not lawfully available for use, or a name or trademark that is subject to any rights of another person or entity without appropriate authorization. You may not use as a username any name that is offensive, vulgar, or obscene.
+            </p>
+            <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="bg-gray-800/50 p-4 rounded-lg">
+                <h3 class="text-purple-400 font-medium mb-2 flex items-center">
+                  <i data-lucide="shield-check" class="mr-2 h-4 w-4"></i> Account Security
+                </h3>
+                <ul class="list-disc pl-5 text-sm space-y-1">
+                  <li>Use a strong, unique password</li>
+                  <li>Enable two-factor authentication if available</li>
+                  <li>Never share your account credentials</li>
+                  <li>Log out from shared devices</li>
+                </ul>
+              </div>
+              <div class="bg-gray-800/50 p-4 rounded-lg">
+                <h3 class="text-purple-400 font-medium mb-2 flex items-center">
+                  <i data-lucide="alert-triangle" class="mr-2 h-4 w-4"></i> Prohibited Actions
+                </h3>
+                <ul class="list-disc pl-5 text-sm space-y-1">
+                  <li>Creating multiple accounts</li>
+                  <li>Impersonating others</li>
+                  <li>Using automated methods to create accounts</li>
+                  <li>Transferring your account to others</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        `
+      },
+      {
+        id: 'skill-learning',
+        title: 'Skill Course',
+        icon: 'graduation-cap',
+        content: `
+          <div class="space-y-4">
+            <p>
+              HobbyHive offers a platform where users can learn new skills from other users who have expertise in various fields. The Platform does not create, control, or edit the content of the skill lessons provided by users. We do not guarantee the quality, accuracy, or reliability of any skills taught on the Platform.
+            </p>
+            <p>
+              When participating as a learner, you agree to:
+            </p>
+            <ul class="list-disc pl-5 space-y-2">
+              <li>Attend scheduled sessions on time or provide reasonable notice for cancellations</li>
+              <li>Respect the intellectual property rights of skill providers</li>
+              <li>Not record or distribute lesson content without explicit permission</li>
+              <li>Provide honest feedback about your learning experience</li>
+              <li>Use the knowledge gained responsibly and ethically</li>
+            </ul>
+            <p>
+              When participating as a skill provider, you agree to:
+            </p>
+            <ul class="list-disc pl-5 space-y-2">
+              <li>Provide accurate information about your qualifications and expertise</li>
+              <li>Deliver skill lessons as described in your profile or listing</li>
+              <li>Communicate clearly about what learners can expect to achieve</li>
+              <li>Respect the privacy and confidentiality of learners</li>
+              <li>Provide a supportive learning environment free from discrimination or harassment</li>
+            </ul>
+            <div class="bg-purple-900/20 p-4 rounded-lg border-l-4 border-pink-500 mt-6">
+              <p class="font-medium text-fuchsia-300">Skill Verification:</p>
+              <p class="text-sm mt-1">
+                While we strive to verify the skills and qualifications of providers on our Platform, we cannot guarantee their accuracy. Users are encouraged to review ratings, reviews, and credentials before engaging with skill providers.
+              </p>
+            </div>
+          </div>
+        `
+      },
+      {
+        id: 'skill-swapping',
+        title: 'Skill Swap',
+        icon: 'zap',
+        content: `
+          <div class="space-y-4">
+            <p>
+              HobbyHive allows users to swap skills with other users, where each user teaches the other a skill in exchange for learning a different skill. Such arrangements are made directly between users, and HobbyHive serves only as a platform to facilitate these connections.
+            </p>
+            <p>
+              When participating in skill swapping, you agree to:
+            </p>
+            <ul class="list-disc pl-5 space-y-2">
+              <li>Accurately represent your skills and expertise</li>
+              <li>Fulfill your commitment to teach your skill as agreed</li>
+              <li>Communicate clearly about expectations, time commitments, and deliverables</li>
+              <li>Respect the time and effort of your swap partner</li>
+              <li>Provide honest feedback about your swap experience</li>
+            </ul>
+            <p>
+              HobbyHive is not responsible for any disputes that may arise between users engaged in skill swapping. We encourage users to:
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+              <div class="bg-gray-800/50 p-4 rounded-lg">
+                <h3 class="text-purple-400 font-medium mb-2">Before the Swap</h3>
+                <ul class="list-disc pl-5 text-sm space-y-1">
+                  <li>Clearly define the skills to be exchanged</li>
+                  <li>Agree on the format and duration of lessons</li>
+                  <li>Establish a timeline for completion</li>
+                  <li>Discuss any materials or prerequisites needed</li>
+                </ul>
+              </div>
+              <div class="bg-gray-800/50 p-4 rounded-lg">
+                <h3 class="text-purple-400 font-medium mb-2">During the Swap</h3>
+                <ul class="list-disc pl-5 text-sm space-y-1">
+                  <li>Maintain open communication</li>
+                  <li>Be respectful and patient</li>
+                  <li>Provide constructive feedback</li>
+                  <li>Document progress and learnings</li>
+                </ul>
+              </div>
+            </div>
+            <p class="mt-4">
+              In the event of a dispute or if you believe a user has not fulfilled their swap commitment, please contact our support team. While we cannot guarantee resolution, we will make reasonable efforts to mediate and may take appropriate action against users who repeatedly fail to honor their commitments.
+            </p>
+          </div>
+        `
+      },
+      {
+        id: 'temporary-recruitment',
+        title: 'Skill Gig',
+        icon: 'briefcase',
+        content: `
+          <div class="space-y-4">
+            <p>
+              HobbyHive enables users to be temporarily recruited for short-term projects or tasks based on their skills. HobbyHive is not an employer, employment agency, or recruiter. We simply provide a platform for users to connect with each other for temporary work arrangements.
+            </p>
+            <p>
+              When offering to recruit others temporarily, you agree to:
+            </p>
+            <ul class="list-disc pl-5 space-y-2">
+              <li>Provide clear and accurate details about the project, including scope, timeline, and compensation</li>
+              <li>Comply with all applicable laws regarding employment, taxation, and worker classification</li>
+              <li>Communicate expectations clearly and provide necessary resources</li>
+              <li>Pay recruited users as agreed and in a timely manner</li>
+              <li>Provide a safe and respectful working environment</li>
+            </ul>
+            <p>
+              When being temporarily recruited, you agree to:
+            </p>
+            <ul class="list-disc pl-5 space-y-2">
+              <li>Accurately represent your skills, qualifications, and availability</li>
+              <li>Fulfill your commitments as agreed</li>
+              <li>Communicate promptly about any issues or delays</li>
+              <li>Maintain confidentiality regarding sensitive information</li>
+              <li>Comply with all applicable laws regarding employment, taxation, and worker classification</li>
+            </ul>
+            <div class="bg-yellow-900/20 p-4 rounded-lg border-l-4 border-yellow-500 mt-6">
+              <p class="font-medium text-yellow-400">Important Legal Disclaimer:</p>
+              <p class="text-sm mt-1">
+                HobbyHive does not determine whether users should be classified as employees or independent contractors. Users are solely responsible for complying with all applicable laws regarding employment, taxation, insurance, benefits, and worker classification in their respective jurisdictions.
+              </p>
+            </div>
+            <p class="mt-4">
+              HobbyHive reserves the right to remove project listings that violate these Terms or applicable laws, or that we determine, in our sole discretion, to be harmful to our users or our reputation.
+            </p>
+          </div>
+        `
+      },
+      {
+        id: 'payments',
+        title: 'Payments and Fees',
+        icon: 'credit-card',
+        content: `
+          <div class="space-y-4">
+            <p>
+              HobbyHive may charge fees for certain features or services on the Platform. Any such fees will be clearly disclosed before you incur them. By using a paid feature or service, you agree to pay the applicable fees and any taxes associated with such fees.
+            </p>
+            <p>
+              For payments between users (such as for temporary recruitment or premium skill lessons), HobbyHive may provide payment processing services or integrate with third-party payment processors. By using our payment services, you agree to:
+            </p>
+            <ul class="list-disc pl-5 space-y-2">
+              <li>Provide accurate and complete payment information</li>
+              <li>Authorize us to charge your chosen payment method for transactions you initiate</li>
+              <li>Not use fraudulent or unauthorized payment methods</li>
+              <li>Pay any applicable platform fees or service charges</li>
+            </ul>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+              <div class="bg-gray-800/50 p-4 rounded-lg">
+                <h3 class="text-purple-400 font-medium mb-2">For Service Providers</h3>
+                <p class="text-sm">
+                  When receiving payment through our Platform, HobbyHive may:
+                </p>
+                <ul class="list-disc pl-5 text-sm mt-2 space-y-1">
+                  <li>Hold funds in escrow until services are completed</li>
+                  <li>Deduct platform fees before releasing payment</li>
+                  <li>Require verification of completed work</li>
+                  <li>Process payouts on a schedule (e.g., weekly)</li>
+                </ul>
+              </div>
+              <div class="bg-gray-800/50 p-4 rounded-lg">
+                <h3 class="text-purple-400 font-medium mb-2">For Clients</h3>
+                <p class="text-sm">
+                  When making payment through our Platform, you:
+                </p>
+                <ul class="list-disc pl-5 text-sm mt-2 space-y-1">
+                  <li>Authorize payment when initiating a project</li>
+                  <li>May dispute charges for incomplete work</li>
+                  <li>Must follow our refund policy</li>
+                  <li>Cannot pay providers outside the Platform</li>
+                </ul>
+              </div>
+            </div>
+            <p class="mt-4">
+              HobbyHive is not responsible for and does not have control over the services provided between users. In the event of a dispute regarding payment, HobbyHive will make reasonable efforts to assist in resolution but cannot guarantee satisfaction for either party.
+            </p>
+            <div class="bg-purple-900/20 p-4 rounded-lg border-l-4 border-pink-500 mt-6">
+              <p class="font-medium text-fuchsia-300">Tax Considerations:</p>
+              <p class="text-sm mt-1">
+                Users are solely responsible for determining their tax obligations and reporting requirements related to any income earned through the Platform. HobbyHive may provide tax documentation where required by law, but users should consult with a tax professional regarding their specific situation.
+              </p>
+            </div>
+          </div>
+        `
+      },
+      {
+        id: 'user-conduct',
+        title: 'User Conduct and Content',
+        icon: 'users',
+        content: `
+          <div class="space-y-4">
+            <p>
+              You are solely responsible for your conduct and any content you submit, post, or display on HobbyHive. You agree not to engage in any of the following prohibited activities:
+            </p>
+            <ul class="list-disc pl-5 space-y-2">
+              <li>Violating any laws, regulations, or third-party rights</li>
+              <li>Posting or transmitting harmful, fraudulent, or deceptive content</li>
+              <li>Impersonating another person or entity</li>
+              <li>Harassing, abusing, or threatening others</li>
+              <li>Posting obscene, pornographic, or offensive content</li>
+              <li>Distributing spam, chain letters, or unsolicited communications</li>
+              <li>Interfering with or disrupting the Platform or its servers</li>
+              <li>Attempting to gain unauthorized access to the Platform or other accounts</li>
+              <li>Using the Platform for any illegal or unauthorized purpose</li>
+              <li>Encouraging or facilitating violations of these Terms</li>
+            </ul>
+            <p>
+              Content that you create, post, or share on the Platform may be visible to other users. You grant HobbyHive a non-exclusive, transferable, sub-licensable, royalty-free, worldwide license to use, copy, modify, create derivative works based on, distribute, publicly display, publicly perform, and otherwise use such content in connection with the operation of the Platform or the promotion, advertising, or marketing of the Platform.
+            </p>
+            <p>
+              You represent and warrant that you have all rights necessary to grant the licenses contained in this section, and that your content and conduct on the Platform do not violate these Terms, applicable law, or the rights of any third party.
+            </p>
+            <div class="bg-purple-900/20 p-4 rounded-lg border-l-4 border-pink-500 mt-6">
+              <p class="font-medium text-fuchsia-300">Content Removal:</p>
+              <p class="text-sm mt-1">
+                HobbyHive reserves the right, but is not obligated, to remove or disable access to any content that we determine, in our sole discretion, violates these Terms or is otherwise harmful to the Platform, our users, or third parties. If you believe that content on the Platform violates these Terms or applicable law, please report it to our support team.
+              </p>
+            </div>
+          </div>
+        `
+      },
+      {
+        id: 'disputes',
+        title: 'Disputes Resolution',
+        icon: 'message-square',
+        content: `
+          <div class="space-y-4">
+            <p>
+              In the event of any dispute, claim, question, or disagreement arising from or relating to these Terms or the breach thereof, the parties shall use their best efforts to settle the dispute, claim, question, or disagreement. To this effect, they shall consult and negotiate with each other in good faith and, recognizing their mutual interests, attempt to reach a just and equitable solution satisfactory to both parties.
+            </p>
+            <p>
+              If the parties do not reach such solution within a period of 60 days, then, upon notice by either party to the other, all disputes, claims, questions, or differences shall be finally settled by arbitration administered by [Arbitration Association] in accordance with the provisions of its Commercial Arbitration Rules.
+            </p>
+            <div class="bg-gray-800/50 p-4 rounded-lg mt-4">
+              <h3 class="text-purple-400 font-medium mb-2">Dispute Resolution Process</h3>
+              <ol class="list-decimal pl-5 space-y-2">
+                <li>
+                  <strong class="text-white">Direct Communication:</strong>
+                  <p class="text-sm text-gray-400 mt-1">Users should first attempt to resolve disputes directly through our messaging system.</p>
+                </li>
+                <li>
+                  <strong class="text-white">Mediation Request:</strong>
+                  <p class="text-sm text-gray-400 mt-1">If direct communication fails, either party may request mediation from HobbyHive support.</p>
+                </li>
+                <li>
+                  <strong class="text-white">Evidence Submission:</strong>
+                  <p class="text-sm text-gray-400 mt-1">Both parties will be asked to submit evidence supporting their position.</p>
+                </li>
+                <li>
+                  <strong class="text-white">Resolution Proposal:</strong>
+                  <p class="text-sm text-gray-400 mt-1">HobbyHive will review the evidence and propose a resolution.</p>
+                </li>
+                <li>
+                  <strong class="text-white">Formal Arbitration:</strong>
+                  <p class="text-sm text-gray-400 mt-1">If the proposed resolution is not accepted, the dispute may proceed to formal arbitration.</p>
+                </li>
+              </ol>
+            </div>
+            <p class="mt-4">
+              You agree that any arbitration shall be limited to the dispute between you and HobbyHive and you agree not to commence or participate in any class action lawsuit against HobbyHive. To the maximum extent permitted by law, you agree that you will not bring against HobbyHive any dispute more than one (1) year after the cause of action arose.
+            </p>
+            <div class="bg-yellow-900/20 p-4 rounded-lg border-l-4 border-yellow-500 mt-6">
+              <p class="font-medium text-yellow-400">Important Note:</p>
+              <p class="text-sm mt-1">
+                By using our Platform, you waive your right to a jury trial for any dispute with HobbyHive or its affiliates. You also waive your right to participate in a class action lawsuit or class-wide arbitration.
+              </p>
+            </div>
+          </div>
+        `
+      }
+    ];
+
+    // DOM Elements
+    const sectionNav = document.getElementById('sectionNav');
+    const termsContent = document.getElementById('termsContent');
+    const printBtn = document.getElementById('printBtn');
+    const acceptBtn = document.getElementById('acceptBtn');
+
+    // Current active section
+    let activeSection = termsData[0].id;
+    let accepted = false;
+
+    // Initialize the page
+    function init() {
+      // Create navigation items
+      termsData.forEach(section => {
+        const listItem = document.createElement('li');
+        
+        const button = document.createElement('button');
+        button.setAttribute('data-section', section.id);
+        button.className = `
+          w-full text-left px-3 py-2 rounded-lg text-sm transition-all duration-300
+          flex items-center hover:bg-gray-800
+          ${section.id === activeSection ? 'active-section' : 'text-gray-400 inactive-section'}
+        `;
+        
+        button.innerHTML = `
+          <i data-lucide="${section.icon}" class="h-4 w-4 mr-2"></i>
+          <span>${section.title}</span>
+          <span class="ml-auto h-2 w-2 rounded-full transition-all duration-300 indicator"></span>
+        `;
+        
+        button.addEventListener('click', () => setActiveSection(section.id));
+        
+        listItem.appendChild(button);
+        sectionNav.appendChild(listItem);
+      });
+
+      // Create content sections
+      termsData.forEach((section, index) => {
+        const sectionDiv = document.createElement('div');
+        sectionDiv.id = section.id;
+        sectionDiv.className = `
+          scroll-mt-8 transition-opacity duration-500
+          ${section.id === activeSection ? 'opacity-100' : 'opacity-70 hover:opacity-100'}
+        `;
+        
+        sectionDiv.innerHTML = `
+          <div class="
+            bg-[rgb(22,29,47)] 
+            border-l-4 
+            ${section.id === activeSection ? 'border-purple-400' : 'border-gray-700'}
+            pl-4 py-2 transition-all duration-300
+            ${section.id === activeSection ? 'transform -translate-x-1' : ''}
+          ">
+            <div class="flex justify-between items-center cursor-pointer group section-header">
+              <h2 class="
+                text-xl font-semibold flex items-center
+                transition-colors duration-300
+                ${section.id === activeSection ? 'text-purple-400' : 'text-gray-200'}
+              ">
+                <span class="mr-3 flex items-center justify-center">
+                  <i data-lucide="${section.icon}" class="h-5 w-5"></i>
+                </span>
+                <span class="relative">
+                  ${section.title}
+                  <span class="
+                    absolute -bottom-1 left-0 right-0 h-0.5 bg-purple-400 
+                    transform origin-left transition-transform duration-300
+                    ${section.id === activeSection ? 'scale-x-100' : 'scale-x-0'}
+                  "></span>
+                </span>
+              </h2>
+              <button 
+                class="p-1 rounded-full text-gray-400 hover:text-purple-400 hover:bg-gray-800 transition-colors duration-200 toggle-btn"
+                aria-label="Toggle section"
+              >
+                <i data-lucide="chevron-up" class="toggle-icon h-5 w-5"></i>
+              </button>
+            </div>
+            
+            <div class="section-content mt-4 text-gray-300 leading-relaxed overflow-hidden transition-all duration-500 expanded-content">
+              <div class="pl-2 animate-fade-in" style="animation-delay: ${index * 100}ms">
+                ${section.content}
+              </div>
+            </div>
+          </div>
+        `;
+        
+        termsContent.appendChild(sectionDiv);
+      });
+
+      // Initialize Lucide icons
+      lucide.createIcons();
+
+      // Set up toggle functionality for each section
+      document.querySelectorAll('.section-header').forEach((header, index) => {
+        const content = header.nextElementSibling;
+        const toggleBtn = header.querySelector('.toggle-btn');
+        const toggleIcon = toggleBtn.querySelector('.toggle-icon');
+        
+        toggleBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          
+          if (content.classList.contains('expanded-content')) {
+            content.classList.remove('expanded-content');
+            content.classList.add('collapsed-content');
+            toggleIcon.setAttribute('data-lucide', 'chevron-down');
+          } else {
+            content.classList.remove('collapsed-content');
+            content.classList.add('expanded-content');
+            toggleIcon.setAttribute('data-lucide', 'chevron-up');
+          }
+          
+          // Refresh the icon
+          lucide.createIcons({
+            icons: [toggleIcon]
+          });
+        });
+        
+        // Entire header also toggles the content
+        header.addEventListener('click', () => {
+          toggleBtn.click();
+        });
+      });
+
+      // Add event listeners for buttons
+      printBtn.addEventListener('click', () => {
+        window.print();
+      });
+      
+      acceptBtn.addEventListener('click', handleAccept);
+
+      // Set up intersection observer for auto-activating sections
+      setupIntersectionObserver();
+    }
+
+    // Set the active section and scroll to it
+    function setActiveSection(sectionId) {
+      // Update active section
+      activeSection = sectionId;
+      
+      // Update navigation styles
+      document.querySelectorAll('[data-section]').forEach(navItem => {
+        if (navItem.getAttribute('data-section') === sectionId) {
+          navItem.classList.add('active-section');
+          navItem.classList.remove('text-gray-400', 'inactive-section');
+        } else {
+          navItem.classList.remove('active-section');
+          navItem.classList.add('text-gray-400', 'inactive-section');
+        }
+      });
+      
+      // Update content section styles
+      termsData.forEach(section => {
+        const sectionElement = document.getElementById(section.id);
+        const sectionContainer = sectionElement.querySelector('div');
+        const sectionTitle = sectionElement.querySelector('h2');
+        const sectionTitleLine = sectionElement.querySelector('span.absolute');
+        
+        if (section.id === sectionId) {
+          sectionElement.classList.add('opacity-100');
+          sectionElement.classList.remove('opacity-70');
+          sectionContainer.classList.add('border-purple-400', 'transform', '-translate-x-1');
+          sectionContainer.classList.remove('border-gray-700');
+          sectionTitle.classList.add('text-purple-400');
+          sectionTitle.classList.remove('text-gray-200');
+          sectionTitleLine.classList.add('scale-x-100');
+          sectionTitleLine.classList.remove('scale-x-0');
+        } else {
+          sectionElement.classList.remove('opacity-100');
+          sectionElement.classList.add('opacity-70');
+          sectionContainer.classList.remove('border-purple-400', 'transform', '-translate-x-1');
+          sectionContainer.classList.add('border-gray-700');
+          sectionTitle.classList.remove('text-purple-400');
+          sectionTitle.classList.add('text-gray-200');
+          sectionTitleLine.classList.remove('scale-x-100');
+          sectionTitleLine.classList.add('scale-x-0');
+        }
+      });
+      
+      // Scroll the section into view
+      const sectionElement = document.getElementById(sectionId);
+      sectionElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    // Set up intersection observer for auto-activating sections while scrolling
+    function setupIntersectionObserver() {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting && entry.target.id) {
+              // Don't scroll when auto-activating sections
+              const oldActiveSection = activeSection;
+              activeSection = entry.target.id;
+              
+              // Only update the UI if the section has changed
+              if (oldActiveSection !== activeSection) {
+                // Update navigation without scrolling
+                document.querySelectorAll('[data-section]').forEach(navItem => {
+                  if (navItem.getAttribute('data-section') === activeSection) {
+                    navItem.classList.add('active-section');
+                    navItem.classList.remove('text-gray-400', 'inactive-section');
+                  } else {
+                    navItem.classList.remove('active-section');
+                    navItem.classList.add('text-gray-400', 'inactive-section');
+                  }
+                });
+                
+                // Update content section styles
+                termsData.forEach(section => {
+                  const sectionElement = document.getElementById(section.id);
+                  const sectionContainer = sectionElement.querySelector('div');
+                  const sectionTitle = sectionElement.querySelector('h2');
+                  const sectionTitleLine = sectionElement.querySelector('span.absolute');
+                  
+                  if (section.id === activeSection) {
+                    sectionElement.classList.add('opacity-100');
+                    sectionElement.classList.remove('opacity-70');
+                    sectionContainer.classList.add('border-purple-400', 'transform', '-translate-x-1');
+                    sectionContainer.classList.remove('border-gray-700');
+                    sectionTitle.classList.add('text-purple-400');
+                    sectionTitle.classList.remove('text-gray-200');
+                    sectionTitleLine.classList.add('scale-x-100');
+                    sectionTitleLine.classList.remove('scale-x-0');
+                  } else {
+                    sectionElement.classList.remove('opacity-100');
+                    sectionElement.classList.add('opacity-70');
+                    sectionContainer.classList.remove('border-purple-400', 'transform', '-translate-x-1');
+                    sectionContainer.classList.add('border-gray-700');
+                    sectionTitle.classList.remove('text-purple-400');
+                    sectionTitle.classList.add('text-gray-200');
+                    sectionTitleLine.classList.remove('scale-x-100');
+                    sectionTitleLine.classList.add('scale-x-0');
+                  }
+                });
+              }
+            }
+          });
+        },
+        { threshold: 0.5, rootMargin: '-100px 0px -100px 0px' }
+      );
+      
+      // Observe all section elements
+      termsData.forEach(section => {
+        const sectionElement = document.getElementById(section.id);
+        observer.observe(sectionElement);
+      });
+    }
+
+    // Handle accept button click
+    function handleAccept() {
+      if (accepted) return;
+      
+      accepted = true;
+      
+      // Update button appearance
+      acceptBtn.classList.remove('bg-gradient-to-r', 'from-violet-500', 'to-fuchsia-500', 'hover:from-violet-400', 'hover:to-fuchsia-400', 'shadow-md');
+      acceptBtn.classList.add('bg-green-600');
+      acceptBtn.innerHTML = `
+        Terms Accepted!
+        <span class="absolute inset-0 flex items-center justify-center">
+          <svg class="h-5 w-5 text-white animate-scale-in" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+          </svg>
+        </span>
+      `;
+      
+      // Reset after 3 seconds
+      setTimeout(() => {
+        accepted = false;
+        acceptBtn.classList.add('bg-gradient-to-r', 'from-violet-500', 'to-fuchsia-500', 'hover:from-violet-400', 'hover:to-fuchsia-400', 'shadow-md');
+        acceptBtn.classList.remove('bg-green-600');
+        acceptBtn.innerHTML = 'I Accept These Terms';
+      }, 3000);
+    }
+
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', init);
+  </script>
+</body>
+</html>

@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Courses</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23A78BFA' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='lucide lucide-palette-icon lucide-palette'%3E%3Cpath d='M12 22a1 1 0 0 1 0-20 10 9 0 0 1 10 9 5 5 0 0 1-5 5h-2.25a1.75 1.75 0 0 0-1.4 2.8l.3.4a1.75 1.75 0 0 1-1.4 2.8z'/%3E%3Ccircle cx='13.5' cy='6.5' r='.5' fill='%23A78BFA'/%3E%3Ccircle cx='17.5' cy='10.5' r='.5' fill='%23A78BFA'/%3E%3Ccircle cx='6.5' cy='12.5' r='.5' fill='%23A78BFA'/%3E%3Ccircle cx='8.5' cy='7.5' r='.5' fill='%23A78BFA'/%3E%3C/svg%3E" />
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Navigation and dropdown styles */
+        nav {
+            background-color: rgba(17, 24, 39, 0.8);
+            backdrop-filter: blur(12px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .dropdown {
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+        }
+        
+        .dropdown.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        
+        .dropdown-item:hover {
+            background-color: rgba(126, 34, 206, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white">
+    <!-- Navigation Bar -->
+    <nav class="fixed w-full z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Logo -->
+                <div class="flex items-center space-x-2">
+                    <i data-lucide="palette" class="h-8 w-8 text-purple-400"></i>
+                    <span class="text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+                        <a href="https://singular-kringle-5f87fe.netlify.app/freelancer%20home%20page">HobbyHive</a>
+                    </span>
+                </div>
+
+                <!-- Search Bar -->
+                <div class="flex-1 max-w-2xl mx-8">
+                    <div class="relative">
+                        <input 
+                            type="text" 
+                            placeholder="Search for courses, topics, or instructors..." 
+                            class="w-full bg-gray-800/50 text-gray-200 placeholder-gray-400 rounded-full py-2 pl-10 pr-4 focus:outline-none focus:ring-2 focus:ring-purple-400/50"
+                        >
+                        <i data-lucide="search" class="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400"></i>
+                    </div>
+                </div>
+
+                <!-- Navigation Icons -->
+                <div class="flex items-center space-x-6">
+                    <button class="text-purple-400 hover:text-purple-300" onclick="window.location.href='https://singular-kringle-5f87fe.netlify.app/skillgig'">
+                        <i data-lucide="dollar-sign" class="h-6 w-6"></i>
+                    </button>
+                    <button class="text-purple-400 hover:text-purple-300" onclick="window.location.href='https://singular-kringle-5f87fe.netlify.app/skillswap'">
+                        <i data-lucide="repeat" class="h-6 w-6"></i>
+                    </button>
+                    <button class="text-purple-400 hover:text-purple-300" onclick="window.location.href='https://singular-kringle-5f87fe.netlify.app/skill%20course%20page'">
+                        <i data-lucide="graduation-cap" class="h-6 w-6"></i>
+                    </button>
+                    <div class="h-6 w-px bg-gray-700"></div>
+                    
+                    <!-- Notification Icon with Dropdown -->
+                    <div class="relative">
+                        <button id="notificationBtn" class="text-purple-400 hover:text-purple-300 relative">
+                            <i data-lucide="bell" class="h-6 w-6"></i>
+                            <span class="absolute -top-1 -right-1 bg-pink-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">3</span>
+                        </button>
+                        <div id="notificationDropdown" class="dropdown absolute right-0 mt-2 w-80 bg-gray-800 rounded-lg shadow-lg border border-gray-700 py-2 z-50">
+                            <div class="px-4 py-3 border-b border-gray-700">
+                                <h3 class="text-lg font-semibold">Notifications</h3>
+                            </div>
+                            <div class="max-h-96 overflow-y-auto">
+                                <a href="#" class="dropdown-item block px-4 py-3 hover:bg-purple-900/10 border-b border-gray-700">
+                                    <p class="font-medium">New course available: Advanced Painting</p>
+                                    <p class="text-sm text-gray-400 mt-1">2h ago</p>
+                                </a>
+                                <a href="#" class="dropdown-item block px-4 py-3 hover:bg-purple-900/10 border-b border-gray-700">
+                                    <p class="font-medium">Your progress in Digital Art is outstanding!</p>
+                                    <p class="text-sm text-gray-400 mt-1">5h ago</p>
+                                </a>
+                                <a href="#" class="dropdown-item block px-4 py-3 hover:bg-purple-900/10">
+                                    <p class="font-medium">Offer from Boracle!</p>
+                                    <p class="text-sm text-gray-400 mt-1">1d ago</p>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Heart Icon -->
+                    <button class="text-purple-400 hover:text-purple-300" onclick="window.location.href='https://singular-kringle-5f87fe.netlify.app/wishlist'">
+                        <i data-lucide="heart" class="h-6 w-6"></i>
+                    </button>
+                    
+                    <!-- Profile Icon with Dropdown -->
+                    <div class="relative">
+                        <button id="profileBtn" class="text-purple-400 hover:text-purple-300">
+                            <i data-lucide="user" class="h-6 w-6"></i>
+                        </button>
+                        <div id="profileDropdown" class="dropdown absolute right-0 mt-2 w-56 bg-gray-800 rounded-lg shadow-lg border border-gray-700 py-2 z-50">
+                            <div class="py-1">
+                                <a href="https://singular-kringle-5f87fe.netlify.app/freelancers%20profile%20page" class="dropdown-item block px-4 py-2 hover:bg-purple-900/10">My Profile</a>
+                                <a href="https://singular-kringle-5f87fe.netlify.app/mycourse" class="dropdown-item block px-4 py-2 hover:bg-purple-900/10">My Courses</a>
+                                <a href="https://singular-kringle-5f87fe.netlify.app/helpcenter" class="dropdown-item block px-4 py-2 hover:bg-purple-900/10">Help Center</a>
+                            </div>
+                            <div class="py-1 border-t border-gray-700">
+                                <a href="https://singular-kringle-5f87fe.netlify.app/homepage" class="dropdown-item block px-4 py-2 hover:bg-purple-900/10 text-red-400">Logout</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main content - REDUCED PADDING to fix spacing between nav and content -->
+    <div class="pt-16 px-4 pb-12">
+        <div class="max-w-7xl mx-auto">
+            <!-- Header - Added mt-4 to create some space but not too much -->
+            <div class="mb-8 mt-4">
+                <h1 class="text-4xl font-bold text-white mb-2">My Learning Journey</h1>
+                <p class="text-gray-400">Track your progress and continue learning</p>
+            </div>
+
+            <!-- Progress Overview -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+                <div class="bg-gray-800/50 rounded-lg p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-semibold text-white">Total Progress</h3>
+                        <div class="h-12 w-12 rounded-full bg-purple-400/20 flex items-center justify-center">
+                            <i data-lucide="graduation-cap" class="h-6 w-6 text-purple-400"></i>
+                        </div>
+                    </div>
+                    <div class="text-3xl font-bold text-white mb-2">60%</div>
+                    <p class="text-gray-400">Average completion rate</p>
+                </div>
+
+                <div class="bg-gray-800/50 rounded-lg p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-semibold text-white">Learning Time</h3>
+                        <div class="h-12 w-12 rounded-full bg-pink-400/20 flex items-center justify-center">
+                            <i data-lucide="clock" class="h-6 w-6 text-pink-400"></i>
+                        </div>
+                    </div>
+                    <div class="text-3xl font-bold text-white mb-2">48h</div>
+                    <p class="text-gray-400">Total learning hours</p>
+                </div>
+
+                <div class="bg-gray-800/50 rounded-lg p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-semibold text-white">Achievements</h3>
+                        <div class="h-12 w-12 rounded-full bg-yellow-400/20 flex items-center justify-center">
+                            <i data-lucide="star" class="h-6 w-6 text-yellow-400"></i>
+                        </div>
+                    </div>
+                    <div class="text-3xl font-bold text-white mb-2">12</div>
+                    <p class="text-gray-400">Completed courses</p>
+                </div>
+            </div>
+
+            <!-- Enrolled Courses -->
+            <div>
+                <h2 class="text-2xl font-semibold text-white mb-6">Enrolled Courses</h2>
+                <div class="grid grid-cols-1 gap-6">
+                    <!-- Course Card 1 -->
+                    <div class="bg-gray-800/50 rounded-lg overflow-hidden">
+                        <div class="flex flex-col md:flex-row">
+                            <div class="md:w-64">
+                                <img src="https://images.unsplash.com/photo-1516035069371-29a1b244cc32" alt="Photography Basics" class="w-full h-48 md:h-full object-cover">
+                            </div>
+                            <div class="flex-1 p-6">
+                                <div class="flex flex-col md:flex-row md:items-center justify-between mb-4">
+                                    <div>
+                                        <span class="text-purple-400 text-sm">Photography</span>
+                                        <h3 class="text-xl font-semibold text-white mt-1">Photography Basics: From Zero to Hero</h3>
+                                        <p class="text-gray-400 text-sm mt-1">Instructor: Sarah Johnson</p>
+                                    </div>
+                                    <button class="mt-4 md:mt-0 px-6 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors" onclick="window.location.href='https://singular-kringle-5f87fe.netlify.app/content-photography'">
+                                        Continue Learning
+                                    </button>
+                                </div>
+
+                                <div class="mb-4">
+                                    <div class="flex justify-between text-sm text-gray-400 mb-2">
+                                        <span>Progress</span>
+                                        <span>65%</span>
+                                    </div>
+                                    <div class="h-2 bg-gray-700 rounded-full">
+                                        <div class="h-full bg-gradient-to-r from-purple-500 to-pink-500 rounded-full" style="width: 65%"></div>
+                                    </div>
+                                </div>
+
+                                <div class="flex flex-wrap gap-4 text-sm text-gray-400">
+                                    <div>
+                                        <span class="font-medium text-white">16</span>/24 lessons completed
+                                    </div>
+                                    <div>
+                                        Last accessed: March 15, 2024
+                                    </div>
+                                    <div>
+                                        Next lesson: Understanding Exposure Triangle
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Course Card 2 -->
+                    <div class="bg-gray-800/50 rounded-lg overflow-hidden">
+                        <div class="flex flex-col md:flex-row">
+                            <div class="md:w-64">
+                                <img src="https://images.unsplash.com/photo-1513364776144-60967b0f800f" alt="Digital Art" class="w-full h-48 md:h-full object-cover">
+                            </div>
+                            <div class="flex-1 p-6">
+                                <div class="flex flex-col md:flex-row md:items-center justify-between mb-4">
+                                    <div>
+                                        <span class="text-purple-400 text-sm">Digital Art</span>
+                                        <h3 class="text-xl font-semibold text-white mt-1">Digital Art Fundamentals</h3>
+                                        <p class="text-gray-400 text-sm mt-1">Instructor: Michael Chen</p>
+                                    </div>
+                                    <button class="mt-4 md:mt-0 px-6 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors" onclick="window.location.href='https://singular-kringle-5f87fe.netlify.app/content-painting'">
+                                        Continue Learning
+                                    </button>
+                                </div>
+
+                                <div class="mb-4">
+                                    <div class="flex justify-between text-sm text-gray-400 mb-2">
+                                        <span>Progress</span>
+                                        <span>82%</span>
+                                    </div>
+                                    <div class="h-2 bg-gray-700 rounded-full">
+                                        <div class="h-full bg-gradient-to-r from-purple-500 to-pink-500 rounded-full" style="width: 82%"></div>
+                                    </div>
+                                </div>
+
+                                <div class="flex flex-wrap gap-4 text-sm text-gray-400">
+                                    <div>
+                                        <span class="font-medium text-white">18</span>/22 lessons completed
+                                    </div>
+                                    <div>
+                                        Last accessed: March 18, 2024
+                                    </div>
+                                    <div>
+                                        Next lesson: Advanced Blending Techniques
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer class="bg-gray-900 border-t border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 py-12">
+          <div class="grid md:grid-cols-4 gap-8">
+            <div class="space-y-4">
+              <div class="flex items-center space-x-2">
+              </div>
+  
+              <div><h3 class="text-white font-semibold mb-4">About HobbyHive</h3><p class="text-gray-400">Empowering creativity and skill development through interactive learning experiences.</p>
+            </div>
+          </div>
+          <div>
+            <h3 class="text-white font-semibold mb-4">Quick Links</h3>
+            <ul class="space-y-2 text-gray-400">
+  
+                <li><a href="https://singular-kringle-5f87fe.netlify.app/aboutus%20after%20logginin" class="hover:text-purple-400">About Us</a></li>
+                <li><a href="https://singular-kringle-5f87fe.netlify.app/freelancer%20home%20page" class="hover:text-purple-400">Home</a></li>
+                <li><a href="https://singular-kringle-5f87fe.netlify.app/success%20stories%20after%20logging%20in" class="hover:text-purple-400">Success stories</a></li>
+                <li><a href="https://singular-kringle-5f87fe.netlify.app/mycourse" class="hover:text-purple-400">My Courses</a></li>
+                <li><a href="https://singular-kringle-5f87fe.netlify.app/howtobecomeinstructor" class="hover:text-purple-400">Become an Instructor</a></li>
+  
+  
+            </ul>
+          </div>
+          <div>
+            <h4 class="text-white font-semibold mb-4">Support</h4>
+            <ul class="space-y-2 text-gray-400">
+                <li><a href="https://singular-kringle-5f87fe.netlify.app/helpcenter" class="hover:text-purple-400">Help Center</a></li>
+                <li><a href="https://singular-kringle-5f87fe.netlify.app/community%20guidelines" class="hover:text-purple-400">Community Guidelines</a></li>
+                <li><a href="https://singular-kringle-5f87fe.netlify.app/terms%20and%20conditions" class="hover:text-purple-400">Terms And Conditions</a></li>
+  
+            </ul>
+          </div>
+          <div>
+            <h4 class="text-white font-semibold mb-4">Connect With Us</h4>
+            <div class="flex space-x-4">
+              <a href="https://www.facebook.com/hobby.hive/" class="text-gray-400 hover:text-purple-400">
+                <i data-lucide="facebook" class="h-6 w-6"></i>
+              </a>
+              <a href="https://x.com/Hobby_Hive" class="text-gray-400 hover:text-purple-400">
+                <i data-lucide="twitter" class="h-6 w-6"></i>
+              </a>
+              <a href="https://www.instagram.com/hobby_hive9/" class="text-gray-400 hover:text-purple-400">
+                <i data-lucide="instagram" class="h-6 w-6"></i>
+              
+            </div>
+          </div>
+          </div>
+          <div class="mt-12 pt-8 border-t border-gray-800 text-center text-gray-400">
+            <p>&copy; <span id="currentYear"></span> HobbyHive. All rights reserved.</p>
+          </div>
+        </div>
+      </footer>
+  
+  
+
+    <!-- JavaScript for Dropdowns -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize Lucide icons
+            lucide.createIcons();
+            
+            // Notification dropdown
+            const notificationBtn = document.getElementById('notificationBtn');
+            const notificationDropdown = document.getElementById('notificationDropdown');
+            
+            // Profile dropdown
+            const profileBtn = document.getElementById('profileBtn');
+            const profileDropdown = document.getElementById('profileDropdown');
+            
+            // Toggle notification dropdown
+            notificationBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                notificationDropdown.classList.toggle('active');
+                profileDropdown.classList.remove('active');
+            });
+            
+            // Toggle profile dropdown
+            profileBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                profileDropdown.classList.toggle('active');
+                notificationDropdown.classList.remove('active');
+            });
+            
+            // Close dropdowns when clicking outside
+            document.addEventListener('click', function() {
+                notificationDropdown.classList.remove('active');
+                profileDropdown.classList.remove('active');
+            });
+            
+            // Prevent dropdown from closing when clicking inside it
+            notificationDropdown.addEventListener('click', function(e) {
+                e.stopPropagation();
+            });
+            
+            profileDropdown.addEventListener('click', function(e) {
+                e.stopPropagation();
+            });
+        });
+    </script>
+</body>
+</html>

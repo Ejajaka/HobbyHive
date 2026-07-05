@@ -1,0 +1,1830 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23A78BFA' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='lucide lucide-palette-icon lucide-palette'%3E%3Cpath d='M12 22a1 1 0 0 1 0-20 10 9 0 0 1 10 9 5 5 0 0 1-5 5h-2.25a1.75 1.75 0 0 0-1.4 2.8l.3.4a1.75 1.75 0 0 1-1.4 2.8z'/%3E%3Ccircle cx='13.5' cy='6.5' r='.5' fill='%23A78BFA'/%3E%3Ccircle cx='17.5' cy='10.5' r='.5' fill='%23A78BFA'/%3E%3Ccircle cx='6.5' cy='12.5' r='.5' fill='%23A78BFA'/%3E%3Ccircle cx='8.5' cy='7.5' r='.5' fill='%23A78BFA'/%3E%3C/svg%3E" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Skill Gig</title>
+    
+    <!-- React and ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@18.2.0/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18.2.0/umd/react-dom.production.min.js"></script>
+    
+    <!-- Babel for JSX -->
+    <script src="https://unpkg.com/@babel/standalone@7.22.9/babel.min.js"></script>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    
+    
+    <style>
+      @keyframes toastIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      
+      @keyframes toastOut {
+        from { opacity: 1; transform: translateY(0); }
+        to { opacity: 0; transform: translateY(20px); }
+      }
+      
+      @keyframes scaleIn {
+        from { opacity: 0; transform: scale(0.95); }
+        to { opacity: 1; transform: scale(1); }
+      }
+      
+      @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+      }
+      
+      .animate-toast-in {
+        animation: toastIn 0.3s ease forwards;
+      }
+      
+      .animate-toast-out {
+        animation: toastOut 0.3s ease forwards;
+      }
+      
+      .animate-scale-in {
+        animation: scaleIn 0.2s ease forwards;
+      }
+      
+      .animate-fade-in {
+        animation: fadeIn 0.2s ease forwards;
+      }
+      
+      .scrollbar-hide::-webkit-scrollbar {
+        display: none;
+      }
+      
+      .scrollbar-hide {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+      /* Navigation and dropdown styles */
+      nav {
+        background-color: rgba(17, 24, 39, 0.8);
+        backdrop-filter: blur(12px);
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+      }
+      
+      .dropdown {
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-10px);
+        transition: all 0.3s ease;
+      }
+      
+      .dropdown.active {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+      }
+      
+      .dropdown-item:hover {
+        background-color: rgba(126, 34, 206, 0.1);
+      }
+      
+      /* Search results styling */
+      .search-results {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        margin-top: 0.5rem;
+        background-color: rgb(22, 29, 47);
+        border: 1px solid rgba(75, 85, 99, 0.5);
+        border-radius: 0.5rem;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
+        max-height: 400px;
+        overflow-y: auto;
+        z-index: 50;
+        animation: scaleIn 0.2s ease forwards;
+      }
+      
+      .search-results.active {
+        display: block;
+      }
+      
+      .search-result-item {
+        padding: 0.75rem 1rem;
+        border-bottom: 1px solid rgba(75, 85, 99, 0.5);
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+      
+      .search-result-item:hover {
+        background-color: rgba(126, 34, 206, 0.1);
+      }
+      
+      .search-result-item:last-child {
+        border-bottom: none;
+      }
+      
+      .highlight {
+        background-color: rgba(139, 92, 246, 0.2);
+        color: rgb(216, 180, 254);
+        padding: 0.05rem 0.1rem;
+        border-radius: 0.15rem;
+      }
+    </style>
+    
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              bg: 'rgb(10, 17, 34)',
+              container: 'rgb(22, 29, 47)',
+              gray: {
+                900: '#121826',
+                800: '#1E293B',
+                700: '#334155',
+                600: '#475569',
+                400: '#94A3B8',
+                300: '#CBD5E1',
+                200: '#E2E8F0'
+              },
+              purple: {
+                900: '#4C1D95',
+                800: '#5B21B6',
+                700: '#6D28D9',
+                600: '#7C3AED',
+                500: '#8B5CF6',
+                400: '#A78BFA'
+              },
+              pink: {
+                900: '#831843',
+                800: '#9D174D',
+                700: '#BE185D',
+                600: '#DB2777',
+                500: '#EC4899',
+                400: '#F472B6'
+              },
+              blue: {
+                900: '#1E3A8A',
+                300: '#93C5FD'
+              },
+              green: {
+                900: '#14532D',
+                600: '#16A34A',
+                300: '#86EFAC'
+              },
+              yellow: {
+                400: '#FACC15'
+              }
+            }
+          }
+        }
+      };
+    </script>
+  </head>
+  <body>
+      <!-- Navbar from second file -->
+  <nav class="fixed w-full z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <!-- Logo -->
+        <div class="flex items-center space-x-2">
+          <i data-lucide="palette" class="h-8 w-8 text-purple-400"></i>
+          <span class="text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+            HobbyHive
+          </span>
+        </div>
+
+        <!-- Search Bar -->
+        <div class="flex-1 max-w-2xl mx-8">
+          <div class="relative">
+            <input 
+              id="searchInput"
+              type="text" 
+              placeholder="Search for courses, topics, or instructors..." 
+              class="w-full bg-gray-800/50 text-gray-200 placeholder-gray-400 rounded-full py-2 pl-10 pr-4 focus:outline-none focus:ring-2 focus:ring-purple-400/50"
+            >
+            <i data-lucide="search" class="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400"></i>
+            <button 
+              id="clearSearch" 
+              class="absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 hover:text-gray-200 cursor-pointer hidden"
+            >
+              <i data-lucide="x" class="h-5 w-5"></i>
+            </button>
+            
+            <!-- Search Results Container -->
+            <div id="searchResults" class="search-results">
+              <div class="p-2 text-sm text-gray-400 border-b border-gray-700">
+                <span id="resultsCount">0</span> results found
+              </div>
+              <div id="searchResultsList"></div>
+              <div id="noResults" class="p-4 text-center text-gray-400 hidden">
+                No results found. Try a different search term.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Navigation Icons -->
+        <div class="flex items-center space-x-6">
+          <button class="text-purple-400 hover:text-purple-300" onclick="window.location.href='https://singular-kringle-5f87fe.netlify.app/skillgig'">
+            <i data-lucide="dollar-sign" class="h-6 w-6"></i>
+          </button>
+          <button class="text-purple-400 hover:text-purple-300" onclick="window.location.href='https://singular-kringle-5f87fe.netlify.app/skillswap'">
+            <i data-lucide="repeat" class="h-6 w-6"></i>
+          </button>
+          <button class="text-purple-400 hover:text-purple-300" onclick="window.location.href='https://singular-kringle-5f87fe.netlify.app/skill%20course%20page'">
+            <i data-lucide="graduation-cap" class="h-6 w-6"></i>
+          </button>
+          <div class="h-6 w-px bg-gray-700"></div>
+                  
+          <!-- Notification Icon with Dropdown -->
+          <div class="relative">
+            <button id="notificationBtn" class="text-purple-400 hover:text-purple-300 relative">
+              <i data-lucide="bell" class="h-6 w-6"></i>
+              <span class="absolute -top-1 -right-1 bg-pink-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">3</span>
+            </button>
+            <div id="notificationDropdown" class="dropdown absolute right-0 mt-2 w-80 bg-gray-800 rounded-lg shadow-lg border border-gray-700 py-2 z-50">
+              <div class="px-4 py-3 border-b border-gray-700">
+                <h3 class="text-lg font-semibold text-white">Notifications</h3>
+              </div>
+              <div class="max-h-96 overflow-y-auto">
+                <a href="#" class="dropdown-item block px-4 py-3 hover:bg-purple-900/10 border-b border-gray-700">
+                  <p class="font-medium text-white">New course available: Advanced Painting</p>
+                  <p class="text-sm text-gray-400 mt-1">2h ago</p>
+                </a>
+                <a href="#" class="dropdown-item block px-4 py-3 hover:bg-purple-900/10 border-b border-gray-700">
+                  <p class="font-medium text-white">Your progress in Digital Art is outstanding!</p>
+                  <p class="text-sm text-gray-400 mt-1">5h ago</p>
+                </a>
+                <a href="#" class="dropdown-item block px-4 py-3 hover:bg-purple-900/10">
+                  <p class="font-medium text-white">Offer from Boracle!</p>
+                  <p class="text-sm text-gray-400 mt-1">1d ago</p>
+                </a>
+              </div>
+            </div>
+            </div>
+          </div>
+                  
+          <!-- Heart Icon -->
+          <button class="text-purple-400 hover:text-purple-300" onclick="window.location.href='https://singular-kringle-5f87fe.netlify.app/wishlist'">
+            <i data-lucide="heart" class="h-6 w-6"></i>
+          </button>
+                  
+          <!-- Profile Icon with Dropdown -->
+          <div class="relative">
+            <button id="profileBtn" class="text-purple-400 hover:text-purple-300">
+              <i data-lucide="user" class="h-6 w-6"></i>
+            </button>
+            <div id="profileDropdown" class="dropdown absolute right-0 mt-2 w-56 bg-gray-800 rounded-lg shadow-lg border border-gray-700 py-2 z-50">
+              <div class="py-1">
+                <a href="https://singular-kringle-5f87fe.netlify.app/freelancers%20profile%20page" class="dropdown-item block px-4 py-2 hover:bg-purple-900/10 text-white">My Profile</a>
+                <a href="https://singular-kringle-5f87fe.netlify.app/mycourse" class="dropdown-item block px-4 py-2 hover:bg-purple-900/10 text-white">My Courses</a>
+                <a href="https://singular-kringle-5f87fe.netlify.app/helpcenter" class="dropdown-item block px-4 py-2 hover:bg-purple-900/10 text-white">Help Center</a>
+              </div>
+              <div class="py-1 border-t border-gray-700">
+                <a href="https://singular-kringle-5f87fe.netlify.app/homepage" class="dropdown-item block px-4 py-2 hover:bg-purple-900/10 text-red-400">Logout</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+    <div id="root"></div>
+
+    <script type="text/babel">
+      // Create Lucide icon components
+      const createIconComponent = (iconName) => {
+        return (props) => {
+          const { className, ...otherProps } = props;
+          return React.createElement('i', {
+            className: `lucide-icon ${className || ''}`,
+            ref: (element) => {
+              if (element) {
+                lucide.createIcons({
+                  icons: {
+                    [iconName]: lucide.icons[iconName]
+                  },
+                  attrs: {
+                    width: props.width || props.size || '1em',
+                    height: props.height || props.size || '1em'
+                  },
+                  elements: [element]
+                });
+              }
+            },
+            ...otherProps,
+          });
+        };
+      };
+
+      // Create all the Lucide icons we'll use
+      const Palette = createIconComponent('Palette');
+      const Search = createIconComponent('Search');
+      const DollarSign = createIconComponent('DollarSign');
+      const Repeat = createIconComponent('Repeat');
+      const GraduationCap = createIconComponent('GraduationCap');
+      const Bell = createIconComponent('Bell');
+      const Heart = createIconComponent('Heart');
+      const User = createIconComponent('User');
+      const Facebook = createIconComponent('Facebook');
+      const Twitter = createIconComponent('Twitter');
+      const Instagram = createIconComponent('Instagram');
+      const Youtube = createIconComponent('Youtube');
+      const X = createIconComponent('X');
+      const ChevronLeft = createIconComponent('ChevronLeft');
+      const ChevronRight = createIconComponent('ChevronRight');
+
+      // Mock data
+      const jobs = [
+        {
+          id: 'job1',
+          title: 'Frontend Developer',
+          company: 'TechCorp Inc.',
+          description: 'Looking for an experienced frontend developer to join our dynamic team. You will be responsible for implementing visual elements and their behaviors with user interactions. You should have strong skills in HTML, CSS, JavaScript, and at least one modern frontend framework.',
+          salary: '$40-60/hr',
+          location: 'Remote',
+          imageUrl: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085'
+        },
+        {
+          id: 'job2',
+          title: 'UI/UX Designer',
+          company: 'DesignHub',
+          description: 'Seeking a creative UI/UX designer with strong portfolio and experience. You will create user-centered designs by understanding business requirements, user feedback, and usability findings. The ideal candidate has a strong portfolio showing design thinking process.',
+          salary: '$45-65/hr',
+          location: 'Hybrid',
+          imageUrl: 'https://images.unsplash.com/photo-1561070791-2526d30994b5'
+        },
+        {
+          id: 'job3',
+          title: 'Full Stack Developer',
+          company: 'StartupX',
+          description: 'Join our fast-growing startup as a full stack developer. You will work on both frontend and backend development for our SaaS platform. We need someone who can take ownership of features from concept to deployment.',
+          salary: '$50-80/hr',
+          location: 'On-site',
+          imageUrl: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f'
+        },
+        {
+          id: 'job4',
+          title: 'Remote DevOps Engineer',
+          company: 'CloudTech Solutions',
+          description: 'Join our remote-first team as a DevOps Engineer. You will be responsible for building and maintaining our cloud infrastructure, implementing CI/CD pipelines, and optimizing our deployment processes.',
+          salary: '$60-80/hr',
+          location: 'Remote',
+          imageUrl: 'https://images.unsplash.com/photo-1551033406-611cf9a28f67'
+        },
+        {
+          id: 'job5',
+          title: 'Remote React Developer',
+          company: 'GlobalApp Inc.',
+          description: 'We are seeking a talented React developer to join our fully distributed team. You will work on building modern, responsive user interfaces for our enterprise clients.',
+          salary: '$50-70/hr',
+          location: 'Remote',
+          imageUrl: 'https://images.unsplash.com/photo-1593720213428-28a5b9e94613'
+        },
+        {
+          id: 'job6',
+          title: 'Senior Backend Architect',
+          company: 'FinTech Innovations',
+          description: 'Looking for an experienced backend architect to lead our engineering team. You will design scalable systems, mentor junior developers, and implement best practices.',
+          salary: '$90-120/hr',
+          location: 'Hybrid',
+          imageUrl: 'https://images.unsplash.com/photo-1573164713988-8665fc963095'
+        },
+        {
+          id: 'job7',
+          title: 'AI/ML Engineer',
+          company: 'DataMind Labs',
+          description: 'Join our cutting-edge AI team to develop machine learning models for enterprise applications. You should have experience with TensorFlow, PyTorch, and large language models.',
+          salary: '$80-110/hr',
+          location: 'On-site',
+          imageUrl: 'https://images.unsplash.com/photo-1555949963-ff9fe0c870eb'
+        },
+        {
+          id: 'job8',
+          title: 'Contract Mobile Developer',
+          company: 'AppWorks Studio',
+          description: '6-month contract role developing mobile applications using React Native. Looking for someone who can hit the ground running and deliver high-quality code.',
+          salary: '$70-90/hr',
+          location: 'Remote',
+          imageUrl: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97'
+        },
+        {
+          id: 'job9',
+          title: 'Part-time UX Researcher',
+          company: 'UserFirst Design',
+          description: 'Part-time role conducting user research and usability testing for our clients. Flexible hours, approximately 20 hours per week.',
+          salary: '$55-75/hr',
+          location: 'Hybrid',
+          imageUrl: 'https://images.unsplash.com/photo-1587440871875-191322ee64b0'
+        }
+      ];
+
+      const offers = [
+        {
+          id: 'offer1',
+          title: 'Senior Developer',
+          company: 'TechGrowth Inc.',
+          description: 'We were impressed by your profile and would like to offer you a position on our development team. The role includes leading a small team and implementing new features for our enterprise clients.',
+          salary: '$75/hr',
+          location: 'Remote',
+          imageUrl: 'https://images.unsplash.com/photo-1560179707-f14e90ef3623',
+          timeLeft: 'New Offer'
+        },
+        {
+          id: 'offer2',
+          title: 'Lead Frontend Developer',
+          company: 'WebPro Solutions',
+          description: 'Based on your experience, we believe you would be a perfect fit for our lead frontend developer position. You would be responsible for architecture decisions and mentoring junior developers.',
+          salary: '$85/hr',
+          location: 'Hybrid',
+          imageUrl: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab',
+          timeLeft: 'New Offer'
+        }
+      ];
+      
+      // Custom hooks
+      function useLocalStorage(key, initialValue) {
+        const [storedValue, setStoredValue] = React.useState(() => {
+          if (typeof window === 'undefined') {
+            return initialValue;
+          }
+          
+          try {
+            const item = window.localStorage.getItem(key);
+            return item ? JSON.parse(item) : initialValue;
+          } catch (error) {
+            console.warn(`Error reading localStorage key "${key}":`, error);
+            return initialValue;
+          }
+        });
+        
+        const setValue = (value) => {
+          try {
+            const valueToStore = value instanceof Function ? value(storedValue) : value;
+            setStoredValue(valueToStore);
+            
+            if (typeof window !== 'undefined') {
+              window.localStorage.setItem(key, JSON.stringify(valueToStore));
+            }
+          } catch (error) {
+            console.warn(`Error setting localStorage key "${key}":`, error);
+          }
+        };
+        
+        React.useEffect(() => {
+          const handleStorageChange = (e) => {
+            if (e.key === key && e.newValue) {
+              setStoredValue(JSON.parse(e.newValue));
+            }
+          };
+          
+          if (typeof window !== 'undefined') {
+            window.addEventListener('storage', handleStorageChange);
+            return () => window.removeEventListener('storage', handleStorageChange);
+          }
+        }, [key]);
+        
+        return [storedValue, setValue];
+      }
+      
+      // Components
+      const Toast = ({ message, type, visible }) => {
+        const [animation, setAnimation] = React.useState('');
+        
+        React.useEffect(() => {
+          if (visible) {
+            setAnimation('animate-toast-in');
+          } else {
+            setAnimation('animate-toast-out');
+          }
+        }, [visible]);
+        
+        const getBackgroundColor = () => {
+          switch (type) {
+            case 'success':
+              return 'bg-green-600';
+            case 'error':
+              return 'bg-pink-600';
+            case 'warning':
+              return 'bg-yellow-600';
+            default:
+              return 'bg-green-600';
+          }
+        };
+        
+        if (!message) return null;
+        
+        return (
+          <div className={`fixed bottom-6 right-6 px-6 py-3 rounded-lg shadow-lg z-50 text-white font-medium ${getBackgroundColor()} ${animation}`}>
+            {message}
+          </div>
+        );
+      };
+      
+      const NavDropdown = ({ isOpen, title, items }) => {
+        if (!isOpen) return null;
+        
+        return (
+          <div className="absolute right-0 mt-2 w-64 bg-container border border-gray-700 rounded-lg shadow-lg overflow-hidden animate-fade-in z-20">
+            <h3 className="px-4 py-3 font-medium border-b border-gray-700">{title}</h3>
+            <div className="max-h-64 overflow-y-auto">
+              {items.map((item, index) => (
+                item.isLink ? (
+                  <a 
+                    key={index}
+                    href="#" 
+                    className={`block px-4 py-3 hover:bg-gray-700 text-gray-300 hover:text-white transition-colors ${item.className || ''}`}
+                  >
+                    {item.content}
+                  </a>
+                ) : (
+                  <div key={index} className="px-4 py-3 border-b border-gray-700 last:border-0">
+                    <p className="text-gray-300">{item.content}</p>
+                    {item.meta && <span className="text-xs text-gray-400 block mt-1">{item.meta}</span>}
+                  </div>
+                )
+              ))}
+            </div>
+          </div>
+        );
+      };
+      
+      const JobCard = ({ job, isSaved, onToggleSave, onApply, onClick, appliedJobs = [] }) => {
+        const [isApplied, setIsApplied] = React.useState(() => {
+          // Check if this job is in the appliedJobs list
+          return appliedJobs.some(j => j.id === job.id);
+        });
+        
+        const handleToggleSave = (e) => {
+          e.stopPropagation();
+          onToggleSave(job.id);
+        };
+        
+        const handleApply = (e) => {
+          e.stopPropagation();
+          if (!isApplied) {
+            onApply(job);
+            setIsApplied(true);
+          }
+        };
+        
+        return (
+          <div 
+            className={`flex-shrink-0 w-80 bg-container rounded-xl border overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-1 cursor-pointer group
+              ${isApplied ? 'border-green-600' : 'border-gray-700'}`}
+            onClick={onClick}
+          >
+            {isApplied && (
+              <div className="bg-green-600 text-white font-bold text-xs uppercase py-1 px-3 absolute right-0 top-0 z-10">
+                Applied
+              </div>
+            )}
+            <div className="relative">
+              <img 
+                src={job.imageUrl} 
+                alt={job.company} 
+                className="w-full h-36 object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-gray-900/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            </div>
+            
+            <div className="p-4">
+              <h3 className="font-semibold text-gray-200 text-lg truncate group-hover:text-white transition-colors duration-200">
+                {job.title}
+              </h3>
+              <p className="text-sm text-gray-400 mb-2 group-hover:text-gray-300 transition-colors duration-200">
+                {job.company}
+              </p>
+              <div className="flex justify-between text-sm mb-4">
+                <span className="font-medium text-gray-200">{job.salary}</span>
+                <span className="text-gray-400">{job.location}</span>
+              </div>
+              <div className="flex space-x-2">
+                <button 
+                  className={`flex-1 px-3 py-2 text-sm font-medium rounded-md transition-all duration-200 ${
+                    isSaved 
+                      ? 'bg-purple-900/50 text-purple-400 hover:bg-purple-800/50' 
+                      : 'bg-gray-700 hover:bg-gray-600 text-gray-200'
+                  }`}
+                  onClick={handleToggleSave}
+                >
+                  {isSaved ? 'Saved' : 'Save'}
+                </button>
+                <button 
+                  className={`flex-1 px-3 py-2 text-sm font-medium rounded-md transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98] ${
+                    isApplied 
+                      ? 'bg-green-600 text-white cursor-default'
+                      : 'bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white'
+                  }`}
+                  onClick={handleApply}
+                  disabled={isApplied}
+                >
+                  {isApplied ? 'Applied' : 'Apply'}
+                </button>
+              </div>
+            </div>
+          </div>
+        );
+      };
+      
+      const OfferCard = ({ offer, onAccept, onDecline, onClick }) => {
+        const [accepted, setAccepted] = React.useState(false);
+        const [visible, setVisible] = React.useState(true);
+
+        const handleClick = (e, action) => {
+          e.stopPropagation();
+          
+          if (action === 'accept') {
+            setAccepted(true);
+            setTimeout(() => {
+              setVisible(false);
+            }, 1500); // Show "Accepted" for 1.5 seconds before removing
+            onAccept();
+          } else {
+            setVisible(false);
+            onDecline();
+          }
+        };
+        
+        if (!visible) return null;
+        
+        return (
+          <div 
+            className="flex-shrink-0 w-80 bg-container rounded-xl border border-gray-700 overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-1 cursor-pointer group"
+            onClick={onClick}
+          >
+            <div className="relative">
+              <img 
+                src={offer.imageUrl} 
+                alt={offer.company} 
+                className="w-full h-36 object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-gray-900/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            </div>
+            
+            <div className="p-4">
+              <h3 className="font-semibold text-gray-200 text-lg group-hover:text-white transition-colors duration-200">
+                {offer.title}
+              </h3>
+              <p className="text-sm text-gray-400 mb-2 group-hover:text-gray-300 transition-colors duration-200">
+                {offer.company}
+              </p>
+              <div className="flex justify-between text-sm mb-2">
+                <span className="font-medium text-gray-200">{offer.salary}</span>
+                <span className="text-gray-400">{offer.location}</span>
+              </div>
+              <p className="text-sm text-pink-400 font-medium mb-3">{offer.timeLeft}</p>
+              <div className="flex space-x-2">
+                <button 
+                  className={`flex-1 px-3 py-2 text-sm font-medium ${
+                    accepted
+                      ? 'bg-green-600 text-white'
+                      : 'bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white'
+                  } rounded-md transition-colors`}
+                  onClick={(e) => !accepted && handleClick(e, 'accept')}
+                  disabled={accepted}
+                >
+                  {accepted ? 'Accepted' : 'Accept'}
+                </button>
+                {!accepted && (
+                  <button 
+                    className="flex-1 px-3 py-2 text-sm font-medium bg-gray-700 hover:bg-gray-600 text-gray-200 text-white rounded-md transition-colors"
+                    onClick={(e) => handleClick(e, 'decline')}
+                  >
+                    Decline
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
+        );
+      };
+      
+      const JobModal = ({ isOpen, job, isSaved, onClose, onApply, onToggleSave, appliedJobs = [] }) => {
+        const [isApplied, setIsApplied] = React.useState(() => {
+          // Check if this job is in the appliedJobs list
+          return appliedJobs.some(j => j.id === job.id);
+        });
+        
+        React.useEffect(() => {
+          if (isOpen && appliedJobs) {
+            setIsApplied(appliedJobs.some(j => j.id === job.id));
+          }
+        }, [isOpen, job, appliedJobs]);
+        
+        React.useEffect(() => {
+          const handleEsc = (e) => {
+            if (e.key === 'Escape' && isOpen) {
+              onClose();
+            }
+          };
+          
+          window.addEventListener('keydown', handleEsc);
+          return () => window.removeEventListener('keydown', handleEsc);
+        }, [isOpen, onClose]);
+        
+        React.useEffect(() => {
+          if (isOpen) {
+            document.body.style.overflow = 'hidden';
+          } else {
+            document.body.style.overflow = '';
+          }
+          return () => {
+            document.body.style.overflow = '';
+          };
+        }, [isOpen]);
+        
+        if (!isOpen) return null;
+        
+        const handleBackdropClick = (e) => {
+          if (e.target === e.currentTarget) {
+            onClose();
+          }
+        };
+        
+        const handleApply = () => {
+          if (!isApplied) {
+            onApply();
+            setIsApplied(true);
+          }
+        };
+        
+        return (
+          <div 
+            className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center transition-opacity duration-300"
+            onClick={handleBackdropClick}
+          >
+            <div className="bg-container rounded-xl border border-gray-700 shadow-xl w-full max-w-3xl max-h-[90vh] overflow-auto m-4 animate-scale-in">
+              <div className="relative">
+                <button 
+                  className="absolute right-4 top-4 text-gray-400 hover:text-white bg-gray-800/70 rounded-full p-1 transition-colors z-10"
+                  onClick={onClose}
+                  aria-label="Close modal"
+                >
+                  <X className="h-6 w-6" />
+                </button>
+                {isApplied && (
+                  <div className="absolute left-0 top-5 bg-green-600 text-white font-bold text-sm uppercase py-2 px-4 z-10">
+                    Applied
+                  </div>
+                )}
+                <img 
+                  src={job.imageUrl} 
+                  alt={job.company} 
+                  className="w-full h-60 object-cover" 
+                />
+              </div>
+              <div className="p-6">
+                <h2 className="text-2xl font-bold text-gray-200 mb-1">{job.title}</h2>
+                <p className="text-gray-400 text-lg mb-4">{job.company}</p>
+                
+                <div className="flex space-x-8 mb-6">
+                  <div className="text-gray-200">
+                    <span className="font-medium block">{job.salary}</span>
+                    <span className="text-sm text-gray-400">Salary</span>
+                  </div>
+                  <div className="text-gray-200">
+                    <span className="font-medium block">{job.location}</span>
+                    <span className="text-sm text-gray-400">Location</span>
+                  </div>
+                </div>
+                
+                <div className="mb-8">
+                  <h3 className="text-lg font-medium text-gray-200 mb-2">Description</h3>
+                  <p className="text-gray-300 leading-relaxed">{job.description}</p>
+                </div>
+                
+                <div className="flex space-x-4">
+                  <button 
+                    className={`flex-1 py-3 font-medium rounded-lg transition-all duration-200 ${
+                      isApplied 
+                        ? 'bg-green-600 text-white cursor-default'
+                        : 'bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white transform hover:scale-[1.02] active:scale-[0.98]'
+                    }`}
+                    onClick={handleApply}
+                    disabled={isApplied}
+                  >
+                    {isApplied ? 'Applied' : 'Apply Now'}
+                  </button>
+                  <button 
+                    className={`flex-1 py-3 font-medium rounded-lg transition-colors ${
+                      isSaved 
+                        ? 'bg-purple-900/50 text-purple-400 hover:bg-purple-800/50' 
+                        : 'bg-gray-700 hover:bg-gray-600 text-gray-200'
+                    }`}
+                    onClick={onToggleSave}
+                  >
+                    {isSaved ? 'Saved' : 'Save for Later'}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+      };
+      
+      const ScrollableSection = ({ title, emptyMessage, isEmpty, children }) => {
+        const containerRef = React.useRef(null);
+        
+        const scroll = (direction) => {
+          if (containerRef.current) {
+            const scrollAmount = direction === 'left' ? -320 : 320;
+            containerRef.current.scrollBy({
+              left: scrollAmount,
+              behavior: 'smooth'
+            });
+          }
+        };
+        
+        return (
+          <div className="bg-container rounded-xl border border-gray-700 p-6 shadow-md">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-semibold text-gray-200">{title}</h2>
+              <div className="flex space-x-2">
+                <button 
+                  className="p-2 w-8 h-8 rounded-full bg-gray-700 hover:bg-gray-600 text-gray-200 transition-colors transform hover:scale-[1.05] active:scale-[0.95] flex items-center justify-center"
+                  onClick={() => scroll('left')}
+                  aria-label="Scroll left"
+                >
+                  &lt;
+                </button>
+                <button 
+                  className="p-2 w-8 h-8 rounded-full bg-gray-700 hover:bg-gray-600 text-gray-200 transition-colors transform hover:scale-[1.05] active:scale-[0.95] flex items-center justify-center"
+                  onClick={() => scroll('right')}
+                  aria-label="Scroll right"
+                >
+                  &gt;
+                </button>
+              </div>
+            </div>
+            {isEmpty ? (
+              <p className="text-gray-400 text-center py-8">{emptyMessage}</p>
+            ) : (
+              <div 
+                ref={containerRef}
+                className="flex space-x-4 overflow-x-auto pb-4 scrollbar-hide"
+                style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+              >
+                {children}
+              </div>
+            )}
+          </div>
+        );
+      };
+      
+      const SidebarSection = ({ title, isExpanded, onToggle, children }) => {
+        return (
+          <div className="bg-container rounded-xl border border-gray-700 overflow-hidden shadow-md transition-all duration-200">
+            <div className="flex justify-between items-center p-4 border-b border-gray-700">
+              <h3 className="font-medium text-gray-200">{title}</h3>
+              <button 
+                className="text-sm font-medium text-purple-400 hover:text-purple-300 transition-colors"
+                onClick={onToggle}
+              >
+                {isExpanded ? 'Hide' : 'Show'}
+              </button>
+            </div>
+            <div className={`transition-all duration-300 overflow-hidden ${isExpanded ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}>
+              {children}
+            </div>
+          </div>
+        );
+      };
+      
+      const Sidebar = ({
+        preferences,
+        setPreferences,
+        savedJobs,
+        appliedJobs,
+        offers,
+        onToggleSave,
+        onApply,
+        onHandleOffer,
+        showToast
+      }) => {
+        const [expandedSections, setExpandedSections] = React.useState({
+          preferences: false,
+          savedJobs: false,
+          appliedJobs: false,
+          receivedOffers: false,
+        });
+        
+        const toggleSection = (section) => {
+          setExpandedSections({
+            ...expandedSections,
+            [section]: !expandedSections[section]
+          });
+        };
+        
+        const handlePreferencesSubmit = (e) => {
+          e.preventDefault();
+          const form = e.target;
+          const newPreferences = {
+            remoteOnly: form.remoteOnly.value === 'true',
+            minHourlyRate: parseInt(form.minHourlyRate.value),
+            availability: form.availability.value
+          };
+          
+          setPreferences(newPreferences);
+          showToast('Preferences updated successfully!', 'success');
+        };
+        
+        return (
+          <div className="w-full lg:w-1/4 space-y-6">
+            {/* Profile Card */}
+            <div className="bg-container rounded-xl border border-gray-700 p-6 flex flex-col items-center text-center shadow-md">
+              <img 
+                src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" 
+                alt="Profile" 
+                className="w-20 h-20 rounded-full object-cover border-2 border-purple-500 mb-4" 
+              />
+              <h2 className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400 mb-1">
+                Alex
+              </h2>
+              <p className="text-gray-400 text-sm mb-1">Full Stack Developer</p>
+              <div className="flex items-center text-yellow-400 text-sm mb-2">
+                <span>★</span>
+                <span className="ml-1 text-gray-200">4.8 (124 reviews)</span>
+              </div>
+            </div>
+            
+            {/* Preferences */}
+            <SidebarSection 
+              title="Preferences" 
+              isExpanded={expandedSections.preferences}
+              onToggle={() => toggleSection('preferences')}
+            >
+              <form id="preferences-form" onSubmit={handlePreferencesSubmit}>
+                <div className="mb-4 p-4">
+                  <label htmlFor="remoteOnly" className="block text-sm font-medium text-purple-400 mb-1">
+                    Remote Only
+                  </label>
+                  <select 
+                    id="remoteOnly" 
+                    name="remoteOnly"
+                    defaultValue={preferences.remoteOnly ? 'true' : 'false'}
+                    className="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-400"
+                  >
+                    <option value="true">Yes</option>
+                    <option value="false">No</option>
+                  </select>
+                </div>
+                
+                <div className="mb-4 px-4">
+                  <label htmlFor="minHourlyRate" className="block text-sm font-medium text-purple-400 mb-1">
+                    Min. Hourly Rate ($)
+                  </label>
+                  <input 
+                    type="number" 
+                    id="minHourlyRate" 
+                    name="minHourlyRate"
+                    defaultValue={preferences.minHourlyRate} 
+                    className="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-400" 
+                  />
+                </div>
+                
+                <div className="mb-4 px-4">
+                  <label htmlFor="availability" className="block text-sm font-medium text-purple-400 mb-1">
+                    Availability
+                  </label>
+                  <select 
+                    id="availability" 
+                    name="availability"
+                    defaultValue={preferences.availability}
+                    className="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-400"
+                  >
+                    <option>Full-time</option>
+                    <option>Part-time</option>
+                    <option>Contract</option>
+                  </select>
+                </div>
+                
+                <div className="px-4 pb-4">
+                  <button 
+                    type="submit" 
+                    className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-medium py-2 px-4 rounded-lg transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98]"
+                  >
+                    Save Preferences
+                  </button>
+                </div>
+              </form>
+            </SidebarSection>
+            
+            {/* Saved Jobs */}
+            <SidebarSection
+              title="Saved Jobs"
+              isExpanded={expandedSections.savedJobs}
+              onToggle={() => toggleSection('savedJobs')}
+            >
+              {savedJobs.length === 0 ? (
+                <div className="p-4 text-center text-gray-400">
+                  No saved jobs yet. Save jobs that interest you for later.
+                </div>
+              ) : (
+                <div className="p-4 space-y-4">
+                  {savedJobs.map(job => {
+                    const isAlreadyApplied = appliedJobs.some(j => j.id === job.id);
+                    return (
+                      <div key={job.id} className="border-b border-gray-700 pb-4 last:border-b-0">
+                        <div className="flex justify-between">
+                          <div>
+                            <h4 className="font-medium text-gray-200">{job.title}</h4>
+                            <p className="text-sm text-gray-400">{job.company}</p>
+                            {isAlreadyApplied && (
+                              <span className="text-xs text-green-400 font-semibold">Applied</span>
+                            )}
+                          </div>
+                          <div className="flex flex-col space-y-2">
+                            <button 
+                              className={`px-3 py-1 text-xs font-medium rounded-md transition-all duration-200 ${
+                                isAlreadyApplied 
+                                  ? 'bg-green-600 text-white cursor-default'
+                                  : 'bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white'
+                              }`}
+                              onClick={() => !isAlreadyApplied && onApply(job)}
+                              disabled={isAlreadyApplied}
+                            >
+                              {isAlreadyApplied ? 'Applied' : 'Apply'}
+                            </button>
+                            <button 
+                              className="px-3 py-1 text-xs font-medium bg-gray-700 hover:bg-gray-600 text-gray-200 text-white rounded-md transition-all duration-200"
+                              onClick={() => onToggleSave(job.id)}
+                            >
+                              Remove
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </SidebarSection>
+            
+            {/* Applied Jobs */}
+            <SidebarSection
+              title="Applied Jobs"
+              isExpanded={expandedSections.appliedJobs}
+              onToggle={() => toggleSection('appliedJobs')}
+            >
+              <div className="p-4 space-y-4">
+                {appliedJobs.map((job) => (
+                  <div key={job.id} className="border-b border-gray-700 pb-4 last:border-b-0">
+                    <div className="flex justify-between items-center">
+                      <div>
+                        <h4 className="font-medium text-gray-200">{job.title}</h4>
+                        <p className="text-sm text-gray-400">{job.company} - Applied on {job.appliedDate}</p>
+                      </div>
+                      <span className={`px-3 py-1 text-xs font-medium rounded-full ${
+                        job.status === 'In Review' 
+                          ? 'bg-blue-900/50 text-blue-300' 
+                          : 'bg-green-900/50 text-green-300'
+                      }`}>
+                        {job.status}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </SidebarSection>
+            
+            {/* Received Offers */}
+            <SidebarSection
+              title="Received Offers"
+              isExpanded={expandedSections.receivedOffers}
+              onToggle={() => toggleSection('receivedOffers')}
+            >
+              {offers.length === 0 ? (
+                <div className="p-4 text-center text-gray-400">
+                  No offers received yet. Keep applying!
+                </div>
+              ) : (
+                <div className="p-4 space-y-4">
+                  {offers.map(offer => (
+                    <div key={offer.id} className="border-b border-gray-700 pb-4 last:border-b-0">
+                      <div>
+                        <h4 className="font-medium text-gray-200">{offer.title}</h4>
+                        <p className="text-sm text-gray-400">{offer.company}</p>
+                        <p className="text-sm text-pink-400 font-medium mt-1">{offer.timeLeft}</p>
+                      </div>
+                      <div className="flex space-x-2 mt-3">
+                        <button 
+                          className="px-3 py-1 text-xs font-medium bg-green-600 hover:bg-green-700 text-white rounded-md transition-all duration-200"
+                          onClick={() => onHandleOffer(offer.id, 'accept')}
+                        >
+                          Accept
+                        </button>
+                        <button 
+                          className="px-3 py-1 text-xs font-medium bg-gray-700 hover:bg-gray-600 text-gray-200 text-white rounded-md transition-all duration-200"
+                          onClick={() => onHandleOffer(offer.id, 'decline')}
+                        >
+                          Decline
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </SidebarSection>
+          </div>
+        );
+      };
+      
+      // Main App Component
+      function App() {
+        // State management
+        const [savedJobs, setSavedJobs] = useLocalStorage('savedJobs', []);
+        const [preferences, setPreferences] = useLocalStorage('preferences', {
+          remoteOnly: true,
+          minHourlyRate: 45,
+          availability: 'Full-time'
+        });
+        const [searchHistory, setSearchHistory] = useLocalStorage('searchHistory', []);
+        
+        const [selectedJob, setSelectedJob] = React.useState(null);
+        const [isModalOpen, setIsModalOpen] = React.useState(false);
+        const [toast, setToast] = React.useState({ message: '', type: '', visible: false });
+        const [appliedJobs, setAppliedJobs] = useLocalStorage('appliedJobs', [
+          {
+            id: 'applied1',
+            title: 'Frontend Developer',
+            company: 'TechCorp Inc.',
+            appliedDate: 'Mar 15, 2024',
+            status: 'In Review'
+          },
+          {
+            id: 'applied2',
+            title: 'Backend Developer',
+            company: 'DataTech Solutions',
+            appliedDate: 'Mar 12, 2024',
+            status: 'Accepted'
+          }
+        ]);
+        
+        // Offers state with React state for visibility handling
+        const [visibleOffers, setVisibleOffers] = React.useState(offers);
+        
+        // Dropdowns state
+        const [activeDropdown, setActiveDropdown] = React.useState(null);
+        
+        // Search state
+        const [searchQuery, setSearchQuery] = React.useState('');
+        
+        // Filter jobs based on preferences and search query
+        const filteredJobs = jobs.filter(job => {
+          // First apply preference filters
+          if (preferences.remoteOnly && job.location !== 'Remote') {
+            return false;
+          }
+          const minRate = job.salary.match(/\$(\d+)/);
+          if (minRate && parseInt(minRate[1]) < preferences.minHourlyRate) {
+            return false;
+          }
+          
+          // Then apply search filter if there is a search query
+          if (searchQuery) {
+            const searchableText = `${job.title} ${job.company} ${job.description} ${job.salary} ${job.location}`.toLowerCase();
+            return searchableText.includes(searchQuery.toLowerCase());
+          }
+          
+          return true;
+        });
+        
+        // Handle saving jobs
+        const toggleSaveJob = (jobId) => {
+          if (savedJobs.includes(jobId)) {
+            setSavedJobs(savedJobs.filter(id => id !== jobId));
+            showToast('Job removed from saved');
+          } else {
+            setSavedJobs([...savedJobs, jobId]);
+            showToast('Job saved for later', 'success');
+          }
+        };
+        
+        // Handle applying for jobs
+        const applyForJob = (job) => {
+          const alreadyApplied = appliedJobs.some(j => j.id === job.id);
+          if (alreadyApplied) {
+            showToast('You have already applied to this job', 'warning');
+            return;
+          }
+          
+          const currentDate = new Date();
+          const formattedDate = `${currentDate.toLocaleString('default', { month: 'short' })} ${currentDate.getDate()}, ${currentDate.getFullYear()}`;
+          
+          const newApplication = {
+            id: job.id,
+            title: job.title,
+            company: job.company,
+            appliedDate: formattedDate,
+            status: 'In Review'
+          };
+          
+          setAppliedJobs([...appliedJobs, newApplication]);
+          showToast('Application submitted successfully!', 'success');
+          setIsModalOpen(false);
+        };
+        
+        // Handle offer actions (accept/decline)
+        const handleOfferAction = (offerId, action) => {
+          // Remove the offer from visible offers
+          setTimeout(() => {
+            setVisibleOffers(visibleOffers.filter(offer => offer.id !== offerId));
+          }, action === 'accept' ? 1500 : 0); // Delay removal if accepted to show "Accepted" state
+          
+          showToast(
+            action === 'accept' ? 'Offer accepted successfully!' : 'Offer declined',
+            action === 'accept' ? 'success' : 'warning'
+          );
+        };
+        
+        // Add to recent searches
+        const addToRecentSearches = (job) => {
+          const existingIndex = searchHistory.findIndex(item => item.id === job.id);
+          
+          if (existingIndex !== -1) {
+            const updatedHistory = [...searchHistory];
+            const [removed] = updatedHistory.splice(existingIndex, 1);
+            removed.timeAgo = 'Just now';
+            setSearchHistory([removed, ...updatedHistory]);
+          } else {
+            const newSearch = {
+              id: job.id,
+              title: job.title,
+              company: job.company,
+              salary: job.salary,
+              location: job.location,
+              imageUrl: job.imageUrl,
+              timeAgo: 'Just now'
+            };
+            setSearchHistory([newSearch, ...searchHistory].slice(0, 5));
+          }
+        };
+        
+        // Open job modal
+        const openJobModal = (job) => {
+          setSelectedJob(job);
+          addToRecentSearches(job);
+          setIsModalOpen(true);
+        };
+        
+        // Show toast notification
+        const showToast = (message, type = 'success') => {
+          setToast({ message, type, visible: true });
+          setTimeout(() => {
+            setToast(prev => ({ ...prev, visible: false }));
+          }, 3000);
+        };
+        
+        // Toggle dropdowns
+        const toggleDropdown = (id) => {
+          setActiveDropdown(activeDropdown === id ? null : id);
+        };
+        
+        // Close dropdowns when clicking outside
+        React.useEffect(() => {
+          const handleClickOutside = (e) => {
+            const target = e.target;
+            if (activeDropdown && !target.closest('.dropdown')) {
+              setActiveDropdown(null);
+            }
+          };
+          
+          document.addEventListener('click', handleClickOutside);
+          return () => {
+            document.removeEventListener('click', handleClickOutside);
+          };
+        }, [activeDropdown]);
+
+        // Handle search input changes from the search bar
+        React.useEffect(() => {
+          const searchInput = document.getElementById('searchInput');
+          if (!searchInput) return;
+          
+          const handleSearchChange = (e) => {
+            setSearchQuery(e.target.value);
+          };
+          
+          searchInput.addEventListener('input', handleSearchChange);
+          
+          // Custom event for when a job is selected from search results
+          document.addEventListener('openJobModal', (e) => {
+            const jobId = e.detail.jobId;
+            const job = [...jobs, ...offers].find(item => item.id === jobId);
+            if (job) {
+              openJobModal(job);
+            }
+          });
+          
+          return () => {
+            searchInput.removeEventListener('input', handleSearchChange);
+            document.removeEventListener('openJobModal', () => {});
+          };
+        }, []);
+        
+        return (
+          <div className="min-h-screen flex flex-col bg-bg text-gray-200">
+            {/* Navigation Bar */}
+            <nav className="fixed top-0 left-0 right-0 z-10 bg-container/70 backdrop-blur-sm border-b border-gray-700 shadow-md">
+              <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+                <a href="#" className="flex items-center space-x-2 text-xl font-bold">
+                  <Palette className="h-6 w-6 text-purple-400" />
+                  <span>HobbyHive</span>
+                </a>
+                
+                <div className="relative w-1/3">
+                  <div className="relative">
+                    <input 
+                      type="text" 
+                      placeholder="Search for hobbies..." 
+                      className="w-full bg-gray-700/50 border border-gray-600 rounded-full px-4 py-2 pl-10 text-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    />
+                    <Search className="h-5 w-5 text-gray-400 absolute left-3 top-2.5" />
+                  </div>
+                  <div id="searchResults" className="hidden absolute top-full mt-2 w-full bg-container border border-gray-700 rounded-lg shadow-lg"></div>
+                </div>
+                
+                <div className="flex items-center space-x-5">
+                  <DollarSign className="h-5 w-5 text-gray-300 hover:text-purple-400 cursor-pointer transition-colors" title="Skill Gig" />
+                  <Repeat className="h-5 w-5 text-gray-300 hover:text-purple-400 cursor-pointer transition-colors" title="Skill Swap" />
+                  <GraduationCap className="h-5 w-5 text-gray-300 hover:text-purple-400 cursor-pointer transition-colors" title="Skill Course" />
+                  
+                  <div className="w-px h-6 bg-gray-700"></div>
+                  
+                  <div className="dropdown relative">
+                    <Bell 
+                      className="h-5 w-5 text-gray-300 hover:text-purple-400 cursor-pointer transition-colors" 
+                      onClick={() => toggleDropdown('notification')}
+                    />
+                    <NavDropdown 
+                      isOpen={activeDropdown === 'notification'} 
+                      title="Notifications"
+                      items={[
+                        { content: 'New course available: Advanced Painting', meta: '2h ago' },
+                        { content: 'Your progress in Digital Art is outstanding!', meta: '5h ago' }
+                      ]}
+                    />
+                  </div>
+                  
+                  <div className="dropdown relative">
+                    <Heart 
+                      className="h-5 w-5 text-gray-300 hover:text-purple-400 cursor-pointer transition-colors" 
+                      onClick={() => toggleDropdown('wishlist')}
+                    />
+                    <NavDropdown 
+                      isOpen={activeDropdown === 'wishlist'} 
+                      title="Wishlist"
+                      items={[
+                        { content: '3D Modeling Masterclass', meta: '$49.99' },
+                        { content: 'Advanced Photography', meta: '$39.99' }
+                      ]}
+                    />
+                  </div>
+                  
+                  <div className="dropdown relative">
+                    <User 
+                      className="h-5 w-5 text-gray-300 hover:text-purple-400 cursor-pointer transition-colors" 
+                      onClick={() => toggleDropdown('profile')}
+                    />
+                    <NavDropdown 
+                      isOpen={activeDropdown === 'profile'} 
+                      title="Alex Johnson"
+                      items={[
+                        { content: 'My Profile', isLink: true },
+                        { content: 'My Courses', isLink: true },
+                        { content: 'Settings', isLink: true },
+                        { content: 'Help Center', isLink: true },
+                        { content: 'Logout', isLink: true, className: 'text-pink-400' }
+                      ]}
+                    />
+                  </div>
+                </div>
+              </div>
+            </nav>
+            
+            {/* Dashboard */}
+            <div className="flex-grow pt-24 pb-10">
+              <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="flex flex-col lg:flex-row gap-6">
+                  {/* Sidebar */}
+                  <Sidebar 
+                    preferences={preferences}
+                    setPreferences={setPreferences}
+                    savedJobs={jobs.filter(job => savedJobs.includes(job.id))}
+                    appliedJobs={appliedJobs}
+                    offers={visibleOffers}
+                    onToggleSave={toggleSaveJob}
+                    onApply={applyForJob}
+                    onHandleOffer={handleOfferAction}
+                    showToast={showToast}
+                  />
+                  
+                  {/* Main Content */}
+                  <div className="w-full lg:w-3/4 space-y-6">
+                    {/* Top Picks */}
+                    <ScrollableSection 
+                      title={searchQuery ? `Search Results for "${searchQuery}"` : "Top Picks for You"}
+                      emptyMessage={searchQuery ? "No results matching your search query. Try a different search term." : "No jobs matching your preferences. Try adjusting your preferences."}
+                      isEmpty={filteredJobs.length === 0}
+                    >
+                      {filteredJobs.map(job => (
+                        <JobCard 
+                          key={job.id} 
+                          job={job} 
+                          isSaved={savedJobs.includes(job.id)}
+                          onToggleSave={toggleSaveJob}
+                          onApply={applyForJob}
+                          onClick={() => openJobModal(job)}
+                          appliedJobs={appliedJobs}
+                        />
+                      ))}
+                    </ScrollableSection>
+                    
+                    {/* Recent Searches */}
+                    <ScrollableSection 
+                      title="Recent Searches"
+                      emptyMessage="Your recent searches will appear here."
+                      isEmpty={searchHistory.length === 0}
+                    >
+                      {searchHistory.map(item => (
+                        <div 
+                          key={item.id}
+                          className="flex-shrink-0 w-72 bg-container rounded-xl border border-gray-700 p-4 shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-1 cursor-pointer"
+                          onClick={() => {
+                            const job = jobs.find(j => j.id === item.id) || offers.find(o => o.id === item.id);
+                            if (job) openJobModal(job);
+                          }}
+                        >
+                          <h3 className="font-semibold text-gray-200 mb-1 truncate">{item.title}</h3>
+                          <p className="text-sm text-gray-400 mb-2">{item.company}</p>
+                          <div className="flex justify-between text-sm mb-3">
+                            <span className="font-medium text-gray-200">{item.salary}</span>
+                            <span className="text-gray-400">{item.location}</span>
+                          </div>
+                          <p className="text-xs text-gray-400">{item.timeAgo}</p>
+                        </div>
+                      ))}
+                    </ScrollableSection>
+                    
+                    {/* Received Offers */}
+                    <ScrollableSection 
+                      title="Received Offers"
+                      emptyMessage="No offers at the moment. Keep building your profile!"
+                      isEmpty={visibleOffers.length === 0}
+                    >
+                      {visibleOffers.map(offer => (
+                        <OfferCard 
+                          key={offer.id} 
+                          offer={offer} 
+                          onAccept={() => handleOfferAction(offer.id, 'accept')}
+                          onDecline={() => handleOfferAction(offer.id, 'decline')}
+                          onClick={() => openJobModal(offer)}
+                        />
+                      ))}
+                    </ScrollableSection>
+                  </div>
+                </div>
+              </main>
+            </div>
+            
+            {/* Footer */}
+            {/* Footer */}
+  <footer className="bg-container backdrop-blur-sm border-t border-gray-700 py-12">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div className="md:col-span-1">
+          <div className="flex items-center space-x-2 text-xl font-bold mb-4">
+            <Palette className="h-6 w-6 text-purple-400" />
+            <span> About HobbyHive</span>
+          </div>
+          <p className="text-gray-400 mb-6">Empowering creativity and skill development through interactive learning experiences.</p>
+          <div className="flex space-x-4">
+            <a href="https://www.facebook.com/hobby.hive/" className="text-gray-400 hover:text-purple-400 transition-colors">
+              <Facebook className="h-5 w-5" />
+            </a>
+            <a href="https://x.com/Hobby_Hive" className="text-gray-400 hover:text-purple-400 transition-colors">
+              <Twitter className="h-5 w-5" />
+            </a>
+            <a href="https://www.instagram.com/hobby_hive9/" className="text-gray-400 hover:text-purple-400 transition-colors">
+              <Instagram className="h-5 w-5" />
+            </a>
+          </div>
+        </div>
+        <div className="md:col-span-1">
+          <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
+          <ul className="space-y-2">
+            <li><a href="https://singular-kringle-5f87fe.netlify.app/aboutus%20after%20logginin" className="text-gray-400 hover:text-white transition-colors">About Us</a></li>
+            <li><a href="https://singular-kringle-5f87fe.netlify.app/freelancer%20home%20page" className="text-gray-400 hover:text-white transition-colors">Home</a></li>
+            <li><a href="https://singular-kringle-5f87fe.netlify.app/success%20stories%20after%20logging%20in" className="text-gray-400 hover:text-white transition-colors">Success stories</a></li>
+            <li><a href="https://singular-kringle-5f87fe.netlify.app/mycourse" className="text-gray-400 hover:text-white transition-colors">My Courses</a></li>
+            <li><a href="https://singular-kringle-5f87fe.netlify.app/howtobecomeinstructor" className="text-gray-400 hover:text-white transition-colors">Become an Instructor</a></li>
+          </ul>
+        </div>
+        <div className="md:col-span-1">
+          <h3 className="text-lg font-semibold mb-4">Support</h3>
+          <p className="text-gray-400 mb-2"><a href="https://singular-kringle-5f87fe.netlify.app/helpcenter">Help Center</a></p>
+          <p className="text-gray-400 mb-2"><a href="https://singular-kringle-5f87fe.netlify.app/community%20guidelines">Community Guidelines</a></p>
+          <p className="text-gray-400 mb-4"><a href="https://singular-kringle-5f87fe.netlify.app/terms%20and%20conditions">Terms and Conditions</a></p>
+        </div>
+        <div className="md:col-span-1">
+          <h3 className="text-lg font-semibold mb-4">Connect With Us</h3>
+          <div className="flex space-x-4">
+            <a href="https://www.facebook.com/hobby.hive/" className="text-gray-400 hover:text-purple-400 transition-colors">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="lucide lucide-facebook"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+            </a>
+            <a href="https://x.com/Hobby_Hive" className="text-gray-400 hover:text-purple-400 transition-colors">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="lucide lucide-twitter"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"/></svg>
+            </a>
+            <a href="https://www.instagram.com/hobby_hive9/" className="text-gray-400 hover:text-purple-400 transition-colors">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="lucide lucide-instagram"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+      <div className="mt-10 pt-8 border-t border-gray-700 text-center text-gray-400 text-sm">
+        <p>© 2025 HobbyHive. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+            
+            {/* Modal */}
+            {selectedJob && (
+              <JobModal 
+                isOpen={isModalOpen}
+                job={selectedJob}
+                isSaved={savedJobs.includes(selectedJob.id)}
+                onClose={() => setIsModalOpen(false)}
+                onApply={() => applyForJob(selectedJob)}
+                onToggleSave={() => toggleSaveJob(selectedJob.id)}
+                appliedJobs={appliedJobs}
+              />
+            )}
+            
+            {/* Toast Notification */}
+            <Toast 
+              message={toast.message}
+              type={toast.type}
+              visible={toast.visible}
+            />
+          </div>
+        );
+      }
+      
+      // Initialize React
+      const rootElement = document.getElementById('root');
+      const root = ReactDOM.createRoot(rootElement);
+      root.render(<App />);
+  // Initialize dropdown functionality
+  function initializeDropdowns() {
+    console.log("Initializing dropdowns");
+    
+    // Get the dropdown elements
+    const profileBtn = document.getElementById('profileBtn');
+    const profileDropdown = document.getElementById('profileDropdown');
+    const notificationBtn = document.getElementById('notificationBtn');
+    const notificationDropdown = document.getElementById('notificationDropdown');
+    
+    if (!profileBtn || !profileDropdown || !notificationBtn || !notificationDropdown) {
+      console.error("Could not find dropdown elements");
+      return;
+    }
+    
+    console.log("Found all dropdown elements");
+    
+    let activeDropdown = null;
+
+    // Toggle profile dropdown
+    profileBtn.addEventListener('click', function(e) {
+      console.log("Profile button clicked");
+      e.stopPropagation();
+      if (activeDropdown && activeDropdown !== profileDropdown) {
+        activeDropdown.classList.remove('active');
+      }
+      profileDropdown.classList.toggle('active');
+      activeDropdown = profileDropdown.classList.contains('active') ? profileDropdown : null;
+      
+      // Close notification dropdown if open
+      notificationDropdown.classList.remove('active');
+    });
+
+    // Toggle notification dropdown
+    notificationBtn.addEventListener('click', function(e) {
+      console.log("Notification button clicked");
+      e.stopPropagation();
+      if (activeDropdown && activeDropdown !== notificationDropdown) {
+        activeDropdown.classList.remove('active');
+      }
+      notificationDropdown.classList.toggle('active');
+      activeDropdown = notificationDropdown.classList.contains('active') ? notificationDropdown : null;
+      
+      // Close profile dropdown if open
+      profileDropdown.classList.remove('active');
+    });
+
+    // Close dropdowns when clicking outside
+    document.addEventListener('click', function() {
+      if (activeDropdown) {
+        activeDropdown.classList.remove('active');
+        activeDropdown = null;
+      }
+    });
+
+    // Prevent dropdown from closing when clicking inside
+    profileDropdown.addEventListener('click', function(e) {
+      e.stopPropagation();
+    });
+
+    notificationDropdown.addEventListener('click', function(e) {
+      e.stopPropagation();
+    });
+    
+    console.log("Dropdown event listeners added");
+  }
+
+  // Search functionality
+  function initializeSearch() {
+    const searchInput = document.getElementById('searchInput');
+    const clearSearchBtn = document.getElementById('clearSearch');
+    const searchResults = document.getElementById('searchResults');
+    const searchResultsList = document.getElementById('searchResultsList');
+    const resultsCount = document.getElementById('resultsCount');
+    const noResults = document.getElementById('noResults');
+    
+    if (!searchInput || !searchResults || !searchResultsList || !clearSearchBtn || !resultsCount || !noResults) {
+      console.error("Could not find search elements");
+      return;
+    }
+    
+    // All searchable data (jobs and offers combined)
+    const allSearchableData = [...jobs, ...offers];
+    
+    // Debounce function to limit search frequency
+    function debounce(func, wait) {
+      let timeout;
+      return function(...args) {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func.apply(this, args), wait);
+      };
+    }
+    
+    // Function to highlight matching text
+    function highlightText(text, query) {
+      if (!query.trim()) return text;
+      
+      const regex = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+      return text.replace(regex, '<span class="highlight">$1</span>');
+    }
+    
+    // Function to search data
+    function performSearch(query) {
+      if (!query.trim()) {
+        searchResults.classList.remove('active');
+        clearSearchBtn.style.display = 'none';
+        return;
+      }
+      
+      clearSearchBtn.style.display = 'block';
+      
+      // Filter data based on search query
+      const filteredData = allSearchableData.filter(item => {
+        const searchableText = `${item.title} ${item.company} ${item.description} ${item.salary} ${item.location}`.toLowerCase();
+        return searchableText.includes(query.toLowerCase());
+      });
+      
+      // Update results count
+      resultsCount.textContent = filteredData.length;
+      
+      // Clear previous results
+      searchResultsList.innerHTML = '';
+      
+      if (filteredData.length === 0) {
+        noResults.classList.remove('hidden');
+      } else {
+        noResults.classList.add('hidden');
+        
+        // Create result items
+        filteredData.forEach(item => {
+          const resultItem = document.createElement('div');
+          resultItem.className = 'search-result-item';
+          resultItem.innerHTML = `
+            <div class="flex items-start">
+              <img src="${item.imageUrl}" alt="${item.company}" class="w-12 h-12 object-cover rounded mr-3">
+              <div class="flex-1">
+                <h4 class="font-medium text-gray-200">${highlightText(item.title, query)}</h4>
+                <p class="text-sm text-gray-400">${highlightText(item.company, query)}</p>
+                <div class="flex justify-between text-xs mt-1">
+                  <span class="text-gray-300">${item.salary}</span>
+                  <span class="text-gray-400">${item.location}</span>
+                </div>
+              </div>
+            </div>
+          `;
+          
+          // Add click event to open job modal
+          resultItem.addEventListener('click', () => {
+            // Find the job in the App component and open its modal
+            const event = new CustomEvent('openJobModal', { 
+              detail: { jobId: item.id }
+            });
+            document.dispatchEvent(event);
+            
+            // Clear search and hide results
+            searchInput.value = '';
+            searchResults.classList.remove('active');
+            clearSearchBtn.style.display = 'none';
+          });
+          
+          searchResultsList.appendChild(resultItem);
+        });
+      }
+      
+      // Show results container
+      searchResults.classList.add('active');
+      
+      // Trigger search for Top Picks section
+      const event = new CustomEvent('search', { detail: { query } });
+      document.dispatchEvent(event);
+    }
+    
+    // Create debounced search function
+    const debouncedSearch = debounce(performSearch, 300);
+    
+    // Search input event listener
+    searchInput.addEventListener('input', function() {
+      const query = this.value;
+      debouncedSearch(query);
+    });
+    
+    // Focus event listener
+    searchInput.addEventListener('focus', function() {
+      if (this.value.trim()) {
+        searchResults.classList.add('active');
+      }
+    });
+    
+    // Clear search button event listener
+    clearSearchBtn.addEventListener('click', function() {
+      searchInput.value = '';
+      searchResults.classList.remove('active');
+      this.style.display = 'none';
+      searchInput.focus();
+      
+      // Clear the search query in the React component
+      const event = new CustomEvent('search', { detail: { query: '' } });
+      document.dispatchEvent(event);
+    });
+    
+    // Close search results when clicking outside
+    document.addEventListener('click', function(e) {
+      if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
+        searchResults.classList.remove('active');
+      }
+    });
+    
+    // Listen for custom event to open job modal from React component
+    document.addEventListener('openJobModal', function(e) {
+      const jobId = e.detail.jobId;
+      const job = allSearchableData.find(item => item.id === jobId);
+      
+      if (job) {
+        // This will be handled by the React component
+        console.log(`Opening job modal for: ${job.title}`);
+      }
+    });
+    
+    // Handle escape key to close search
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && searchResults.classList.contains('active')) {
+        searchResults.classList.remove('active');
+      }
+    });
+  }
+
+  // Wait for the DOM to be fully loaded
+  document.addEventListener('DOMContentLoaded', function() {
+    console.log("DOM loaded, initializing icons and search");
+    
+    // Initialize the Lucide icons
+    lucide.createIcons();
+    
+    // Wait a moment for React to render, then initialize functionality
+    setTimeout(() => {
+      initializeDropdowns();
+      initializeSearch();
+    }, 100);
+  });
+
+  // Also try initializing on window load as a fallback
+  window.addEventListener('load', function() {
+    console.log("Window loaded");
+    initializeDropdowns();
+    initializeSearch();
+  });
+    </script>
+  </body>
+</html>

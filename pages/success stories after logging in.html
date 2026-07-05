@@ -1,0 +1,1247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23A78BFA' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='lucide lucide-palette-icon lucide-palette'%3E%3Cpath d='M12 22a1 1 0 0 1 0-20 10 9 0 0 1 10 9 5 5 0 0 1-5 5h-2.25a1.75 1.75 0 0 0-1.4 2.8l.3.4a1.75 1.75 0 0 1-1.4 2.8z'/%3E%3Ccircle cx='13.5' cy='6.5' r='.5' fill='%23A78BFA'/%3E%3Ccircle cx='17.5' cy='10.5' r='.5' fill='%23A78BFA'/%3E%3Ccircle cx='6.5' cy='12.5' r='.5' fill='%23A78BFA'/%3E%3Ccircle cx='8.5' cy='7.5' r='.5' fill='%23A78BFA'/%3E%3C/svg%3E" />
+
+  <title>Success Stories Page</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          animation: {
+            'fade-in-up': 'fade-in-up 0.5s ease-out forwards',
+            'scale-in': 'scale-in 0.3s ease-out forwards',
+            'float': 'float 15s infinite ease-in-out',
+            'bounce': 'bounce 1s infinite',
+          },
+          keyframes: {
+            'fade-in-up': {
+              '0%': {
+                opacity: '0',
+                transform: 'translateY(20px)'
+              },
+              '100%': {
+                opacity: '1',
+                transform: 'translateY(0)'
+              },
+            },
+            'scale-in': {
+              '0%': {
+                opacity: '0',
+                transform: 'scale(0.9)'
+              },
+              '100%': {
+                opacity: '1',
+                transform: 'scale(1)'
+              },
+            },
+            'float': {
+              '0%, 100%': {
+                transform: 'translateY(0)'
+              },
+              '50%': {
+                transform: 'translateY(-10px)'
+              },
+            },
+          }
+        }
+      }
+    }
+  </script>
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <style>
+    /* Custom animations */
+    @keyframes fade-in-up {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    @keyframes scale-in {
+      from {
+        opacity: 0;
+        transform: scale(0.9);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+    
+    @keyframes float {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-10px);
+      }
+    }
+    
+    .animate-fade-in-up {
+      animation: fade-in-up 0.5s ease-out forwards;
+    }
+    
+    .animate-scale-in {
+      animation: scale-in 0.3s ease-out forwards;
+    }
+    
+    .particle {
+      animation: float 15s infinite ease-in-out;
+    }
+    
+    /* Line clamp for truncating text */
+    .line-clamp-3 {
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;  
+      overflow: hidden;
+    }
+    
+    /* Set body defaults and base colors */
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    }
+    
+    .bg-gradient-navbar {
+      background: linear-gradient(180deg, rgba(10,17,34,1) 0%, rgba(10,17,34,0) 100%);
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-[rgb(10,17,34)] text-white">
+  
+  <!-- Header -->
+  <header id="header" class="fixed top-0 left-0 right-0 z-50 py-5 transition-all duration-300">
+    <div class="container mx-auto px-4 flex justify-between items-center">
+      <div class="flex items-center">
+        <h1 class="text-2xl font-bold bg-gradient-to-r from-indigo-400 to-purple-500 bg-clip-text text-transparent">
+          <a href="https://singular-kringle-5f87fe.netlify.app/freelancer%20home%20page">HobbyHive</a>
+        </h1>
+      </div>
+
+      <!-- Desktop Menu -->
+      <nav class="hidden md:flex space-x-8">
+        <button class="bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-700 transition-colors" onclick="window.location.href='https://singular-kringle-5f87fe.netlify.app/freelancer%20home%20page'">
+          Continue Learning
+        </button>
+      </nav>
+
+      <!-- Mobile Menu Button -->
+      <button id="mobile-menu-button" class="md:hidden text-white">
+        <i data-lucide="menu" size="24"></i>
+      </button>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="md:hidden bg-[rgb(22,29,47)] py-4 hidden">
+      <div class="container mx-auto px-4 flex flex-col space-y-4">
+        <button class="bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-700 transition-colors mt-2">
+          Sign In
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <div id="hero" class="relative h-screen flex items-center justify-center overflow-hidden">
+    <!-- Background particle animation -->
+    <div class="absolute inset-0 overflow-hidden">
+      <div id="particles-container" class="particles-container">
+        <!-- Particles will be dynamically created by JavaScript -->
+      </div>
+    </div>
+
+    <div id="hero-content" class="container mx-auto px-4 text-center pt-20 transition-all duration-200">
+      <div class="inline-flex items-center justify-center mb-4 bg-indigo-500/10 px-4 py-2 rounded-full">
+        <i data-lucide="award" class="mr-2 text-indigo-400" size="20"></i>
+        <span class="text-indigo-400 font-medium">Success Stories</span>
+      </div>
+      
+      <h1 class="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-white to-indigo-200 bg-clip-text text-transparent">
+        Turn Passion Into Profession
+      </h1>
+      
+      <p class="text-lg md:text-xl text-gray-300 max-w-3xl mx-auto mb-10">
+        Discover how HobbyHive members transformed their hobbies into careers, 
+        landed dream jobs, and found opportunities they never thought possible.
+      </p>
+      
+      <div class="flex flex-col md:flex-row justify-center gap-4">
+        <a href="#success-stories" class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium px-8 py-3 rounded-lg transition-colors duration-300 shadow-lg shadow-indigo-700/20 inline-block">
+          Explore Success Stories
+        </a>
+        <a href="#story-form-section" class="bg-transparent border border-indigo-500 text-indigo-400 font-medium px-8 py-3 rounded-lg hover:bg-indigo-500/10 transition-colors duration-300 inline-block">
+          Share Your Story
+        </a>
+      </div>
+    </div>
+
+    <!-- Scroll indicator -->
+    <div class="absolute bottom-10 left-0 right-0 flex justify-center animate-bounce">
+      <div class="w-0.5 h-16 bg-gradient-to-b from-indigo-500/0 to-indigo-500/50 rounded"></div>
+    </div>
+  </div>
+
+  <!-- Stats Section -->
+  <section class="py-16 bg-[rgb(15,22,40)]">
+    <div class="container mx-auto px-4">
+      <div class="text-center mb-16">
+        <h2 class="text-3xl font-bold mb-4">Our Impact By Numbers</h2>
+        <p class="text-gray-400 max-w-2xl mx-auto">
+          These numbers reflect the real-world impact HobbyHive has made in connecting talented hobbyists with professional opportunities.
+        </p>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div class="stat flex flex-col items-center p-6 bg-[rgb(22,29,47)] rounded-2xl shadow-lg transform hover:translate-y-[-4px] transition-transform duration-300">
+          <div class="p-3 rounded-full bg-indigo-500/10 mb-4 text-indigo-400">
+            <i data-lucide="briefcase" size="24"></i>
+          </div>
+          <div class="text-4xl font-bold text-white mb-2" data-value="748">0</div>
+          <div class="text-gray-400 text-center">Jobs Secured</div>
+        </div>
+        
+        <div class="stat flex flex-col items-center p-6 bg-[rgb(22,29,47)] rounded-2xl shadow-lg transform hover:translate-y-[-4px] transition-transform duration-300">
+          <div class="p-3 rounded-full bg-indigo-500/10 mb-4 text-indigo-400">
+            <i data-lucide="bar-chart" size="24"></i>
+          </div>
+          <div class="text-4xl font-bold text-white mb-2" data-value="84" data-suffix="%">0%</div>
+          <div class="text-gray-400 text-center">Average Salary Increase</div>
+        </div>
+        
+        <div class="stat flex flex-col items-center p-6 bg-[rgb(22,29,47)] rounded-2xl shadow-lg transform hover:translate-y-[-4px] transition-transform duration-300">
+          <div class="p-3 rounded-full bg-indigo-500/10 mb-4 text-indigo-400">
+            <i data-lucide="users" size="24"></i>
+          </div>
+          <div class="text-4xl font-bold text-white mb-2" data-value="12500">0</div>
+          <div class="text-gray-400 text-center">Active Members</div>
+        </div>
+        
+        <div class="stat flex flex-col items-center p-6 bg-[rgb(22,29,47)] rounded-2xl shadow-lg transform hover:translate-y-[-4px] transition-transform duration-300">
+          <div class="p-3 rounded-full bg-indigo-500/10 mb-4 text-indigo-400">
+            <i data-lucide="award" size="24"></i>
+          </div>
+          <div class="text-4xl font-bold text-white mb-2" data-value="35">0</div>
+          <div class="text-gray-400 text-center">Industries Represented</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Success Stories Grid -->
+  <section id="success-stories" class="py-16 bg-[rgb(10,17,34)]">
+    <div class="container mx-auto px-4">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl font-bold mb-4">Featured Success Stories</h2>
+        <p class="text-gray-400 max-w-2xl mx-auto">
+          Meet the hobbyists who turned their passion into profession through HobbyHive's platform.
+        </p>
+      </div>
+
+      <!-- Search and Filter -->
+      <div class="mb-10 flex flex-col md:flex-row gap-4 justify-between items-center">
+        <div class="relative w-full md:w-96">
+          <i data-lucide="search" class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size="20"></i>
+          <input
+            id="search-input"
+            type="text"
+            placeholder="Search by name, job, or company..."
+            class="w-full bg-[rgb(22,29,47)] text-white border border-gray-700 rounded-lg py-3 pl-10 pr-4 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          />
+        </div>
+
+        <div class="flex items-center gap-2 overflow-x-auto w-full md:w-auto py-2">
+          <i data-lucide="filter" class="text-gray-400 mr-2 shrink-0" size="20"></i>
+          <button
+            data-category="All"
+            class="category-filter shrink-0 px-4 py-2 rounded-lg transition-colors bg-indigo-600 text-white"
+          >
+            All
+          </button>
+          <button
+            data-category="Digital Art"
+            class="category-filter shrink-0 px-4 py-2 rounded-lg transition-colors bg-[rgb(22,29,47)] text-gray-300 hover:bg-[rgb(30,40,60)]"
+          >
+            Digital Art
+          </button>
+          <button
+            data-category="Music"
+            class="category-filter shrink-0 px-4 py-2 rounded-lg transition-colors bg-[rgb(22,29,47)] text-gray-300 hover:bg-[rgb(30,40,60)]"
+          >
+            Music
+          </button>
+          <button
+            data-category="Photography"
+            class="category-filter shrink-0 px-4 py-2 rounded-lg transition-colors bg-[rgb(22,29,47)] text-gray-300 hover:bg-[rgb(30,40,60)]"
+          >
+            Photography
+          </button>
+          <button
+            data-category="Coding"
+            class="category-filter shrink-0 px-4 py-2 rounded-lg transition-colors bg-[rgb(22,29,47)] text-gray-300 hover:bg-[rgb(30,40,60)]"
+          >
+            Coding
+          </button>
+          <button
+            data-category="Writing"
+            class="category-filter shrink-0 px-4 py-2 rounded-lg transition-colors bg-[rgb(22,29,47)] text-gray-300 hover:bg-[rgb(30,40,60)]"
+          >
+            Writing
+          </button>
+          <button
+            data-category="Crafts"
+            class="category-filter shrink-0 px-4 py-2 rounded-lg transition-colors bg-[rgb(22,29,47)] text-gray-300 hover:bg-[rgb(30,40,60)]"
+          >
+            Crafts
+          </button>
+          <button
+            data-category="Culinary"
+            class="category-filter shrink-0 px-4 py-2 rounded-lg transition-colors bg-[rgb(22,29,47)] text-gray-300 hover:bg-[rgb(30,40,60)]"
+          >
+            Culinary
+          </button>
+        </div>
+      </div>
+
+      <!-- Stories Grid -->
+      <div id="stories-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <!-- Stories will be dynamically added here by JavaScript -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Success Story Detail Modal -->
+  <div id="story-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 hidden">
+    <!-- Modal content will be dynamically populated by JavaScript -->
+  </div>
+
+  <!-- Testimonial Carousel -->
+  <section class="py-16 bg-[rgb(15,22,40)]">
+    <div class="container mx-auto px-4">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl font-bold mb-4">What HobbyHivers Say</h2>
+        <p class="text-gray-400 max-w-2xl mx-auto">
+          Hear directly from our community members about their transformative experiences.
+        </p>
+      </div>
+      
+      <div class="relative max-w-4xl mx-auto">
+        <!-- Testimonial Slides -->
+        <div class="relative overflow-hidden rounded-2xl">
+          <div id="testimonial-slider" class="flex transition-transform duration-700 ease-out">
+            <!-- Testimonials will be dynamically added here by JavaScript -->
+          </div>
+        </div>
+        
+        <!-- Navigation Buttons -->
+        <button
+          id="prev-testimonial"
+          class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 md:-translate-x-6 bg-indigo-600 hover:bg-indigo-700 text-white p-3 rounded-full shadow-lg transition-colors z-10"
+          aria-label="Previous testimonial"
+        >
+          <i data-lucide="chevron-left" size="24"></i>
+        </button>
+        
+        <button
+          id="next-testimonial"
+          class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 md:translate-x-6 bg-indigo-600 hover:bg-indigo-700 text-white p-3 rounded-full shadow-lg transition-colors z-10"
+          aria-label="Next testimonial"
+        >
+          <i data-lucide="chevron-right" size="24"></i>
+        </button>
+        
+        <!-- Indicators -->
+        <div id="testimonial-indicators" class="flex justify-center space-x-2 mt-8">
+          <!-- Indicators will be dynamically added by JavaScript -->
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Call To Action -->
+  <section id="story-form-section" class="py-16 bg-[rgb(10,17,34)]">
+    <div class="container mx-auto px-4">
+      <div class="bg-gradient-to-r from-indigo-900/40 to-purple-900/40 rounded-3xl overflow-hidden relative">
+        <!-- Background pattern -->
+        <div class="absolute inset-0 opacity-10">
+          <div class="absolute top-0 left-0 w-96 h-96 bg-indigo-500 rounded-full filter blur-3xl -translate-x-1/2 -translate-y-1/2"></div>
+          <div class="absolute bottom-0 right-0 w-96 h-96 bg-purple-500 rounded-full filter blur-3xl translate-x-1/2 translate-y-1/2"></div>
+        </div>
+        
+        <div class="relative z-10 p-8 md:p-12 lg:p-16">
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div>
+              <h2 class="text-3xl md:text-4xl font-bold mb-6 leading-tight">
+                Your Success Story Could <br />
+                <span class="text-indigo-400">Inspire Others</span>
+              </h2>
+              
+              <p class="text-gray-300 mb-8 max-w-lg">
+                Have you landed a job or opportunity through HobbyHive? We'd love to feature your story and inspire others on their journey from hobby to profession.
+              </p>
+              
+              <div class="space-y-6">
+                <div class="flex items-start">
+                  <div class="mt-1 mr-4 p-2 bg-indigo-500/10 rounded-full text-indigo-400">
+                    <i data-lucide="chevron-right" size="18"></i>
+                  </div>
+                  <div>
+                    <h3 class="font-medium text-white mb-1">Inspire the Community</h3>
+                    <p class="text-gray-400">Help others see what's possible when they pursue their passions</p>
+                  </div>
+                </div>
+                
+                <div class="flex items-start">
+                  <div class="mt-1 mr-4 p-2 bg-indigo-500/10 rounded-full text-indigo-400">
+                    <i data-lucide="chevron-right" size="18"></i>
+                  </div>
+                  <div>
+                    <h3 class="font-medium text-white mb-1">Gain Recognition</h3>
+                    <p class="text-gray-400">Get featured on our platform and social media channels</p>
+                  </div>
+                </div>
+                
+                <div class="flex items-start">
+                  <div class="mt-1 mr-4 p-2 bg-indigo-500/10 rounded-full text-indigo-400">
+                    <i data-lucide="chevron-right" size="18"></i>
+                  </div>
+                  <div>
+                    <h3 class="font-medium text-white mb-1">Pay It Forward</h3>
+                    <p class="text-gray-400">Help build the community that supported your growth</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div id="form-container" class="bg-[rgb(22,29,47)] p-8 rounded-xl shadow-lg">
+              <h3 class="text-xl font-semibold mb-6 text-center">Share Your Success Story</h3>
+              
+              <form id="story-form" class="space-y-5 w-full max-w-md mx-auto mt-[50px]">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label for="name" class="block text-gray-300 mb-1 text-sm">Full Name</label>
+                    <input 
+                      type="text" 
+                      id="name" 
+                      name="name" 
+                      required
+                      class="w-full px-4 py-3 rounded-lg bg-[rgb(15,22,40)] border border-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      placeholder="John Doe"
+                    />
+                  </div>
+                  
+                  <div>
+                    <label for="email" class="block text-gray-300 mb-1 text-sm">Email Address</label>
+                    <input 
+                      type="email" 
+                      id="email" 
+                      name="email" 
+                      required
+                      class="w-full px-4 py-3 rounded-lg bg-[rgb(15,22,40)] border border-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      placeholder="john@example.com"
+                    />
+                  </div>
+                </div>
+                
+                <div>
+                  <label for="category" class="block text-gray-300 mb-1 text-sm">Skill Category</label>
+                  <select 
+                    id="category" 
+                    name="category" 
+                    required
+                    class="w-full px-4 py-3 rounded-lg bg-[rgb(15,22,40)] border border-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  >
+                    <option value="">Select a category</option>
+                    <option value="Digital Art">Digital Art</option>
+                    <option value="Music">Music</option>
+                    <option value="Photography">Photography</option>
+                    <option value="Coding">Coding</option>
+                    <option value="Writing">Writing</option>
+                    <option value="Crafts">Crafts</option>
+                    <option value="Culinary">Culinary</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
+                
+                <div>
+                  <label for="story" class="block text-gray-300 mb-1 text-sm">Your Success Story</label>
+                  <textarea 
+                    id="story" 
+                    name="story" 
+                    required
+                    rows="4"
+                    class="w-full px-4 py-3 rounded-lg bg-[rgb(15,22,40)] border border-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    placeholder="Tell us about your journey - how you started, what you learned on HobbyHive, and where it led you..."
+                  ></textarea>
+                </div>
+                
+                <div class="flex items-start">
+                  <input 
+                    type="checkbox" 
+                    id="agreed" 
+                    name="agreed" 
+                    required
+                    class="mt-1 rounded text-indigo-600 focus:ring-indigo-500 bg-[rgb(15,22,40)] border-gray-700"
+                  />
+                  <label for="agreed" class="ml-3 text-sm text-gray-400">
+                    I agree that HobbyHive may use my story and name for promotional purposes. I confirm all information provided is true and accurate.
+                  </label>
+                </div>
+                
+                <button 
+                  type="submit" 
+                  class="w-full py-3 px-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition-colors flex items-center justify-center font-medium"
+                >
+                  <i data-lucide="send" size="18" class="mr-2"></i>
+                  Submit Your Story
+                </button>
+              </form>
+            </div>
+
+            <div id="form-success" class="bg-[rgb(22,29,47)] p-8 rounded-xl shadow-lg hidden">
+              <div class="text-center py-10">
+                <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-green-500/20 text-green-500 mb-4">
+                  <svg viewBox="0 0 24 24" fill="none" class="w-8 h-8" stroke="currentColor" stroke-width="2">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                  </svg>
+                </div>
+                <h3 class="text-2xl font-semibold mb-2">Story Submitted!</h3>
+                <p class="text-gray-400">Thank you for sharing your journey with us. We'll review your story and may be in touch for more details.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+
+  <script>
+    // Data for Success Stories and Testimonials
+    const successStories = [
+      {
+        id: 1,
+        name: "Sarah Johnson",
+        imageUrl: "https://images.pexels.com/photos/762020/pexels-photo-762020.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500",
+        category: "Digital Art",
+        jobTitle: "Creative Director",
+        company: "Pixel Studios",
+        location: "San Francisco, CA",
+        timeframe: "8 months",
+        shortTestimonial: "What started as digital painting on weekends turned into my dream job. HobbyHive connected me with mentors who helped refine my skills to a professional level.",
+        skills: ["Illustrator", "Photoshop", "Concept Art", "Brand Design"]
+      },
+      {
+        id: 2,
+        name: "Michael Chen",
+        imageUrl: "https://images.pexels.com/photos/1681010/pexels-photo-1681010.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500",
+        category: "Coding",
+        jobTitle: "Frontend Developer",
+        company: "TechVision",
+        location: "Austin, TX",
+        timeframe: "12 months",
+        shortTestimonial: "I was coding simple games for fun until HobbyHive helped me turn my hobby into a career. The skill exchange with professional developers was invaluable.",
+        skills: ["JavaScript", "React", "UI/UX", "Game Development"]
+      },
+      {
+        id: 3,
+        name: "Olivia Rodriguez",
+        imageUrl: "https://images.pexels.com/photos/1587009/pexels-photo-1587009.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500",
+        category: "Photography",
+        jobTitle: "Brand Photographer",
+        company: "Visionary Images",
+        location: "New York, NY",
+        timeframe: "6 months",
+        shortTestimonial: "HobbyHive's photography workshops and connections led me to shoot for brands I used to only dream about. My weekend hobby is now my full-time career.",
+        skills: ["Portrait Photography", "Lighting", "Editing", "Composition"]
+      },
+      {
+        id: 4,
+        name: "James Wilson",
+        imageUrl: "https://images.pexels.com/photos/2379005/pexels-photo-2379005.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500",
+        category: "Music",
+        jobTitle: "Sound Designer",
+        company: "Harmony Studios",
+        location: "Los Angeles, CA",
+        timeframe: "10 months",
+        shortTestimonial: "From bedroom producer to professional sound designer—HobbyHive's community helped me refine my craft and connect with the entertainment industry.",
+        skills: ["Composition", "Sound Engineering", "DAW Expertise", "Foley Sound"]
+      },
+      {
+        id: 5,
+        name: "Aisha Patel",
+        imageUrl: "https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500",
+        category: "Writing",
+        jobTitle: "Content Strategist",
+        company: "Narrative Media",
+        location: "Chicago, IL",
+        timeframe: "9 months",
+        shortTestimonial: "My passion for storytelling led me to HobbyHive, where I connected with editors who helped polish my skills. Now I develop content strategies for major brands.",
+        skills: ["Creative Writing", "Content Strategy", "SEO", "Brand Voice"]
+      },
+      {
+        id: 6,
+        name: "David Martinez",
+        imageUrl: "https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500",
+        category: "Culinary",
+        jobTitle: "Pastry Chef",
+        company: "Fusion Bakery",
+        location: "Seattle, WA",
+        timeframe: "11 months",
+        shortTestimonial: "HobbyHive's culinary exchange programs connected me with professional chefs who mentored me. My home baking experiments are now signature desserts on our menu.",
+        skills: ["Pastry Techniques", "Menu Development", "Food Photography", "Recipe Creation"]
+      }
+    ];
+
+    const testimonials = [
+      {
+        name: "Sarah Johnson",
+        title: "Creative Director at Pixel Studios",
+        avatar: "https://images.pexels.com/photos/762020/pexels-photo-762020.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500",
+        quote: "What started as digital painting on weekends turned into my dream job. HobbyHive connected me with mentors who helped refine my skills to a professional level. I still can't believe I get paid to do what I love every day."
+      },
+      {
+        name: "Michael Chen",
+        title: "Frontend Developer at TechVision",
+        avatar: "https://images.pexels.com/photos/1681010/pexels-photo-1681010.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500",
+        quote: "The skill exchanges on HobbyHive were game-changing. I went from coding simple games for fun to building professional applications. The mentorship from senior developers helped me land a job that doubled my previous salary."
+      },
+      {
+        name: "Olivia Rodriguez",
+        title: "Brand Photographer at Visionary Images",
+        avatar: "https://images.pexels.com/photos/1587009/pexels-photo-1587009.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500",
+        quote: "HobbyHive's photography workshops and professional connections led me to shoot for brands I used to only dream about. The community feedback improved my portfolio dramatically, and within months I was getting paid work."
+      },
+      {
+        name: "James Wilson",
+        title: "Sound Designer at Harmony Studios",
+        avatar: "https://images.pexels.com/photos/2379005/pexels-photo-2379005.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500",
+        quote: "From bedroom producer to working on major film projects—HobbyHive's community helped me refine my craft and connect with industry professionals. The specialized learning tracks gave me the exact skills employers were looking for."
+      }
+    ];
+
+    // Wait for the DOM to be fully loaded
+    document.addEventListener('DOMContentLoaded', function() {
+      // Initialize Lucide icons
+      lucide.createIcons();
+      
+      // Header scroll effect
+      initHeader();
+      
+      // Hero section
+      initHero();
+      
+      // Stats counting animation
+      initStats();
+      
+      // Success stories grid
+      initSuccessStories();
+      
+      // Testimonial carousel
+      initTestimonialCarousel();
+      
+      // Form submission
+      initForm();
+    });
+
+    // Header functionality
+    function initHeader() {
+      const header = document.getElementById('header');
+      const mobileMenuButton = document.getElementById('mobile-menu-button');
+      const mobileMenu = document.getElementById('mobile-menu');
+      
+      // Header scroll effect
+      window.addEventListener('scroll', function() {
+        if (window.scrollY > 10) {
+          header.classList.add('bg-[rgb(10,17,34)]', 'shadow-lg', 'py-3');
+          header.classList.remove('py-5', 'bg-transparent');
+        } else {
+          header.classList.remove('bg-[rgb(10,17,34)]', 'shadow-lg', 'py-3');
+          header.classList.add('py-5', 'bg-transparent');
+        }
+      });
+      
+      // Mobile menu toggle
+      mobileMenuButton.addEventListener('click', function() {
+        const isOpen = mobileMenu.classList.contains('hidden');
+        
+        if (isOpen) {
+          mobileMenu.classList.remove('hidden');
+          mobileMenuButton.innerHTML = '<i data-lucide="x" size="24"></i>';
+        } else {
+          mobileMenu.classList.add('hidden');
+          mobileMenuButton.innerHTML = '<i data-lucide="menu" size="24"></i>';
+        }
+        
+        lucide.createIcons();
+      });
+    }
+
+    // Hero section functionality
+    function initHero() {
+      const hero = document.getElementById('hero');
+      const heroContent = document.getElementById('hero-content');
+      const particlesContainer = document.getElementById('particles-container');
+      
+      // Create particles
+      for (let i = 0; i < 20; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle absolute rounded-full bg-indigo-500 opacity-20';
+        
+        // Random positioning and size
+        const size = Math.random() * 10 + 5;
+        particle.style.top = `${Math.random() * 100}%`;
+        particle.style.left = `${Math.random() * 100}%`;
+        particle.style.width = `${size}px`;
+        particle.style.height = `${size}px`;
+        particle.style.animationDuration = `${Math.random() * 20 + 10}s`;
+        particle.style.animationDelay = `${Math.random() * 5}s`;
+        
+        particlesContainer.appendChild(particle);
+      }
+      
+      // Scroll effect
+      window.addEventListener('scroll', function() {
+        if (!heroContent) return;
+        const scrollPosition = window.scrollY;
+        const opacity = Math.max(1 - scrollPosition / 500, 0.2);
+        const transform = `translateY(${scrollPosition * 0.3}px)`;
+        
+        heroContent.style.opacity = opacity;
+        heroContent.style.transform = transform;
+      });
+    }
+
+    // Stats counting animation
+    function initStats() {
+      const stats = document.querySelectorAll('.stat');
+      
+      // Intersection Observer to start animation when stats are visible
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const countElement = entry.target.querySelector('[data-value]');
+            const value = parseInt(countElement.getAttribute('data-value'));
+            const suffix = countElement.getAttribute('data-suffix') || '';
+            
+            animateCounter(countElement, value, suffix);
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.1 });
+      
+      stats.forEach(stat => {
+        observer.observe(stat);
+      });
+    }
+
+    // Counter animation
+    function animateCounter(element, target, suffix = '') {
+      let start = 0;
+      const duration = 2000; // 2 seconds
+      const increment = target / (duration / 16);
+      const timer = setInterval(() => {
+        start += increment;
+        element.textContent = `${Math.min(Math.floor(start), target)}${suffix}`;
+        if (start >= target) clearInterval(timer);
+      }, 16);
+    }
+
+    // Success stories grid initialization
+    function initSuccessStories() {
+      const storiesGrid = document.getElementById('stories-grid');
+      const searchInput = document.getElementById('search-input');
+      const categoryFilters = document.querySelectorAll('.category-filter');
+      let activeCategory = 'All';
+      let searchQuery = '';
+      
+      // Render initial stories
+      renderStories(successStories);
+      
+      // Filter by category
+      categoryFilters.forEach(button => {
+        button.addEventListener('click', function() {
+          activeCategory = this.getAttribute('data-category');
+          
+          // Update active button styling
+          categoryFilters.forEach(btn => {
+            if (btn.getAttribute('data-category') === activeCategory) {
+              btn.classList.remove('bg-[rgb(22,29,47)]', 'text-gray-300');
+              btn.classList.add('bg-indigo-600', 'text-white');
+            } else {
+              btn.classList.remove('bg-indigo-600', 'text-white');
+              btn.classList.add('bg-[rgb(22,29,47)]', 'text-gray-300');
+            }
+          });
+          
+          filterStories();
+        });
+      });
+      
+      // Search functionality
+      searchInput.addEventListener('input', function() {
+        searchQuery = this.value.toLowerCase();
+        filterStories();
+      });
+      
+      // Filter and render stories
+      function filterStories() {
+        const filtered = successStories.filter(story => {
+          const matchesCategory = activeCategory === 'All' || story.category === activeCategory;
+          const matchesSearch = 
+            story.name.toLowerCase().includes(searchQuery) ||
+            story.jobTitle.toLowerCase().includes(searchQuery) ||
+            story.company.toLowerCase().includes(searchQuery) ||
+            story.shortTestimonial.toLowerCase().includes(searchQuery);
+          
+          return matchesCategory && matchesSearch;
+        });
+        
+        renderStories(filtered);
+      }
+      
+      // Render stories to the grid
+      function renderStories(stories) {
+        storiesGrid.innerHTML = '';
+        
+        if (stories.length === 0) {
+          storiesGrid.innerHTML = `
+            <div class="col-span-full text-center py-16">
+              <p class="text-gray-400 text-lg">
+                No success stories found matching your criteria. Try adjusting your filters.
+              </p>
+            </div>
+          `;
+          return;
+        }
+        
+        stories.forEach((story, index) => {
+          const card = document.createElement('div');
+          card.className = 'bg-[rgb(22,29,47)] rounded-2xl overflow-hidden shadow-lg hover:shadow-indigo-500/10 transition-all duration-300 cursor-pointer group opacity-0';
+          card.style.animationDelay = `${index * 150}ms`;
+          
+          card.innerHTML = `
+            <div class="h-56 overflow-hidden relative">
+              <img 
+                src="${story.imageUrl}" 
+                alt="${story.name}" 
+                class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+              />
+              <div class="absolute inset-0 bg-gradient-to-t from-[rgb(22,29,47)] opacity-60"></div>
+              <div class="absolute bottom-0 left-0 w-full p-6 z-10">
+                <div class="flex items-center mb-2">
+                  <div class="w-10 h-10 rounded-full bg-indigo-600 flex items-center justify-center text-white mr-3 shadow-lg">
+                    <i data-lucide="briefcase" size="18"></i>
+                  </div>
+                  <div>
+                    <h3 class="text-lg font-semibold text-white">${story.name}</h3>
+                    <div class="flex items-center">
+                      <span class="text-indigo-400">${story.jobTitle}</span>
+                      <span class="mx-2 text-gray-500">•</span>
+                      <span class="text-gray-400">${story.company}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="p-6">
+              <div class="mb-4">
+                <span class="inline-block px-3 py-1 text-sm rounded-full bg-indigo-500/10 text-indigo-400">
+                  ${story.category}
+                </span>
+                <span class="inline-block ml-2 px-3 py-1 text-sm rounded-full bg-green-500/10 text-green-400">
+                  ${story.timeframe}
+                </span>
+              </div>
+              
+              <p class="text-gray-300 mb-4 line-clamp-3">
+                "${story.shortTestimonial}"
+              </p>
+              
+              <div class="flex justify-between items-center pt-2">
+                <div class="text-sm text-gray-400">
+                  ${story.location}
+                </div>
+                
+                <button class="flex items-center text-indigo-400 group-hover:text-indigo-300 transition-colors">
+                  <span class="mr-1">Read story</span>
+                  <i data-lucide="arrow-up-right" size="16" class="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform"></i>
+                </button>
+              </div>
+            </div>
+          `;
+          
+          // Add the card to the grid
+          storiesGrid.appendChild(card);
+          
+          // Add intersection observer for animation
+          const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('animate-fade-in-up');
+                observer.unobserve(entry.target);
+              }
+            });
+          }, { threshold: 0.1 });
+          
+          observer.observe(card);
+          
+          // Add click event to open modal
+          card.addEventListener('click', () => {
+            openStoryModal(story);
+          });
+          
+          // Initialize Lucide icons for the new elements
+          lucide.createIcons({
+            attrs: {
+              'stroke-width': 1.5,
+              'stroke': 'currentColor'
+            }
+          });
+        });
+      }
+      
+      // Story detail modal functionality
+      function openStoryModal(story) {
+        const modal = document.getElementById('story-modal');
+        
+        // Create modal content
+        modal.innerHTML = `
+          <div class="bg-[rgb(22,29,47)] rounded-2xl overflow-hidden shadow-2xl w-full max-w-4xl max-h-[90vh] flex flex-col animate-scale-in">
+            <div class="relative h-80 overflow-hidden">
+              <img 
+                src="${story.imageUrl}" 
+                alt="${story.name}" 
+                class="w-full h-full object-cover"
+              />
+              <div class="absolute inset-0 bg-gradient-to-t from-[rgb(22,29,47)] opacity-70"></div>
+              
+              <div class="absolute top-4 right-4">
+                <button 
+                  id="close-modal"
+                  class="p-2 bg-black/30 hover:bg-black/50 rounded-full text-white transition-colors"
+                >
+                  <i data-lucide="x" size="24"></i>
+                </button>
+              </div>
+              
+              <div class="absolute bottom-0 left-0 w-full p-8">
+                <div class="flex flex-col md:flex-row md:items-end justify-between">
+                  <div>
+                    <div class="inline-flex items-center mb-3 bg-indigo-500/20 px-3 py-1 rounded-full">
+                      <i data-lucide="award" class="mr-2 text-indigo-400" size="16"></i>
+                      <span class="text-indigo-400 text-sm font-medium">Success Story</span>
+                    </div>
+                    <h2 class="text-3xl font-bold text-white mb-2">${story.name}</h2>
+                    <div class="flex items-center text-gray-300">
+                      <i data-lucide="briefcase" size="16" class="mr-2"></i>
+                      <span class="mr-2">${story.jobTitle}</span>
+                      <span class="mx-2 text-gray-500">•</span>
+                      <span>${story.company}</span>
+                    </div>
+                  </div>
+                  
+
+                </div>
+              </div>
+            </div>
+            
+            <div class="flex-1 overflow-y-auto p-8">
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="md:col-span-2">
+                  <div class="mb-8">
+                    <h3 class="text-xl font-semibold mb-4 text-white">The Journey</h3>
+                    <p class="text-gray-300 leading-relaxed mb-4">
+                      ${story.fullTestimonial || 
+                        `${story.name}'s journey began as a passionate ${story.category.toLowerCase()} enthusiast, dedicating weekends and evenings to perfecting their craft. Through HobbyHive's skill-sharing platform, they connected with mentors who helped elevate their work to professional standards.`
+                      }
+                    </p>
+                    <p class="text-gray-300 leading-relaxed">
+                      After participating in several skill exchanges and completing specialized learning tracks on HobbyHive, they built a portfolio that caught the attention of recruiters. This led to their current position at ${story.company}, where they now utilize their hobby skills in a professional capacity.
+                    </p>
+                  </div>
+                  
+                  <div class="mb-8">
+                    <h3 class="text-xl font-semibold mb-4 text-white">Key Milestones</h3>
+                    <ul class="space-y-4">
+                      <li class="flex">
+                        <div class="mr-4 h-full">
+                          <div class="w-3 h-3 rounded-full bg-indigo-500 mt-1.5"></div>
+                          <div class="w-0.5 h-full bg-indigo-500/30 ml-1.5 mt-1"></div>
+                        </div>
+                        <div>
+                          <h4 class="font-medium text-white">Joined HobbyHive</h4>
+                          <p class="text-gray-400">Initially joined to find others who shared their passion</p>
+                        </div>
+                      </li>
+                      <li class="flex">
+                        <div class="mr-4 h-full">
+                          <div class="w-3 h-3 rounded-full bg-indigo-500 mt-1.5"></div>
+                          <div class="w-0.5 h-full bg-indigo-500/30 ml-1.5 mt-1"></div>
+                        </div>
+                        <div>
+                          <h4 class="font-medium text-white">Skill Exchange</h4>
+                          <p class="text-gray-400">Participated in 12+ skill exchange sessions with professionals</p>
+                        </div>
+                      </li>
+                      <li class="flex">
+                        <div class="mr-4">
+                          <div class="w-3 h-3 rounded-full bg-indigo-500 mt-1.5"></div>
+                        </div>
+                        <div>
+                          <h4 class="font-medium text-white">Professional Recruitment</h4>
+                          <p class="text-gray-400">Recruited by ${story.company} after showcasing portfolio</p>
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+                  
+                  <div class="relative p-6 bg-[rgb(15,22,40)] rounded-xl mb-8">
+                    <i data-lucide="quote" class="absolute top-6 left-6 text-indigo-500/20" size="32"></i>
+                    <blockquote class="pl-12 italic text-gray-300">
+                      "${story.shortTestimonial}"
+                    </blockquote>
+                  </div>
+                </div>
+                
+                <div class="md:col-span-1">
+                  <div class="bg-[rgb(15,22,40)] rounded-xl p-6 mb-6">
+                    <h3 class="text-lg font-semibold mb-4 text-white">Details</h3>
+                    <ul class="space-y-3">
+                      <li class="flex justify-between">
+                        <span class="text-gray-400">Category</span>
+                        <span class="text-white">${story.category}</span>
+                      </li>
+                      <li class="flex justify-between">
+                        <span class="text-gray-400">Location</span>
+                        <span class="text-white">${story.location}</span>
+                      </li>
+                      <li class="flex justify-between">
+                        <span class="text-gray-400">Timeframe</span>
+                        <span class="text-white">${story.timeframe}</span>
+                      </li>
+                      <li class="flex justify-between">
+                        <span class="text-gray-400">Salary Increase</span>
+                        <span class="text-white">${story.salaryIncrease || "62%"}</span>
+                      </li>
+                    </ul>
+                  </div>
+                  
+                  <div class="bg-[rgb(15,22,40)] rounded-xl p-6">
+                    <h3 class="text-lg font-semibold mb-4 text-white">Skills Acquired</h3>
+                    <div class="flex flex-wrap gap-2">
+                      ${(story.skills || ["Portfolio Development", "Networking", "Professional Practice", "Industry Tools"]).map(skill => `
+                        <span class="px-3 py-1 text-sm rounded-full bg-indigo-500/10 text-indigo-400">
+                          ${skill}
+                        </span>
+                      `).join('')}
+                    </div>
+                  </div>
+                  
+
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+        
+        // Show the modal
+        modal.classList.remove('hidden');
+        
+        // Initialize Lucide icons for the modal
+        lucide.createIcons();
+        
+        // Close modal functionality
+        const closeButton = document.getElementById('close-modal');
+        closeButton.addEventListener('click', () => {
+          modal.classList.add('hidden');
+        });
+        
+        // Close on Escape key
+        document.addEventListener('keydown', function(e) {
+          if (e.key === 'Escape') {
+            modal.classList.add('hidden');
+          }
+        });
+        
+        // Close when clicking outside of modal content
+        modal.addEventListener('click', function(e) {
+          if (e.target === modal) {
+            modal.classList.add('hidden');
+          }
+        });
+      }
+    }
+
+    // Testimonial carousel functionality
+    function initTestimonialCarousel() {
+      const slider = document.getElementById('testimonial-slider');
+      const indicators = document.getElementById('testimonial-indicators');
+      const prevButton = document.getElementById('prev-testimonial');
+      const nextButton = document.getElementById('next-testimonial');
+      let activeIndex = 0;
+      let isPaused = false;
+      let autoplayInterval;
+      
+      // Create testimonial slides
+      testimonials.forEach((testimonial, index) => {
+        // Create slide
+        const slide = document.createElement('div');
+        slide.className = 'w-full shrink-0';
+        slide.innerHTML = `
+          <div class="bg-[rgb(22,29,47)] p-8 md:p-12 rounded-2xl">
+            <i data-lucide="quote" class="text-indigo-500/30 mb-4" size="48"></i>
+            <blockquote class="text-xl md:text-2xl text-gray-200 italic mb-8 leading-relaxed">
+              "${testimonial.quote}"
+            </blockquote>
+            <div class="flex items-center">
+              <div class="w-12 h-12 rounded-full overflow-hidden mr-4">
+                <img 
+                  src="${testimonial.avatar}" 
+                  alt="${testimonial.name}" 
+                  class="w-full h-full object-cover"
+                />
+              </div>
+              <div>
+                <h4 class="font-semibold text-white">${testimonial.name}</h4>
+                <p class="text-gray-400">${testimonial.title}</p>
+              </div>
+            </div>
+          </div>
+        `;
+        
+        slider.appendChild(slide);
+        
+        // Create indicator
+        const indicator = document.createElement('button');
+        indicator.className = `w-3 h-3 rounded-full transition-colors ${
+          index === activeIndex ? 'bg-indigo-500' : 'bg-gray-600 hover:bg-gray-500'
+        }`;
+        indicator.setAttribute('aria-label', `Go to testimonial ${index + 1}`);
+        indicator.addEventListener('click', () => {
+          goToSlide(index);
+        });
+        
+        indicators.appendChild(indicator);
+      });
+      
+      // Initialize Lucide icons for the slides
+      lucide.createIcons();
+      
+      // Navigation functions
+      function goToSlide(index) {
+        activeIndex = index;
+        slider.style.transform = `translateX(-${activeIndex * 100}%)`;
+        
+        // Update indicators
+        Array.from(indicators.children).forEach((indicator, i) => {
+          if (i === activeIndex) {
+            indicator.classList.remove('bg-gray-600');
+            indicator.classList.add('bg-indigo-500');
+          } else {
+            indicator.classList.remove('bg-indigo-500');
+            indicator.classList.add('bg-gray-600');
+          }
+        });
+      }
+      
+      function goToNextSlide() {
+        activeIndex = (activeIndex === testimonials.length - 1) ? 0 : activeIndex + 1;
+        goToSlide(activeIndex);
+      }
+      
+      function goToPrevSlide() {
+        activeIndex = (activeIndex === 0) ? testimonials.length - 1 : activeIndex - 1;
+        goToSlide(activeIndex);
+      }
+      
+      // Event listeners
+      prevButton.addEventListener('click', goToPrevSlide);
+      nextButton.addEventListener('click', goToNextSlide);
+      
+      // Auto-advance carousel
+      function startAutoplay() {
+        autoplayInterval = setInterval(goToNextSlide, 5000);
+      }
+      
+      function stopAutoplay() {
+        clearInterval(autoplayInterval);
+      }
+      
+      // Start autoplay
+      startAutoplay();
+      
+      // Pause on hover
+      slider.parentElement.addEventListener('mouseenter', stopAutoplay);
+      slider.parentElement.addEventListener('mouseleave', () => {
+        if (!isPaused) {
+          startAutoplay();
+        }
+      });
+      
+      // Pause when not in viewport
+      const observer = new IntersectionObserver(
+        ([entry]) => {
+          isPaused = !entry.isIntersecting;
+          if (entry.isIntersecting) {
+            startAutoplay();
+          } else {
+            stopAutoplay();
+          }
+        },
+        { threshold: 0.5 }
+      );
+      
+      observer.observe(slider.closest('section'));
+    }
+
+    // Form submission
+    function initForm() {
+      const storyForm = document.getElementById('story-form');
+      const formContainer = document.getElementById('form-container');
+      const formSuccess = document.getElementById('form-success');
+      
+      storyForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Collect form data
+        const formData = {
+          name: document.getElementById('name').value,
+          email: document.getElementById('email').value,
+          story: document.getElementById('story').value,
+          category: document.getElementById('category').value,
+          agreed: document.getElementById('agreed').checked
+        };
+        
+        console.log('Form submitted:', formData);
+        
+        // Show success message
+        formContainer.classList.add('hidden');
+        formSuccess.classList.remove('hidden');
+        
+        // Reset form after 3 seconds
+        setTimeout(() => {
+          formContainer.classList.remove('hidden');
+          formSuccess.classList.add('hidden');
+          storyForm.reset();
+        }, 3000);
+      });
+    }
+  </script>
+</body>
+</html>

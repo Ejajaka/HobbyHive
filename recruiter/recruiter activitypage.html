@@ -1,0 +1,2967 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recruiter Activity Page</title>
+  <!-- External dependencies -->
+   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23A78BFA' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='lucide lucide-palette-icon lucide-palette'%3E%3Cpath d='M12 22a1 1 0 0 1 0-20 10 9 0 0 1 10 9 5 5 0 0 1-5 5h-2.25a1.75 1.75 0 0 0-1.4 2.8l.3.4a1.75 1.75 0 0 1-1.4 2.8z'/%3E%3Ccircle cx='13.5' cy='6.5' r='.5' fill='%23A78BFA'/%3E%3Ccircle cx='17.5' cy='10.5' r='.5' fill='%23A78BFA'/%3E%3Ccircle cx='6.5' cy='12.5' r='.5' fill='%23A78BFA'/%3E%3Ccircle cx='8.5' cy='7.5' r='.5' fill='%23A78BFA'/%3E%3C/svg%3E" />
+
+  <script src="https://unpkg.com/react@18.2.0/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@18.2.0/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <style>
+    /* Base styles */
+    body {
+      background-color: rgb(10, 17, 34);
+      color: white;
+    }
+    
+    /* Improve scrollbar appearance */
+    ::-webkit-scrollbar {
+      width: 0.375rem;
+      height: 0.375rem;
+    }
+    
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    
+    ::-webkit-scrollbar-thumb {
+      background-color: rgba(107, 114, 128, 0.5);
+      border-radius: 9999px;
+    }
+    
+    ::-webkit-scrollbar-thumb:hover {
+      background-color: rgba(107, 114, 128, 0.8);
+    }
+    
+    /* Animations */
+    @keyframes fade-in {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    
+    @keyframes slide-up {
+      from {
+        transform: translateY(10px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+    
+    @keyframes slide-down {
+      from {
+        transform: translateY(-10px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+    
+    @keyframes pulse-gentle {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+    
+    .animate-fade-in {
+      animation: fade-in 0.3s ease-out;
+    }
+    
+    .animate-slide-up {
+      animation: slide-up 0.3s ease-out;
+    }
+    
+    .animate-slide-down {
+      animation: slide-down 0.3s ease-out;
+    }
+    
+    .animate-pulse-gentle {
+      animation: pulse-gentle 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+    
+    /* Form elements */
+    input[type="text"],
+    input[type="date"],
+    input[type="time"],
+    textarea,
+    select {
+      background-color: rgb(55, 65, 81);
+      border-color: rgb(75, 85, 99);
+      color: white;
+      border-radius: 0.375rem;
+      padding: 0.625rem;
+    }
+    
+    input[type="text"]:focus,
+    input[type="date"]:focus,
+    input[type="time"]:focus,
+    textarea:focus,
+    select:focus {
+      outline: none;
+      border-color: rgb(139, 92, 246);
+      box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.3);
+    }
+    
+    /* Date validation styles */
+    input[type="date"]:invalid,
+    input[type="time"]:invalid {
+      border-color: rgb(239, 68, 68);
+      box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2);
+    }
+    
+    .date-error,
+    .time-error {
+      color: rgb(252, 165, 165);
+      font-size: 0.75rem;
+      margin-top: 0.25rem;
+      animation: slide-up 0.3s ease-out;
+    }
+    
+    /* Utility classes */
+    .bg-gradient-dark {
+      background: rgb(22, 29, 47);
+    }
+    
+    .line-clamp-2 {
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+  </style>
+  
+  <script>
+    // Configure Tailwind
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            purple: {
+              500: '#8b5cf6',
+              600: '#7c3aed',
+              700: '#6d28d9',
+            },
+          },
+        },
+      },
+    }
+  </script>
+</head>
+<body>
+  <div id="root"></div>
+  
+  <script type="text/babel">
+    // React Icons implementation
+    const LucideIcons = {
+      Search: (props) => (
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={props.className || "h-6 w-6"}>
+          <circle cx="11" cy="11" r="8" />
+          <path d="m21 21-4.3-4.3" />
+        </svg>
+      ),
+      Calendar: (props) => (
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={props.className || "h-6 w-6"}>
+          <path d="M8 2v4" />
+          <path d="M16 2v4" />
+          <rect width="18" height="18" x="3" y="4" rx="2" />
+          <path d="M3 10h18" />
+        </svg>
+      ),
+      CheckSquare: (props) => (
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={props.className || "h-6 w-6"}>
+          <path d="m9 11 3 3L22 4" />
+          <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
+        </svg>
+      ),
+      MessageSquare: (props) => (
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={props.className || "h-6 w-6"}>
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+        </svg>
+      ),
+      X: (props) => (
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={props.className || "h-6 w-6"}>
+          <path d="M18 6 6 18" />
+          <path d="m6 6 12 12" />
+        </svg>
+      ),
+      Filter: (props) => (
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={props.className || "h-6 w-6"}>
+          <path d="M3 6h18" />
+          <path d="M7 12h10" />
+          <path d="M10 18h4" />
+        </svg>
+      ),
+      Clock: (props) => (
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={props.className || "h-6 w-6"}>
+          <circle cx="12" cy="12" r="10" />
+          <polyline points="12 6 12 12 16 14" />
+        </svg>
+      ),
+      MapPin: (props) => (
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={props.className || "h-6 w-6"}>
+          <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
+          <circle cx="12" cy="10" r="3" />
+        </svg>
+      ),
+      Heart: (props) => (
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={props.className || "h-6 w-6"}>
+          <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
+        </svg>
+      ),
+      Check: (props) => (
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={props.className || "h-6 w-6"}>
+          <polyline points="20 6 9 17 4 12" />
+        </svg>
+      ),
+      Send: (props) => (
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={props.className || "h-6 w-6"}>
+          <path d="m22 2-7 20-4-9-9-4Z" />
+          <path d="M22 2 11 13" />
+        </svg>
+      ),
+      ArrowLeft: (props) => (
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={props.className || "h-6 w-6"}>
+          <path d="m12 19-7-7 7-7" />
+          <path d="M19 12H5" />
+        </svg>
+      ),
+      RefreshCcw: (props) => (
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={props.className || "h-6 w-6"}>
+          <path d="M3 2v6h6" />
+          <path d="M21 12A9 9 0 0 0 6 5.3L3 8" />
+          <path d="M21 22v-6h-6" />
+          <path d="M3 12a9 9 0 0 0 15 6.7l3-2.7" />
+        </svg>
+      ),
+      Plus: (props) => (
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={props.className || "h-6 w-6"}>
+          <path d="M5 12h14" />
+          <path d="M12 5v14" />
+        </svg>
+      ),
+      Share: (props) => (
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={props.className || "h-6 w-6"}>
+          <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" />
+          <polyline points="16 6 12 2 8 6" />
+          <line x1="12" y1="2" x2="12" y2="15" />
+        </svg>
+      ),
+      AlertCircle: (props) => (
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={props.className || "h-6 w-6"}>
+          <circle cx="12" cy="12" r="10" />
+          <line x1="12" y1="8" x2="12" y2="12" />
+          <line x1="12" y1="16" x2="12.01" y2="16" />
+        </svg>
+      ),
+    };
+    
+    // Mock Data
+    const mockUsers = [
+      {
+        id: '1',
+        name: 'Alex Johnson',
+        avatar: 'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=600',
+        role: 'UX Designer',
+        field: 'Design',
+        experience: 5,
+        location: 'San Francisco, CA',
+        skills: ['UI/UX', 'Figma', 'User Research', 'Prototyping', 'Design Systems', 'Sketch', 'Adobe XD', 'Wireframing'],
+        education: 'Master of Fine Arts in Design, Rhode Island School of Design',
+        languages: ['English', 'Spanish'],
+        salary: '$105,000 - $125,000',
+        availableFrom: '2025-06-01',
+        achievements: [
+          {
+            id: 'a1',
+            title: 'Designer of the Year',
+            date: '2025-05-15',
+            description: 'Recognized for exceptional UI/UX design contributions to major projects.'
+          },
+          {
+            id: 'a2',
+            title: 'Design Sprint Certificate',
+            date: '2025-11-10',
+            description: 'Completed advanced design sprint facilitation training.'
+          },
+          {
+            id: 'a3',
+            title: 'Design Leadership Summit Speaker',
+            date: '2025-02-20',
+            description: 'Invited speaker on inclusive design at the annual Design Leadership Summit.'
+          }
+        ],
+        posts: [
+          {
+            id: 'p1',
+            title: 'My Weekend Photography Project',
+            author: 'Alex Johnson',
+            image: 'https://images.pexels.com/photos/270348/pexels-photo-270348.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+            content: 'Working on a new React project with TypeScript! Spent the weekend exploring urban photography across the city. Would love feedback on my composition and lighting techniques. Anyone interested in joining me for photo walks on weekends?',
+            date: '2025-08-22',
+            likes: 127,
+            comments: 43,
+            files: [
+              {
+                name: 'camera_settings.pdf',
+                size: '1.2 MB',
+                url: '#'
+              },
+              {
+                name: 'photo_tips.docx',
+                size: '580 KB',
+                url: '#'
+              }
+            ]
+          },
+          {
+            id: 'p2',
+            title: 'Accessibility First: Designing for Everyone',
+            author: 'Alex Johnson',
+            image: 'https://images.pexels.com/photos/196644/pexels-photo-196644.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+            content: 'Why designing with accessibility in mind from the start creates better products for all users. Sharing some key principles and techniques I recently applied in my latest project.',
+            date: '2025-07-14',
+            likes: 189,
+            comments: 56,
+            files: [
+              {
+                name: 'accessibility_checklist.pdf',
+                size: '850 KB',
+                url: '#'
+              }
+            ]
+          }
+        ],
+        bio: 'Passionate UX designer with 5+ years of experience creating user-centered digital experiences. Specializing in product design for SaaS applications with a focus on accessibility and inclusive design practices. Previously worked at Airbnb and Shopify.',
+        connectionStatus: 'none'
+      },
+      {
+        id: '2',
+        name: 'Samantha Lee',
+        avatar: 'https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=600',
+        role: 'Frontend Developer',
+        field: 'Development',
+        experience: 3,
+        location: 'Austin, TX',
+        skills: ['React', 'TypeScript', 'Tailwind CSS', 'Jest', 'Next.js', 'GraphQL', 'Webpack', 'CSS Animation'],
+        education: 'Bachelor of Science in Computer Science, University of Texas',
+        languages: ['English', 'Korean'],
+        salary: '$95,000 - $110,000',
+        availableFrom: '2025-07-15',
+        achievements: [
+          {
+            id: 'a3',
+            title: 'React Certification',
+            date: '2025-01-20',
+            description: 'Completed advanced React certification focusing on performance optimization.'
+          },
+          {
+            id: 'a4',
+            title: 'Web Accessibility Champion',
+            date: '2025-08-15',
+            description: 'Recognized for implementing comprehensive accessibility improvements across product suite.'
+          }
+        ],
+        posts: [
+          {
+            id: 'p2',
+            title: 'Building Accessible React Components',
+            author: 'Samantha Lee',
+            image: 'https://images.pexels.com/photos/39284/macbook-apple-imac-computer-39284.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+            content: 'A deep dive into creating accessible components in React applications. This article covers ARIA attributes, keyboard navigation, and focus management techniques.',
+            date: '2025-07-12',
+            likes: 89,
+            comments: 21,
+            files: [
+              {
+                name: 'react_a11y_examples.zip',
+                size: '2.4 MB',
+                url: '#'
+              },
+              {
+                name: 'component_checklist.pdf',
+                size: '450 KB',
+                url: '#'
+              }
+            ]
+          },
+          {
+            id: 'p3',
+            title: 'CSS Grid vs Flexbox: When to Use Each',
+            author: 'Samantha Lee',
+            image: 'https://images.pexels.com/photos/270360/pexels-photo-270360.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+            content: 'A comprehensive comparison of CSS Grid and Flexbox with practical examples of when each layout system shines in modern web development.',
+            date: '2025-05-18',
+            likes: 112,
+            comments: 34,
+            files: [
+              {
+                name: 'layout_examples.html',
+                size: '320 KB',
+                url: '#'
+              }
+            ]
+          }
+        ],
+        bio: 'Frontend developer specialized in building responsive and accessible web applications using React and TypeScript. Advocate for web performance and modern development practices. Contributed to open source projects including React component libraries.',
+        connectionStatus: 'pending'
+      },
+      {
+        id: '3',
+        name: 'David Chen',
+        avatar: 'https://images.pexels.com/photos/614810/pexels-photo-614810.jpeg?auto=compress&cs=tinysrgb&w=600',
+        role: 'Data Scientist',
+        field: 'Data Science',
+        experience: 7,
+        location: 'Seattle, WA',
+        skills: ['Python', 'Machine Learning', 'Data Visualization', 'SQL', 'TensorFlow', 'PyTorch', 'NLP', 'Deep Learning'],
+        education: 'PhD in Computer Science, Stanford University',
+        languages: ['English', 'Mandarin', 'French'],
+        salary: '$140,000 - $165,000',
+        availableFrom: '2025-05-30',
+        achievements: [
+          {
+            id: 'a4',
+            title: 'Published Research Paper',
+            date: '2025-09-05',
+            description: 'Published research on predictive analytics in healthcare in a peer-reviewed journal.'
+          },
+          {
+            id: 'a6',
+            title: 'Patent Holder',
+            date: '2025-11-22',
+            description: 'Co-inventor of patented machine learning algorithm for medical image analysis.'
+          }
+        ],
+        posts: [
+          {
+            id: 'p3',
+            title: 'Practical Applications of ML in Business',
+            content: 'Exploring how machine learning can be applied to solve real-world business problems.',
+            date: '2025-06-18',
+            likes: 142,
+            comments: 37
+          },
+          {
+            id: 'p4',
+            title: 'Ethics in AI: Building Responsible Models',
+            content: 'A framework for ensuring ethical considerations are built into AI systems from the ground up.',
+            date: '2025-04-05',
+            likes: 203,
+            comments: 62
+          }
+        ],
+        bio: 'Data scientist with expertise in predictive modeling and machine learning algorithms. Background in healthcare analytics with a passion for using data to drive meaningful insights and business decisions. Led a team of 8 data scientists at Microsoft Research.',
+        connectionStatus: 'connected'
+      },
+      {
+        id: '4',
+        name: 'Priya Patel',
+        avatar: 'https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=600',
+        role: 'Product Manager',
+        field: 'Product',
+        experience: 6,
+        location: 'New York, NY',
+        skills: ['Product Strategy', 'Agile', 'User Research', 'Roadmapping', 'A/B Testing', 'Market Analysis', 'Stakeholder Management', 'Data Analytics'],
+        education: 'MBA, Harvard Business School; BS in Information Systems, NYU',
+        languages: ['English', 'Hindi', 'Gujarati'],
+        salary: '$125,000 - $150,000',
+        availableFrom: '2025-06-15',
+        achievements: [
+          {
+            id: 'a5',
+            title: 'Product Launch Success',
+            date: '2025-03-12',
+            description: 'Led successful launch of flagship product resulting in 200% increase in user acquisition.'
+          },
+          {
+            id: 'a8',
+            title: 'Product School Certification',
+            date: '2025-05-18',
+            description: 'Completed advanced product management certification focused on data-driven decision making.'
+          }
+        ],
+        posts: [
+          {
+            id: 'p4',
+            title: 'Aligning Product and Engineering Teams',
+            content: 'Strategies for creating alignment between product and engineering for successful outcomes.',
+            date: '2025-05-09',
+            likes: 112,
+            comments: 28
+          },
+          {
+            id: 'p6',
+            title: 'From MVP to Scale: Product Growth Strategy',
+            content: 'How to evolve your product strategy from initial MVP to scaled solution without losing focus on user needs.',
+            date: '2025-02-17',
+            likes: 167,
+            comments: 45
+          }
+        ],
+        bio: 'Product manager focused on building user-centric products that solve real problems. Experience in B2B SaaS products with a background in marketing and user research. Previously at Spotify and Google, where I managed products used by millions of users daily.',
+        connectionStatus: 'none'
+      },
+      {
+        id: '5',
+        name: 'Michael Washington',
+        avatar: 'https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?auto=compress&cs=tinysrgb&w=600',
+        role: 'Full Stack Developer',
+        field: 'Development',
+        experience: 8,
+        location: 'Chicago, IL',
+        skills: ['JavaScript', 'Node.js', 'React', 'MongoDB', 'AWS', 'Docker', 'Kubernetes', 'CI/CD', 'Microservices', 'GraphQL'],
+        education: 'Bachelor of Science in Computer Engineering, University of Illinois Urbana-Champaign',
+        languages: ['English', 'Spanish'],
+        salary: '$130,000 - $155,000',
+        availableFrom: '2025-07-01',
+        achievements: [
+          {
+            id: 'a6',
+            title: 'Open Source Contributor',
+            date: '2025-12-01',
+            description: 'Significant contributions to major open source projects with over 500 GitHub stars.'
+          },
+          {
+            id: 'a10',
+            title: 'AWS Solutions Architect Certification',
+            date: '2025-06-15',
+            description: 'Achieved professional level certification in AWS architecture design and implementation.'
+          }
+        ],
+        posts: [
+          {
+            id: 'p5',
+            title: 'Serverless Architecture Patterns',
+            content: 'Exploring effective patterns for building serverless applications at scale.',
+            date: '2025-04-14',
+            likes: 156,
+            comments: 45
+          },
+          {
+            id: 'p8',
+            title: 'Migrating Monoliths to Microservices',
+            content: 'A practical approach to breaking down monolithic applications into maintainable, scalable microservices.',
+            date: '2025-02-22',
+            likes: 189,
+            comments: 67
+          }
+        ],
+        bio: 'Full stack developer with expertise in JavaScript ecosystems. Experience building and scaling web applications from startups to enterprise. Passionate about mentoring junior developers and contributing to open source. Led engineering teams at Stripe and Shopify.',
+        connectionStatus: 'connected'
+      },
+      {
+        id: '6',
+        name: 'Emily Rodriguez',
+        avatar: 'https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=600',
+        role: 'DevOps Engineer',
+        field: 'Infrastructure',
+        experience: 6,
+        location: 'Portland, OR',
+        skills: ['Kubernetes', 'Docker', 'Terraform', 'AWS', 'CI/CD', 'GitOps', 'Prometheus', 'Grafana', 'Jenkins', 'Python'],
+        education: 'Master of Science in Computer Engineering, Oregon State University',
+        languages: ['English', 'Portuguese', 'Spanish'],
+        salary: '$120,000 - $145,000',
+        availableFrom: '2025-06-10',
+        achievements: [
+          {
+            id: 'a12',
+            title: 'Kubernetes Certified Administrator',
+            date: '2025-08-30',
+            description: 'Achieved expert-level certification in Kubernetes administration and architecture.'
+          },
+          {
+            id: 'a13',
+            title: 'Infrastructure Cost Optimization',
+            date: '2025-01-25',
+            description: 'Led initiative that reduced cloud infrastructure costs by 40% while improving performance.'
+          }
+        ],
+        posts: [
+          {
+            id: 'p10',
+            title: 'GitOps: The Future of Infrastructure Management',
+            content: 'How GitOps principles transform infrastructure management to be more efficient, secure, and scalable.',
+            date: '2025-05-03',
+            likes: 176,
+            comments: 48
+          },
+          {
+            id: 'p11',
+            title: 'Kubernetes Production Best Practices',
+            content: 'Proven strategies for running production-grade Kubernetes clusters, focusing on reliability and security.',
+            date: '2025-02-28',
+            likes: 214,
+            comments: 59
+          }
+        ],
+        bio: 'DevOps engineer specializing in cloud-native technologies and infrastructure automation. Expert in designing and implementing scalable, reliable systems. Led the infrastructure team at Netflix, where I architected the deployment pipeline handling thousands of daily deployments.',
+        connectionStatus: 'pending'
+      },
+      {
+        id: '7',
+        name: 'Jordan Wilson',
+        avatar: 'https://images.pexels.com/photos/2128807/pexels-photo-2128807.jpeg?auto=compress&cs=tinysrgb&w=600',
+        role: 'Cybersecurity Specialist',
+        field: 'Security',
+        experience: 9,
+        location: 'Washington, DC',
+        skills: ['Penetration Testing', 'Threat Analysis', 'Security Architecture', 'Incident Response', 'SIEM', 'Cloud Security', 'Cryptography', 'Network Security'],
+        education: 'Master of Science in Cybersecurity, Carnegie Mellon University',
+        languages: ['English', 'Russian'],
+        salary: '$135,000 - $160,000',
+        availableFrom: '2025-08-01',
+        achievements: [
+          {
+            id: 'a15',
+            title: 'CISSP Certification',
+            date: '2025-11-14',
+            description: 'Achieved the Certified Information Systems Security Professional certification.'
+          },
+          {
+            id: 'a16',
+            title: 'Offensive Security Certified Professional',
+            date: '2025-07-20',
+            description: 'Completed rigorous penetration testing certification and practical exam.'
+          }
+        ],
+        posts: [
+          {
+            id: 'p13',
+            title: 'Zero Trust Architecture Implementation',
+            content: 'A practical guide to implementing zero trust security models in enterprise environments.',
+            date: '2025-06-12',
+            likes: 197,
+            comments: 54
+          },
+          {
+            id: 'p14',
+            title: 'Supply Chain Security: The Overlooked Vulnerability',
+            content: 'Analyzing the increasing threats to software supply chains and strategies to mitigate these risks.',
+            date: '2025-04-05',
+            likes: 165,
+            comments: 42
+          }
+        ],
+        bio: 'Cybersecurity specialist with expertise in offensive security and threat intelligence. Background in government and financial sectors, protecting critical infrastructure from advanced persistent threats. Previously led security teams at JP Morgan Chase and consulted for the NSA.',
+        connectionStatus: 'none'
+      },
+      {
+        id: '8',
+        name: 'Sofia Reyes',
+        avatar: 'https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?auto=compress&cs=tinysrgb&w=600',
+        role: 'AI Research Scientist',
+        field: 'Artificial Intelligence',
+        experience: 7,
+        location: 'Boston, MA',
+        skills: ['Deep Learning', 'Neural Networks', 'Natural Language Processing', 'Computer Vision', 'Reinforcement Learning', 'PyTorch', 'TensorFlow', 'Research Methods'],
+        education: 'PhD in Machine Learning, MIT; Master\'s in Mathematics, University of Barcelona',
+        languages: ['English', 'Spanish', 'Catalan'],
+        salary: '$145,000 - $170,000',
+        availableFrom: '2025-09-15',
+        achievements: [
+          {
+            id: 'a18',
+            title: 'Best Paper Award',
+            date: '2025-12-10',
+            description: 'Received top recognition for research paper on attention mechanisms in neural networks at NeurIPS.'
+          },
+          {
+            id: 'a19',
+            title: 'AI Research Grant',
+            date: '2025-03-18',
+            description: 'Awarded $1.2M research grant to explore novel approaches to explainable AI.'
+          }
+        ],
+        posts: [
+          {
+            id: 'p16',
+            title: 'Advances in Attention Mechanisms for Vision Transformers',
+            content: 'Exploring recent breakthroughs in attention-based architectures for computer vision tasks and their implications.',
+            date: '2025-07-08',
+            likes: 243,
+            comments: 72
+          },
+          {
+            id: 'p17',
+            title: 'Explainable AI: Making the Black Box Transparent',
+            content: 'Research-backed approaches to creating AI systems that can explain their decisions in human-understandable terms.',
+            date: '2025-05-15',
+            likes: 226,
+            comments: 67
+          }
+        ],
+        bio: 'AI research scientist specializing in neural architectures and multimodal learning. Published over 25 papers in top-tier conferences including NeurIPS, ICML, and CVPR. Previously researcher at Google Brain and Meta AI, working on fundamental advances in deep learning architectures.',
+        connectionStatus: 'connected'
+      },
+      {
+        id: '9',
+        name: 'Omar Khan',
+        avatar: 'https://images.pexels.com/photos/1300402/pexels-photo-1300402.jpeg?auto=compress&cs=tinysrgb&w=600',
+        role: 'Mobile App Developer',
+        field: 'Mobile Development',
+        experience: 5,
+        location: 'Los Angeles, CA',
+        skills: ['Swift', 'iOS Development', 'React Native', 'Kotlin', 'Android Development', 'Mobile UI/UX', 'Firebase', 'App Performance'],
+        education: 'Bachelor of Science in Computer Science, UCLA',
+        languages: ['English', 'Urdu', 'Arabic'],
+        salary: '$115,000 - $135,000',
+        availableFrom: '2025-07-01',
+        achievements: [
+          {
+            id: 'a21',
+            title: 'Apple Design Award Finalist',
+            date: '2025-06-06',
+            description: 'App nominated as finalist for Apple Design Awards for outstanding design and innovation.'
+          },
+          {
+            id: 'a22',
+            title: 'Featured App',
+            date: '2025-02-12',
+            description: 'Developed app featured on the App Store homepage for exceptional quality and innovation.'
+          }
+        ],
+        posts: [
+          {
+            id: 'p19',
+            title: 'Building Performant React Native Applications',
+            content: 'Strategies and techniques for optimizing React Native apps for performance across different devices and network conditions.',
+            date: '2025-06-18',
+            likes: 178,
+            comments: 56
+          },
+          {
+            id: 'p20',
+            title: 'SwiftUI vs UIKit: When to Use Each Framework',
+            content: 'A comprehensive comparison of Apple\'s UI frameworks with guidance on choosing the right approach for your app.',
+            date: '2025-04-30',
+            likes: 156,
+            comments: 42
+          }
+        ],
+        bio: 'Mobile app developer specializing in creating polished, high-performance apps for iOS and Android. Experience developing apps with millions of downloads in categories ranging from productivity to fintech. Previously mobile lead at Headspace and Robinhood.',
+        connectionStatus: 'none'
+      },
+      {
+        id: '10',
+        name: 'Aisha Johnson',
+        avatar: 'https://images.pexels.com/photos/1858175/pexels-photo-1858175.jpeg?auto=compress&cs=tinysrgb&w=600',
+        role: 'Engineering Manager',
+        field: 'Management',
+        experience: 10,
+        location: 'Atlanta, GA',
+        skills: ['Team Leadership', 'Engineering Management', 'Agile Methodologies', 'Project Planning', 'Technical Architecture', 'Mentorship', 'Cross-functional Collaboration', 'Conflict Resolution'],
+        education: 'MBA, Georgia Tech; Bachelor of Science in Computer Science, Howard University',
+        languages: ['English', 'French'],
+        salary: '$150,000 - $180,000',
+        availableFrom: '2025-08-15',
+        achievements: [
+          {
+            id: 'a24',
+            title: 'Engineering Leadership Award',
+            date: '2025-10-15',
+            description: 'Recognized for outstanding leadership of high-performing engineering teams.'
+          },
+          {
+            id: 'a25',
+            title: 'Successful Department Scaling',
+            date: '2025-01-08',
+            description: 'Successfully scaled engineering department from 15 to 50 engineers while maintaining culture and quality.'
+          }
+        ],
+        posts: [
+          {
+            id: 'p22',
+            title: 'Building Inclusive Engineering Teams',
+            content: 'Strategies for creating diverse, equitable, and inclusive engineering cultures that drive innovation and retention.',
+            date: '2025-05-25',
+            likes: 234,
+            comments: 81
+          },
+          {
+            id: 'p23',
+            title: 'From Engineer to Manager: Navigating the Transition',
+            content: 'Practical advice for technical contributors moving into engineering management roles, focusing on mindset shifts and new skill development.',
+            date: '2025-03-14',
+            likes: 208,
+            comments: 65
+          }
+        ],
+        bio: 'Engineering leader with a track record of building and scaling high-performing technical teams. Experience managing organizations of 50+ engineers across multiple disciplines. Previously Engineering Director at Twitter and Senior Engineering Manager at Salesforce.',
+        connectionStatus: 'pending'
+      }
+    ];
+    const mockEvents = [
+      {
+        id: 'e1',
+        title: 'Candidate Interview: Frontend Developer',
+        date: '2025-09-15',
+        startTime: '10:00',
+        endTime: '11:00',
+        description: 'Interview with Sarah Johnson for the Senior Frontend Developer position.',
+        location: 'Virtual (Zoom)',
+        participants: ['Sarah Johnson', 'Tech Lead', 'HR Representative']
+      },
+      {
+        id: 'e2',
+        title: 'Team Skill Assessment',
+        date: '2025-09-18',
+        startTime: '14:00',
+        endTime: '16:00',
+        description: 'Quarterly skill assessment for the engineering team to identify training needs.',
+        location: 'Conference Room A',
+        participants: ['Engineering Team', 'Learning & Development']
+      },
+      {
+        id: 'e3',
+        title: 'Recruitment Strategy Meeting',
+        date: '2025-09-20',
+        startTime: '09:30',
+        endTime: '11:00',
+        description: 'Planning meeting to discuss Q4 recruitment strategy and targets.',
+        location: 'Conference Room B',
+        participants: ['HR Director', 'Department Heads', 'Recruitment Team']
+      },
+      {
+        id: 'e4',
+        title: 'Career Fair: Tech University',
+        date: '2025-09-25',
+        startTime: '10:00',
+        endTime: '16:00',
+        description: 'Representing the company at Tech University annual career fair to attract new talent.',
+        location: 'Tech University Campus',
+        participants: ['Recruitment Team', 'Engineering Representatives']
+      },
+      {
+        id: 'e5',
+        title: 'New Hire Onboarding',
+        date: '2025-09-30',
+        startTime: '09:00',
+        endTime: '12:00',
+        description: 'Onboarding session for new hires starting in October.',
+        location: 'Training Room',
+        participants: ['HR', 'IT Support', 'New Employees']
+      }
+    ];
+
+    const mockTasks = [
+      {
+        id: 't1',
+        title: 'Review candidate applications',
+        description: 'Review and shortlist candidates for the Senior UX Designer position.',
+        dueDate: '2025-09-15',
+        priority: 'high',
+        status: 'pending'
+      },
+      {
+        id: 't2',
+        title: 'Prepare interview questions',
+        description: 'Develop a standardized set of interview questions for frontend developer candidates.',
+        dueDate: '2025-09-16',
+        priority: 'medium',
+        status: 'pending'
+      },
+      {
+        id: 't3',
+        title: 'Update job descriptions',
+        description: 'Update job descriptions for open positions to better reflect current requirements.',
+        dueDate: '2025-09-18',
+        priority: 'low',
+        status: 'pending'
+      },
+      {
+        id: 't4',
+        title: 'Schedule team interviews',
+        description: 'Coordinate with team members to schedule panel interviews for next week.',
+        dueDate: '2025-09-12',
+        priority: 'high',
+        status: 'completed'
+      },
+      {
+        id: 't5',
+        title: 'Finalize onboarding documents',
+        description: 'Review and finalize onboarding documents for new hires starting next month.',
+        dueDate: '2025-09-25',
+        priority: 'medium',
+        status: 'pending'
+      }
+    ];
+
+    const mockConversations = [
+      {
+        id: 'c1',
+        participantId: '1',
+        participantName: 'Alex Johnson',
+        participantAvatar: 'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=600',
+        lastMessage: 'Thanks for the update on the interview schedule.',
+        lastMessageTime: '2025-09-12T10:30:00',
+        unreadCount: 0
+      },
+      {
+        id: 'c2',
+        participantId: '2',
+        participantName: 'Samantha Lee',
+        participantAvatar: 'https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=600',
+        lastMessage: 'I\'ve reviewed the candidates and shortlisted my top 3 picks.',
+        lastMessageTime: '2025-09-11T16:45:00',
+        unreadCount: 2
+      },
+      {
+        id: 'c3',
+        participantId: '3',
+        participantName: 'David Chen',
+        participantAvatar: 'https://images.pexels.com/photos/614810/pexels-photo-614810.jpeg?auto=compress&cs=tinysrgb&w=600',
+        lastMessage: 'When is the next team meeting scheduled?',
+        lastMessageTime: '2025-09-10T09:15:00',
+        unreadCount: 0
+      },
+      {
+        id: 'c4',
+        participantId: '4',
+        participantName: 'Priya Patel',
+        participantAvatar: 'https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=600',
+        lastMessage: 'I\'ll be sending over the job requirements document shortly.',
+        lastMessageTime: '2025-09-09T14:20:00',
+        unreadCount: 0
+      },
+      {
+        id: 'c5',
+        participantId: '5',
+        participantName: 'Michael Washington',
+        participantAvatar: 'https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?auto=compress&cs=tinysrgb&w=600',
+        lastMessage: 'Do you have time for a quick call to discuss the technical assessment?',
+        lastMessageTime: '2025-09-08T11:05:00',
+        unreadCount: 1
+      }
+    ];
+
+    const mockMessages = {
+      'c1': [
+        {
+          id: 'm1',
+          senderId: '1',
+          receiverId: 'current-user',
+          content: 'Hi, I wanted to check in about the upcoming interview schedule.',
+          timestamp: '2025-09-12T10:15:00',
+          read: true
+        },
+        {
+          id: 'm2',
+          senderId: 'current-user',
+          receiverId: '1',
+          content: 'Hello Alex, I\'m finalizing the schedule now and will send it over shortly.',
+          timestamp: '2025-09-12T10:20:00',
+          read: true
+        },
+        {
+          id: 'm3',
+          senderId: 'current-user',
+          receiverId: '1',
+          content: 'Just sent the schedule to your email. Let me know if you have any questions.',
+          timestamp: '2025-09-12T10:25:00',
+          read: true
+        },
+        {
+          id: 'm4',
+          senderId: '1',
+          receiverId: 'current-user',
+          content: 'Thanks for the update on the interview schedule.',
+          timestamp: '2025-09-12T10:30:00',
+          read: true
+        }
+      ],
+      'c2': [
+        {
+          id: 'm5',
+          senderId: 'current-user',
+          receiverId: '2',
+          content: 'Samantha, have you had a chance to review the candidates for the frontend position?',
+          timestamp: '2025-09-11T16:30:00',
+          read: true
+        },
+        {
+          id: 'm6',
+          senderId: '2',
+          receiverId: 'current-user',
+          content: 'Yes, I\'ve been going through their portfolios and code samples today.',
+          timestamp: '2025-09-11T16:35:00',
+          read: true
+        },
+        {
+          id: 'm7',
+          senderId: '2',
+          receiverId: 'current-user',
+          content: 'Some really impressive candidates this time around.',
+          timestamp: '2025-09-11T16:40:00',
+          read: true
+        },
+        {
+          id: 'm8',
+          senderId: '2',
+          receiverId: 'current-user',
+          content: 'I\'ve reviewed the candidates and shortlisted my top 3 picks.',
+          timestamp: '2025-09-11T16:45:00',
+          read: false
+        },
+        {
+          id: 'm9',
+          senderId: '2',
+          receiverId: 'current-user',
+          content: 'Should I send you the detailed evaluation?',
+          timestamp: '2025-09-11T16:47:00',
+          read: false
+        }
+      ],
+      'c3': [
+        {
+          id: 'm10',
+          senderId: '3',
+          receiverId: 'current-user',
+          content: 'When is the next team meeting scheduled?',
+          timestamp: '2025-09-10T09:15:00',
+          read: true
+        },
+        {
+          id: 'm11',
+          senderId: 'current-user',
+          receiverId: '3',
+          content: 'Hi David, the next team meeting is scheduled for Thursday at 2pm.',
+          timestamp: '2025-09-10T09:20:00',
+          read: true
+        }
+      ],
+      'c4': [
+        {
+          id: 'm12',
+          senderId: 'current-user',
+          receiverId: '4',
+          content: 'Priya, do you have the updated job requirements for the product manager position?',
+          timestamp: '2025-09-09T14:10:00',
+          read: true
+        },
+        {
+          id: 'm13',
+          senderId: '4',
+          receiverId: 'current-user',
+          content: 'Yes, I\'m just finalizing them now after getting feedback from the department head.',
+          timestamp: '2025-09-09T14:15:00',
+          read: true
+        },
+        {
+          id: 'm14',
+          senderId: '4',
+          receiverId: 'current-user',
+          content: 'I\'ll be sending over the job requirements document shortly.',
+          timestamp: '2025-09-09T14:20:00',
+          read: true
+        }
+      ],
+      'c5': [
+        {
+          id: 'm15',
+          senderId: '5',
+          receiverId: 'current-user',
+          content: 'Do you have time for a quick call to discuss the technical assessment?',
+          timestamp: '2025-09-08T11:05:00',
+          read: false
+        }
+      ]
+    };
+    
+    // Utility functions
+    const formatDateShort = (dateString) => {
+      const options = { month: 'short', day: 'numeric' };
+      return new Date(dateString).toLocaleDateString('en-US', options);
+    };
+    
+    const formatDateLong = (dateString) => {
+      const options = { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' };
+      return new Date(dateString).toLocaleDateString('en-US', options);
+    };
+    
+    const formatTime = (timeString) => {
+      const [hours, minutes] = timeString.split(':');
+      const date = new Date();
+      date.setHours(parseInt(hours, 10));
+      date.setMinutes(parseInt(minutes, 10));
+      
+      return date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+    };
+    
+    const formatTimeRange = (startTime, endTime) => {
+      return `${formatTime(startTime)} - ${formatTime(endTime)}`;
+    };
+    
+    const formatDateTime = (dateTimeString) => {
+      const date = new Date(dateTimeString);
+      const today = new Date();
+      const yesterday = new Date(today);
+      yesterday.setDate(yesterday.getDate() - 1);
+      
+      let dateStr;
+      if (date.toDateString() === today.toDateString()) {
+        dateStr = 'Today';
+      } else if (date.toDateString() === yesterday.toDateString()) {
+        dateStr = 'Yesterday';
+      } else {
+        dateStr = formatDateShort(dateTimeString);
+      }
+      
+      return `${dateStr} at ${date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}`;
+    };
+    
+    const formatDistanceToNow = (dateTimeString) => {
+      const date = new Date(dateTimeString);
+      const now = new Date();
+      const seconds = Math.floor((now - date) / 1000);
+      
+      let interval = seconds / 31536000;
+      if (interval > 1) {
+        return Math.floor(interval) + 'y ago';
+      }
+      
+      interval = seconds / 2592000;
+      if (interval > 1) {
+        return Math.floor(interval) + 'mo ago';
+      }
+      
+      interval = seconds / 86400;
+      if (interval > 1) {
+        return Math.floor(interval) + 'd ago';
+      }
+      
+      interval = seconds / 3600;
+      if (interval > 1) {
+        return Math.floor(interval) + 'h ago';
+      }
+      
+      interval = seconds / 60;
+      if (interval > 1) {
+        return Math.floor(interval) + 'm ago';
+      }
+      
+      return 'just now';
+    };
+    
+    // Date validation utility
+    const getFormattedToday = () => {
+      const today = new Date();
+      const year = today.getFullYear();
+      let month = today.getMonth() + 1;
+      let day = today.getDate();
+      
+      // Add leading zeros if needed
+      month = month < 10 ? `0${month}` : month;
+      day = day < 10 ? `0${day}` : day;
+      
+      return `${year}-${month}-${day}`;
+    };
+    
+    const isDateValid = (dateString) => {
+      if (!dateString) return false;
+      
+      const selectedDate = new Date(dateString);
+      const today = new Date();
+      
+      // Reset hours to compare just the dates
+      today.setHours(0, 0, 0, 0);
+      selectedDate.setHours(0, 0, 0, 0);
+      
+      return selectedDate >= today;
+    };
+    
+    // Time validation utility
+    const isTimeValid = (dateString, timeString) => {
+      if (!dateString || !timeString) return true; // Only validate if both date and time are provided
+      
+      const selectedDate = new Date(dateString);
+      const today = new Date();
+      
+      // Reset time parts we don't need for comparison
+      today.setSeconds(0);
+      today.setMilliseconds(0);
+      
+      // If date is in the future, all times are valid
+      if (selectedDate.getDate() !== today.getDate() || 
+          selectedDate.getMonth() !== today.getMonth() || 
+          selectedDate.getFullYear() !== today.getFullYear()) {
+        return true;
+      }
+      
+      // Parse the time string
+      const [hours, minutes] = timeString.split(':').map(part => parseInt(part, 10));
+      
+      // Create a date object with the selected time
+      const selectedDateTime = new Date(selectedDate);
+      selectedDateTime.setHours(hours, minutes, 0, 0);
+      
+      // Compare with current time
+      return selectedDateTime >= today;
+    };
+    
+    // Context setup
+    const AppContext = React.createContext({
+      activeSection: 'search',
+      setActiveSection: () => {},
+      showModal: () => {},
+      closeModal: () => {},
+      showToast: () => {}
+    });
+    
+    // UI Components
+    const Modal = ({ title, children, onClose }) => {
+      React.useEffect(() => {
+        const handleEscape = (e) => {
+          if (e.key === 'Escape') {
+            onClose();
+          }
+        };
+        
+        document.addEventListener('keydown', handleEscape);
+        document.body.style.overflow = 'hidden';
+        
+        return () => {
+          document.removeEventListener('keydown', handleEscape);
+          document.body.style.overflow = 'auto';
+        };
+      }, [onClose]);
+      
+      return (
+        <div 
+          className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fade-in"
+          onClick={onClose}
+        >
+          <div 
+            className="bg-gradient-dark rounded-lg shadow-xl max-w-md w-full max-h-[90vh] flex flex-col overflow-hidden animate-slide-up"
+            onClick={e => e.stopPropagation()}
+          >
+            <div className="flex justify-between items-center p-4 border-b border-gray-700">
+              <h3 className="text-lg font-semibold text-white">{title}</h3>
+              <button
+                className="text-gray-400 hover:text-white focus:outline-none"
+                onClick={onClose}
+              >
+                <LucideIcons.X className="h-5 w-5" />
+              </button>
+            </div>
+            
+            <div className="p-4 overflow-y-auto">
+              {children}
+            </div>
+          </div>
+        </div>
+      );
+    };
+    
+    const Toast = ({ message }) => {
+      return (
+        <div className="fixed bottom-4 right-4 bg-gray-800 text-white px-4 py-2 rounded-lg shadow-lg animate-fade-in z-50">
+          {message}
+        </div>
+      );
+    };
+    
+    // Dashboard components
+    const Sidebar = () => {
+      const { activeSection, setActiveSection } = React.useContext(AppContext);
+      
+      const navItems = [
+        { id: 'search', icon: LucideIcons.Search, label: 'Search' },
+        { id: 'calendar', icon: LucideIcons.Calendar, label: 'Calendar' },
+        { id: 'todo', icon: LucideIcons.CheckSquare, label: 'Todo' },
+        { id: 'chat', icon: LucideIcons.MessageSquare, label: 'Chat' }
+      ];
+      
+      return (
+        <div className="w-16 bg-gradient-dark border-r border-gray-700 flex flex-col items-center py-5 md:py-10 shrink-0">
+          {navItems.map(item => {
+            const Icon = item.icon;
+            return (
+              <button
+                key={item.id}
+                className={`w-10 h-10 rounded-lg flex items-center justify-center mb-5 transition-all duration-200 ${
+                  activeSection === item.id 
+                    ? 'bg-purple-600 text-white' 
+                    : 'text-gray-400 hover:bg-purple-600/10 hover:text-purple-400'
+                }`}
+                onClick={() => setActiveSection(item.id)}
+                aria-label={item.label}
+                title={item.label}
+              >
+                <Icon className="w-5 h-5" />
+              </button>
+            );
+          })}
+        </div>
+      );
+    };
+    
+    // User Components
+    const UserCard = ({ user, isSelected, onClick }) => {
+      return (
+        <div 
+          className={`p-4 border-b border-gray-700 hover:bg-purple-600/10 transition-colors cursor-pointer ${
+            isSelected ? 'bg-purple-600/20' : ''
+          }`}
+          onClick={() => onClick(user)}
+        >
+          <div className="flex items-center">
+            <img 
+              src={user.avatar} 
+              alt={user.name} 
+              className="w-10 h-10 rounded-full object-cover"
+            />
+            <div className="ml-3 flex-1">
+              <div className="flex justify-between items-start">
+                <h3 className="font-medium text-white">{user.name}</h3>
+                {user.connectionStatus === 'pending' && (
+                  <span className="bg-yellow-500/20 text-yellow-300 text-xs px-2 py-0.5 rounded-full">
+                    Pending
+                  </span>
+                )}
+                {user.connectionStatus === 'connected' && (
+                  <span className="bg-green-500/20 text-green-300 text-xs px-2 py-0.5 rounded-full">
+                    Connected
+                  </span>
+                )}
+              </div>
+              <p className="text-sm text-gray-400">{user.role}</p>
+            </div>
+          </div>
+        </div>
+      );
+    };
+    
+    const UserList = ({ users, selectedUser, onSelectUser }) => {
+      return (
+        <div className="divide-y divide-gray-700">
+          {users.length === 0 ? (
+            <div className="p-8 text-center text-gray-400">
+              No users match your search criteria
+            </div>
+          ) : (
+            users.map(user => (
+              <UserCard 
+                key={user.id} 
+                user={user} 
+                isSelected={selectedUser && selectedUser.id === user.id}
+                onClick={onSelectUser}
+              />
+            ))
+          )}
+        </div>
+      );
+    };
+    
+    const UserDetail = ({ user, onUpdateUser }) => {
+      const { showToast } = React.useContext(AppContext);
+      
+      const handleConnect = () => {
+        if (!user) return;
+        
+        const updatedUser = {
+          ...user,
+          connectionStatus: user.connectionStatus === 'none' ? 'pending' : user.connectionStatus
+        };
+        
+        onUpdateUser(updatedUser);
+        showToast(`Connection request sent to ${user.name}`);
+      };
+      
+      if (!user) {
+        return (
+          <div className="h-full flex items-center justify-center p-8 text-center text-gray-400">
+            Select a user to view details
+          </div>
+        );
+      }
+      
+      return (
+        <div className="p-5 overflow-y-auto">
+          <div className="mb-6 text-center">
+            <img 
+              src={user.avatar} 
+              alt={user.name} 
+              className="w-20 h-20 rounded-full object-cover mx-auto"
+            />
+            <h2 className="mt-3 text-xl font-semibold text-white">{user.name}</h2>
+            <p className="text-gray-400">{user.role}</p>
+            <p className="text-gray-500 text-sm">{user.location}</p>
+            
+            <div className="mt-4">
+              {user.connectionStatus === 'none' && (
+                <button 
+                  className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-md transition-colors"
+                  onClick={handleConnect}
+                >
+                  Connect
+                </button>
+              )}
+              {user.connectionStatus === 'pending' && (
+                <span className="bg-yellow-500/20 text-yellow-300 px-3 py-1 rounded-md">
+                  Connection Pending
+                </span>
+              )}
+              {user.connectionStatus === 'connected' && (
+                <span className="bg-green-500/20 text-green-300 px-3 py-1 rounded-md">
+                  Connected
+                </span>
+              )}
+            </div>
+          </div>
+          
+          <div className="mb-6">
+            <h3 className="text-lg font-medium text-white mb-2">Bio</h3>
+            <p className="text-gray-300 text-sm">{user.bio}</p>
+          </div>
+          
+          <div className="mb-6">
+            <h3 className="text-lg font-medium text-white mb-2">Skills</h3>
+            <div className="flex flex-wrap gap-2">
+              {user.skills.map((skill, index) => (
+                <span 
+                  key={index} 
+                  className="bg-purple-600/20 text-purple-300 text-sm px-3 py-1 rounded-full"
+                >
+                  {skill}
+                </span>
+              ))}
+            </div>
+          </div>
+          
+          <div className="mb-6">
+            <h3 className="text-lg font-medium text-white mb-2">Achievements</h3>
+            <div className="space-y-3">
+              {user.achievements.map(achievement => (
+                <div key={achievement.id} className="bg-gray-800/50 rounded-lg p-3">
+                  <div className="flex justify-between items-start">
+                    <h4 className="font-medium text-white">{achievement.title}</h4>
+                    <span className="text-xs text-gray-400">{formatDateShort(achievement.date)}</span>
+                  </div>
+                  <p className="text-sm text-gray-300 mt-1">{achievement.description}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+          
+          <div>
+            <h3 className="text-lg font-medium text-white mb-2">Posts</h3>
+            <div className="space-y-3">
+              {user.posts.map(post => (
+                <div key={post.id} className="bg-gray-800/50 rounded-lg p-3">
+                  <div className="flex justify-between items-start">
+                    <h4 className="font-medium text-white">{post.title}</h4>
+                    <span className="text-xs text-gray-400">{formatDateShort(post.date)}</span>
+                  </div>
+                  <p className="text-sm text-gray-300 mt-1 line-clamp-2">{post.content}</p>
+                  <div className="flex items-center mt-2 text-xs text-gray-400">
+                    <span className="flex items-center">
+                      <LucideIcons.Heart className="h-3.5 w-3.5 mr-1" />
+                      {post.likes}
+                    </span>
+                    <span className="flex items-center ml-3">
+                      <LucideIcons.MessageSquare className="h-3.5 w-3.5 mr-1" />
+                      {post.comments}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      );
+    };
+    
+    // Filter Form Component
+    const FilterForm = ({ selectedField, selectedExperience, onApply, onReset }) => {
+      const [field, setField] = React.useState(selectedField);
+      const [experience, setExperience] = React.useState(selectedExperience);
+      
+      const fields = ['Design', 'Development', 'Data Science', 'Product', ''];
+      
+      return (
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-2">Field</label>
+            <select 
+              className="w-full bg-gray-700 border-gray-600 text-white rounded-md p-2.5"
+              value={field}
+              onChange={(e) => setField(e.target.value)}
+            >
+              <option value="">All Fields</option>
+              {fields.filter(f => f !== '').map(f => (
+                <option key={f} value={f}>{f}</option>
+              ))}
+            </select>
+          </div>
+          
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-2">
+              Minimum Experience: {experience} years
+            </label>
+            <input 
+              type="range" 
+              min="0" 
+              max="10" 
+              step="1"
+              value={experience}
+              onChange={(e) => setExperience(parseInt(e.target.value))}
+              className="w-full"
+            />
+          </div>
+          
+          <div className="flex justify-end space-x-3 pt-3">
+            <button 
+              className="text-gray-300 hover:text-white transition-colors"
+              onClick={onReset}
+            >
+              Reset
+            </button>
+            <button 
+              className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-md transition-colors"
+              onClick={() => onApply(field, experience)}
+            >
+              Apply Filters
+            </button>
+          </div>
+        </div>
+      );
+    };
+    
+    // Event Form Component
+    const EventForm = ({ event, onSubmit }) => {
+      const today = getFormattedToday();
+      
+      const initialEventData = event || {
+        id: `e${Date.now()}`,
+        title: '',
+        date: today,
+        startTime: '09:00',
+        endTime: '10:00',
+        description: '',
+        location: '',
+        participants: []
+      };
+      
+      const [eventData, setEventData] = React.useState(initialEventData);
+      const [participantInput, setParticipantInput] = React.useState('');
+      const [dateError, setDateError] = React.useState('');
+      const [startTimeError, setStartTimeError] = React.useState('');
+      const [endTimeError, setEndTimeError] = React.useState('');
+      
+      // Validate time when component mounts or when date/times change
+      React.useEffect(() => {
+        validateTimes(eventData.date, eventData.startTime, eventData.endTime);
+      }, [eventData.date, eventData.startTime, eventData.endTime]);
+      
+      const validateTimes = (date, startTime, endTime) => {
+        // Reset errors first
+        setStartTimeError('');
+        setEndTimeError('');
+        
+        // Only validate times if date is today
+        if (date === today) {
+          // Validate start time
+          if (!isTimeValid(date, startTime)) {
+            setStartTimeError('Please select a time that is now or later.');
+          }
+          
+          // Validate end time
+          if (!isTimeValid(date, endTime)) {
+            setEndTimeError('Please select a time that is now or later.');
+          }
+        }
+        
+        // Validate that end time is after start time
+        if (startTime && endTime) {
+          const [startHours, startMinutes] = startTime.split(':').map(Number);
+          const [endHours, endMinutes] = endTime.split(':').map(Number);
+          
+          if (
+            endHours < startHours || 
+            (endHours === startHours && endMinutes <= startMinutes)
+          ) {
+            setEndTimeError('End time must be after start time.');
+          }
+        }
+      };
+      
+      const handleChange = (e) => {
+        const { name, value } = e.target;
+        
+        if (name === 'date') {
+          if (!isDateValid(value)) {
+            setDateError('Please select a date that is today or later.');
+          } else {
+            setDateError('');
+          }
+        }
+        
+        setEventData(prev => ({ ...prev, [name]: value }));
+      };
+      
+      const handleAddParticipant = () => {
+        if (!participantInput.trim()) return;
+        
+        setEventData(prev => ({
+          ...prev,
+          participants: [...prev.participants, participantInput.trim()]
+        }));
+        
+        setParticipantInput('');
+      };
+      
+      const handleRemoveParticipant = (index) => {
+        setEventData(prev => ({
+          ...prev,
+          participants: prev.participants.filter((_, i) => i !== index)
+        }));
+      };
+      
+      const handleSubmit = (e) => {
+        e.preventDefault();
+        
+        // Validate date
+        if (!isDateValid(eventData.date)) {
+          setDateError('Please select a date that is today or later.');
+          return;
+        }
+        
+        // Validate times
+        validateTimes(eventData.date, eventData.startTime, eventData.endTime);
+        
+        // Only submit if there are no errors
+        if (!dateError && !startTimeError && !endTimeError) {
+          onSubmit(eventData);
+        }
+      };
+      
+      return (
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-2">Title</label>
+            <input
+              type="text"
+              name="title"
+              value={eventData.title}
+              onChange={handleChange}
+              placeholder="Event title"
+              className="w-full"
+              required
+            />
+          </div>
+          
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-2">Date</label>
+              <input
+                type="date"
+                name="date"
+                value={eventData.date}
+                onChange={handleChange}
+                className={`w-full ${dateError ? 'border-red-500' : ''}`}
+                min={today}
+                required
+              />
+              {dateError && (
+                <div className="date-error flex items-center mt-1">
+                  <LucideIcons.AlertCircle className="h-3.5 w-3.5 mr-1" />
+                  <span>{dateError}</span>
+                </div>
+              )}
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-2">Location</label>
+              <input
+                type="text"
+                name="location"
+                value={eventData.location}
+                onChange={handleChange}
+                placeholder="Location"
+                className="w-full"
+                required
+              />
+            </div>
+          </div>
+          
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-2">Start Time</label>
+              <input
+                type="time"
+                name="startTime"
+                value={eventData.startTime}
+                onChange={handleChange}
+                className={`w-full ${startTimeError ? 'border-red-500' : ''}`}
+                required
+              />
+              {startTimeError && (
+                <div className="time-error flex items-center mt-1">
+                  <LucideIcons.AlertCircle className="h-3.5 w-3.5 mr-1" />
+                  <span>{startTimeError}</span>
+                </div>
+              )}
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-2">End Time</label>
+              <input
+                type="time"
+                name="endTime"
+                value={eventData.endTime}
+                onChange={handleChange}
+                className={`w-full ${endTimeError ? 'border-red-500' : ''}`}
+                required
+              />
+              {endTimeError && (
+                <div className="time-error flex items-center mt-1">
+                  <LucideIcons.AlertCircle className="h-3.5 w-3.5 mr-1" />
+                  <span>{endTimeError}</span>
+                </div>
+              )}
+            </div>
+          </div>
+          
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-2">Description</label>
+            <textarea
+              name="description"
+              value={eventData.description}
+              onChange={handleChange}
+              placeholder="Event description"
+              rows="3"
+              className="w-full"
+            />
+          </div>
+          
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-2">Participants</label>
+            
+            <div className="flex mb-2">
+              <input
+                type="text"
+                value={participantInput}
+                onChange={(e) => setParticipantInput(e.target.value)}
+                placeholder="Add participant"
+                className="flex-1"
+              />
+              <button
+                type="button"
+                onClick={handleAddParticipant}
+                className="ml-2 bg-purple-600 text-white px-3 py-2 rounded-md hover:bg-purple-700"
+              >
+                Add
+              </button>
+            </div>
+            
+            <div className="space-y-2">
+              {eventData.participants.map((participant, index) => (
+                <div key={index} className="flex justify-between items-center bg-gray-700/50 rounded px-3 py-1">
+                  <span className="text-sm text-gray-200">{participant}</span>
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveParticipant(index)}
+                    className="text-gray-400 hover:text-red-400"
+                  >
+                    <LucideIcons.X className="h-4 w-4" />
+                  </button>
+                </div>
+              ))}
+              
+              {eventData.participants.length === 0 && (
+                <p className="text-sm text-gray-500 italic">No participants added yet</p>
+              )}
+            </div>
+          </div>
+          
+          <div className="pt-2">
+            <button
+              type="submit"
+              className="w-full bg-purple-600 text-white py-2 rounded-md hover:bg-purple-700"
+              disabled={dateError !== '' || startTimeError !== '' || endTimeError !== ''}
+            >
+              {event ? 'Update Event' : 'Create Event'}
+            </button>
+          </div>
+        </form>
+      );
+    };
+    
+    // Task Form Component
+    const TaskForm = ({ task, onSubmit }) => {
+      const today = getFormattedToday();
+      
+      const initialTaskData = task || {
+        id: `t${Date.now()}`,
+        title: '',
+        description: '',
+        dueDate: today,
+        priority: 'medium',
+        status: 'pending'
+      };
+      
+      const [taskData, setTaskData] = React.useState(initialTaskData);
+      const [dateError, setDateError] = React.useState('');
+      
+      const handleChange = (e) => {
+        const { name, value } = e.target;
+        
+        if (name === 'dueDate') {
+          if (!isDateValid(value)) {
+            setDateError('Please select a date that is today or later.');
+          } else {
+            setDateError('');
+          }
+        }
+        
+        setTaskData(prev => ({ ...prev, [name]: value }));
+      };
+      
+      const handleSubmit = (e) => {
+        e.preventDefault();
+        
+        if (!isDateValid(taskData.dueDate)) {
+          setDateError('Please select a date that is today or later.');
+          return;
+        }
+        
+        onSubmit(taskData);
+      };
+      
+      return (
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-2">Title</label>
+            <input
+              type="text"
+              name="title"
+              value={taskData.title}
+              onChange={handleChange}
+              placeholder="Task title"
+              className="w-full"
+              required
+            />
+          </div>
+          
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-2">Description</label>
+            <textarea
+              name="description"
+              value={taskData.description}
+              onChange={handleChange}
+              placeholder="Task description"
+              rows="3"
+              className="w-full"
+            />
+          </div>
+          
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-2">Due Date</label>
+              <input
+                type="date"
+                name="dueDate"
+                value={taskData.dueDate}
+                onChange={handleChange}
+                className={`w-full ${dateError ? 'border-red-500' : ''}`}
+                min={today}
+                required
+              />
+              {dateError && (
+                <div className="date-error flex items-center mt-1">
+                  <LucideIcons.AlertCircle className="h-3.5 w-3.5 mr-1" />
+                  <span>{dateError}</span>
+                </div>
+              )}
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-2">Priority</label>
+              <select
+                name="priority"
+                value={taskData.priority}
+                onChange={handleChange}
+                className="w-full"
+              >
+                <option value="low">Low</option>
+                <option value="medium">Medium</option>
+                <option value="high">High</option>
+              </select>
+            </div>
+          </div>
+          
+          <div className="pt-2">
+            <button
+              type="submit"
+              className="w-full bg-purple-600 text-white py-2 rounded-md hover:bg-purple-700"
+              disabled={dateError !== ''}
+            >
+              {task ? 'Update Task' : 'Create Task'}
+            </button>
+          </div>
+        </form>
+      );
+    };
+    
+    // Event Details Component
+    const EventDetail = ({ event, onUpdateEvent, onDeleteEvent }) => {
+      const { showModal, showToast } = React.useContext(AppContext);
+      
+      if (!event) {
+        return (
+          <div className="h-full flex items-center justify-center p-8 text-center text-gray-400">
+            Select an event to view details
+          </div>
+        );
+      }
+      
+      const handleEditClick = () => {
+        showModal(
+          'Edit Event', 
+          <EventForm 
+            event={event} 
+            onSubmit={(updatedEvent) => {
+              onUpdateEvent(updatedEvent);
+              showToast('Event updated successfully');
+            }}
+          />
+        );
+      };
+      
+      const handleDeleteClick = () => {
+        if (confirm('Are you sure you want to delete this event?')) {
+          onDeleteEvent(event.id);
+        }
+      };
+      
+      return (
+        <div className="p-5">
+          <div className="mb-6">
+            <div className="flex justify-between items-start">
+              <h2 className="text-2xl font-bold text-white">{event.title}</h2>
+              <div className="flex space-x-2">
+                <button 
+                  onClick={handleEditClick}
+                  className="text-purple-400 hover:text-purple-300 transition-colors"
+                >
+                  Edit
+                </button>
+                <button 
+                  onClick={handleDeleteClick}
+                  className="text-red-400 hover:text-red-300 transition-colors"
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+            
+            <div className="mt-4 flex items-center text-gray-300">
+              <LucideIcons.Calendar className="h-5 w-5 mr-2" />
+              <span>{formatDateLong(event.date)}</span>
+            </div>
+            
+            <div className="mt-2 flex items-center text-gray-300">
+              <LucideIcons.Clock className="h-5 w-5 mr-2" />
+              <span>{formatTimeRange(event.startTime, event.endTime)}</span>
+            </div>
+            
+            <div className="mt-2 flex items-center text-gray-300">
+              <LucideIcons.MapPin className="h-5 w-5 mr-2" />
+              <span>{event.location}</span>
+            </div>
+          </div>
+          
+          <div className="mb-6">
+            <h3 className="text-lg font-medium text-white mb-2">Description</h3>
+            <p className="text-gray-300">{event.description}</p>
+          </div>
+          
+          <div>
+            <h3 className="text-lg font-medium text-white mb-2">Participants</h3>
+            <div className="grid grid-cols-2 gap-2">
+              {event.participants.map((participant, index) => (
+                <div key={index} className="bg-gray-800/50 px-3 py-2 rounded-md">
+                  <span className="text-gray-300">{participant}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      );
+    };
+    
+    // Task Details Component
+    const TaskDetail = ({ task, onUpdateTask, onDeleteTask, onToggleStatus }) => {
+      const { showModal, showToast } = React.useContext(AppContext);
+      
+      if (!task) {
+        return (
+          <div className="h-full flex items-center justify-center p-8 text-center text-gray-400">
+            Select a task to view details
+          </div>
+        );
+      }
+      
+      const handleEditClick = () => {
+        showModal(
+          'Edit Task', 
+          <TaskForm 
+            task={task} 
+            onSubmit={(updatedTask) => {
+              onUpdateTask(updatedTask);
+              showToast('Task updated successfully');
+            }}
+          />
+        );
+      };
+      
+      const handleDeleteClick = () => {
+        if (confirm('Are you sure you want to delete this task?')) {
+          onDeleteTask(task.id);
+        }
+      };
+      
+      return (
+        <div className="p-5">
+          <div className="mb-6">
+            <div className="flex justify-between items-start">
+              <h2 className="text-2xl font-bold text-white">{task.title}</h2>
+              <div className="flex space-x-2">
+                <button 
+                  onClick={handleEditClick}
+                  className="text-purple-400 hover:text-purple-300 transition-colors"
+                >
+                  Edit
+                </button>
+                <button 
+                  onClick={handleDeleteClick}
+                  className="text-red-400 hover:text-red-300 transition-colors"
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+            
+            <div className="mt-4 flex items-center space-x-3">
+              <span className={`
+                inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+                ${task.priority === 'high' ? 'bg-red-500/20 text-red-300' : 
+                  task.priority === 'medium' ? 'bg-yellow-500/20 text-yellow-300' : 
+                  'bg-blue-500/20 text-blue-300'}
+              `}>
+                {task.priority.charAt(0).toUpperCase() + task.priority.slice(1)} Priority
+              </span>
+              
+              <span className={`
+                inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+                ${task.status === 'completed' ? 'bg-green-500/20 text-green-300' : 'bg-purple-500/20 text-purple-300'}
+              `}>
+                {task.status.charAt(0).toUpperCase() + task.status.slice(1)}
+              </span>
+            </div>
+            
+            <div className="mt-2 flex items-center text-gray-300">
+              <LucideIcons.Calendar className="h-5 w-5 mr-2" />
+              <span>Due: {formatDateLong(task.dueDate)}</span>
+            </div>
+          </div>
+          
+          <div className="mb-6">
+            <h3 className="text-lg font-medium text-white mb-2">Description</h3>
+            <p className="text-gray-300">{task.description}</p>
+          </div>
+          
+          <div>
+            <button
+              onClick={() => onToggleStatus(task.id)}
+              className={`
+                w-full py-2 rounded-md transition-colors
+                ${task.status === 'completed' 
+                  ? 'bg-gray-700 text-gray-300 hover:bg-gray-600' 
+                  : 'bg-purple-600 text-white hover:bg-purple-700'}
+              `}
+            >
+              {task.status === 'completed' ? 'Mark as Pending' : 'Mark as Completed'}
+            </button>
+          </div>
+        </div>
+      );
+    };
+    
+    // Message Components
+    const MessageList = ({ messages, currentUserId }) => {
+      const messagesEndRef = React.useRef(null);
+      
+      React.useEffect(() => {
+        if (messagesEndRef.current) {
+          messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, [messages]);
+      
+      if (!messages || messages.length === 0) {
+        return (
+          <div className="h-full flex items-center justify-center text-gray-400">
+            No messages yet
+          </div>
+        );
+      }
+      
+      return (
+        <div className="space-y-4">
+          {messages.map(message => {
+            const isCurrentUser = message.senderId === currentUserId;
+            
+            return (
+              <div 
+                key={message.id} 
+                className={`flex ${isCurrentUser ? 'justify-end' : 'justify-start'}`}
+              >
+                <div 
+                  className={`max-w-[80%] rounded-lg p-3 ${
+                    isCurrentUser 
+                      ? 'bg-purple-600 text-white rounded-tr-none' 
+                      : 'bg-gray-700 text-white rounded-tl-none'
+                  }`}
+                >
+                  <p>{message.content}</p>
+                  <div className={`text-xs mt-1 flex justify-end ${
+                    isCurrentUser ? 'text-purple-200' : 'text-gray-400'
+                  }`}>
+                    {formatDateTime(message.timestamp)}
+                    {isCurrentUser && (
+                      <span className="ml-1">
+                        {message.read ? (
+                          <LucideIcons.Check className="h-3 w-3 text-green-400" />
+                        ) : (
+                          <LucideIcons.Check className="h-3 w-3" />
+                        )}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+          <div ref={messagesEndRef} />
+        </div>
+      );
+    };
+    
+    const ConversationList = ({ conversations, selectedConversation, onSelectConversation }) => {
+      if (!conversations || conversations.length === 0) {
+        return (
+          <div className="p-8 text-center text-gray-400">
+            No conversations
+          </div>
+        );
+      }
+      
+      return (
+        <>
+          {conversations.map(conversation => (
+            <div 
+              key={conversation.id}
+              className={`p-4 border-b border-gray-700 hover:bg-gray-700/30 transition-colors cursor-pointer ${
+                selectedConversation && selectedConversation.id === conversation.id 
+                  ? 'bg-gray-700/50' 
+                  : ''
+              }`}
+              onClick={() => onSelectConversation(conversation)}
+            >
+              <div className="flex items-center">
+                <div className="relative">
+                  <img 
+                    src={conversation.participantAvatar} 
+                    alt={conversation.participantName} 
+                    className="w-10 h-10 rounded-full object-cover"
+                  />
+                  {conversation.unreadCount > 0 && (
+                    <span className="absolute -top-1 -right-1 bg-purple-600 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">
+                      {conversation.unreadCount}
+                    </span>
+                  )}
+                </div>
+                
+                <div className="ml-3 flex-1 overflow-hidden">
+                  <div className="flex justify-between items-center">
+                    <h4 className="font-medium text-white truncate">
+                      {conversation.participantName}
+                    </h4>
+                    <span className="text-xs text-gray-400 whitespace-nowrap ml-2">
+                      {formatDistanceToNow(conversation.lastMessageTime)}
+                    </span>
+                  </div>
+                  <p className="text-sm text-gray-400 truncate">{conversation.lastMessage}</p>
+                </div>
+              </div>
+            </div>
+          ))}
+        </>
+      );
+    };
+    
+    // Panel Components
+    const SearchPanel = () => {
+      const [searchQuery, setSearchQuery] = React.useState('');
+      const [selectedField, setSelectedField] = React.useState('');
+      const [selectedExperience, setSelectedExperience] = React.useState(0);
+      const [selectedUser, setSelectedUser] = React.useState(null);
+      const [users, setUsers] = React.useState(mockUsers);
+      const { showModal } = React.useContext(AppContext);
+      
+      const filteredUsers = users.filter(user => {
+        const matchesQuery = searchQuery === '' || 
+          user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          user.role.toLowerCase().includes(searchQuery.toLowerCase());
+        
+        const matchesField = selectedField === '' || user.field === selectedField;
+        const matchesExperience = selectedExperience === 0 || user.experience >= selectedExperience;
+        
+        return matchesQuery && matchesField && matchesExperience;
+      });
+      
+      React.useEffect(() => {
+        if (selectedUser && !filteredUsers.some(user => user.id === selectedUser.id)) {
+          setSelectedUser(null);
+        }
+      }, [filteredUsers, selectedUser]);
+      
+      const handleFilterClick = () => {
+        showModal(
+          'Filter Users', 
+          <FilterForm 
+            selectedField={selectedField}
+            selectedExperience={selectedExperience}
+            onApply={(field, experience) => {
+              setSelectedField(field);
+              setSelectedExperience(experience);
+            }}
+            onReset={() => {
+              setSelectedField('');
+              setSelectedExperience(0);
+            }}
+          />
+        );
+      };
+      
+      return (
+        <>
+          <div className="w-1/2 bg-gradient-dark border-r border-gray-700 flex flex-col overflow-hidden">
+            <div className="p-5 border-b border-gray-700 flex items-center space-x-3">
+              <div className="relative flex-1">
+                <input 
+                  type="text" 
+                  placeholder="Search users..." 
+                  className="w-full bg-gray-800/50 border-none rounded-md py-2 px-4 text-white focus:ring-2 focus:ring-purple-500 focus:outline-none"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+              </div>
+              <button 
+                className="flex items-center gap-2 bg-gray-800/50 hover:bg-gray-700 text-white px-3 py-2 rounded-md transition-colors"
+                onClick={handleFilterClick}
+              >
+                <LucideIcons.Filter className="h-4 w-4" />
+                <span className="hidden sm:inline">Filters</span>
+              </button>
+            </div>
+            
+            <div className="flex-1 overflow-y-auto">
+              <UserList 
+                users={filteredUsers} 
+                selectedUser={selectedUser} 
+                onSelectUser={setSelectedUser} 
+              />
+            </div>
+          </div>
+          
+          <div className="w-1/2 bg-gradient-dark overflow-y-auto">
+            <UserDetail
+              user={selectedUser}
+              onUpdateUser={(updatedUser) => {
+                setUsers(users.map(u => u.id === updatedUser.id ? updatedUser : u));
+                setSelectedUser(updatedUser);
+              }}
+            />
+          </div>
+        </>
+      );
+    };
+    
+    const CalendarPanel = () => {
+      const [events, setEvents] = React.useState(mockEvents);
+      const [selectedEvent, setSelectedEvent] = React.useState(null);
+      const { showModal, showToast } = React.useContext(AppContext);
+      
+      const handleUpdateEvent = (updatedEvent) => {
+        setEvents(events.map(e => e.id === updatedEvent.id ? updatedEvent : e));
+        setSelectedEvent(updatedEvent);
+        showToast('Event updated successfully');
+      };
+      
+      const handleDeleteEvent = (eventId) => {
+        setEvents(events.filter(e => e.id !== eventId));
+        setSelectedEvent(null);
+        showToast('Event deleted successfully');
+      };
+      
+      const handleCreateEvent = () => {
+        showModal(
+          'Create New Event',
+          <EventForm
+            onSubmit={(newEvent) => {
+              setEvents([...events, newEvent]);
+              showToast('Event created successfully');
+            }}
+          />
+        );
+      };
+      
+      return (
+        <>
+          <div className="w-1/2 bg-gradient-dark border-r border-gray-700 flex flex-col overflow-hidden">
+            <div className="p-5 border-b border-gray-700 flex justify-between items-center">
+              <h2 className="text-xl font-bold text-white">Upcoming Events</h2>
+              <button
+                onClick={handleCreateEvent}
+                className="flex items-center gap-1 bg-purple-600 hover:bg-purple-700 text-white px-3 py-1.5 rounded-md transition-colors"
+              >
+                <LucideIcons.Plus className="h-4 w-4" />
+                <span>New Event</span>
+              </button>
+            </div>
+            
+            <div className="flex-1 overflow-y-auto p-4 space-y-4">
+              {events.length === 0 ? (
+                <div className="text-center text-gray-400 p-8">
+                  No events scheduled
+                </div>
+              ) : (
+                events.map(event => (
+                  <div 
+                    key={event.id}
+                    className={`bg-gray-800/50 rounded-lg p-4 hover:bg-gray-700/50 transition-colors cursor-pointer ${
+                      selectedEvent && selectedEvent.id === event.id ? 'border-l-4 border-purple-500' : ''
+                    }`}
+                    onClick={() => setSelectedEvent(event)}
+                  >
+                    <div className="flex justify-between items-start">
+                      <h3 className="font-medium text-white">{event.title}</h3>
+                      <span className="bg-purple-600/20 text-purple-300 text-xs px-2 py-0.5 rounded-full">
+                        {formatDateShort(event.date)}
+                      </span>
+                    </div>
+                    
+                    <div className="mt-2 flex items-center text-gray-400 text-sm">
+                      <LucideIcons.Clock className="h-4 w-4 mr-1" />
+                      <span>{formatTimeRange(event.startTime, event.endTime)}</span>
+                      <span className="mx-2">•</span>
+                      <LucideIcons.MapPin className="h-4 w-4 mr-1" />
+                      <span>{event.location}</span>
+                    </div>
+                    
+                    <div className="mt-3 text-gray-300 text-sm line-clamp-2">
+                      {event.description}
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+          
+          <div className="w-1/2 bg-gradient-dark overflow-y-auto">
+            <EventDetail
+              event={selectedEvent}
+              onUpdateEvent={handleUpdateEvent}
+              onDeleteEvent={handleDeleteEvent}
+            />
+          </div>
+        </>
+      );
+    };
+    
+    const TodoPanel = () => {
+      const [tasks, setTasks] = React.useState(mockTasks);
+      const [selectedTask, setSelectedTask] = React.useState(null);
+      const { showModal, showToast } = React.useContext(AppContext);
+      
+      const handleUpdateTask = (updatedTask) => {
+        setTasks(tasks.map(t => t.id === updatedTask.id ? updatedTask : t));
+        setSelectedTask(updatedTask);
+        showToast('Task updated successfully');
+      };
+      
+      const handleDeleteTask = (taskId) => {
+        setTasks(tasks.filter(t => t.id !== taskId));
+        setSelectedTask(null);
+        showToast('Task deleted successfully');
+      };
+      
+      const handleToggleStatus = (taskId) => {
+        setTasks(tasks.map(task => {
+          if (task.id === taskId) {
+            const newStatus = task.status === 'completed' ? 'pending' : 'completed';
+            const updatedTask = { ...task, status: newStatus };
+            if (selectedTask && selectedTask.id === taskId) {
+              setSelectedTask(updatedTask);
+            }
+            return updatedTask;
+          }
+          return task;
+        }));
+      };
+      
+      const handleCreateTask = () => {
+        showModal(
+          'Create New Task',
+          <TaskForm
+            onSubmit={(newTask) => {
+              setTasks([...tasks, newTask]);
+              showToast('Task created successfully');
+            }}
+          />
+        );
+      };
+      
+      const pendingTasks = tasks.filter(task => task.status === 'pending');
+      const completedTasks = tasks.filter(task => task.status === 'completed');
+      
+      return (
+        <>
+          <div className="w-1/2 bg-gradient-dark border-r border-gray-700 flex flex-col overflow-hidden">
+            <div className="p-5 border-b border-gray-700 flex justify-between items-center">
+              <h2 className="text-xl font-bold text-white">Tasks</h2>
+              <button
+                onClick={handleCreateTask}
+                className="flex items-center gap-1 bg-purple-600 hover:bg-purple-700 text-white px-3 py-1.5 rounded-md transition-colors"
+              >
+                <LucideIcons.Plus className="h-4 w-4" />
+                <span>New Task</span>
+              </button>
+            </div>
+            
+            <div className="flex-1 overflow-y-auto p-4">
+              <div className="mb-6">
+                <h3 className="text-lg font-medium text-white mb-3">Pending Tasks</h3>
+                {pendingTasks.length === 0 ? (
+                  <div className="bg-gray-800/50 rounded-lg p-4 text-gray-400 text-center">
+                    No pending tasks
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    {pendingTasks.map(task => (
+                      <div 
+                        key={task.id}
+                        className={`bg-gray-800/50 rounded-lg p-4 flex items-start cursor-pointer hover:bg-gray-700/50 transition-colors ${
+                          selectedTask && selectedTask.id === task.id ? 'border-l-4 border-purple-500' : ''
+                        }`}
+                        onClick={() => setSelectedTask(task)}
+                      >
+                        <button
+                          className="mt-0.5 mr-3 flex-shrink-0 h-5 w-5 rounded-full border border-gray-400"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleToggleStatus(task.id);
+                          }}
+                          aria-label="Mark as completed"
+                        />
+                        
+                        <div className="flex-1">
+                          <div className="flex justify-between items-start">
+                            <h4 className="font-medium text-white">
+                              {task.title}
+                            </h4>
+                            <div className="flex items-center">
+                              <span className={`
+                                text-xs px-2 py-0.5 rounded-full
+                                ${task.priority === 'high' ? 'bg-red-500/20 text-red-300' : 
+                                  task.priority === 'medium' ? 'bg-yellow-500/20 text-yellow-300' : 
+                                  'bg-blue-500/20 text-blue-300'}
+                              `}>
+                                {task.priority.charAt(0).toUpperCase() + task.priority.slice(1)}
+                              </span>
+                            </div>
+                          </div>
+                          
+                          <div className="mt-1 text-sm text-gray-400 flex items-center">
+                            <LucideIcons.Calendar className="h-3.5 w-3.5 mr-1" />
+                            Due {formatDateShort(task.dueDate)}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+              
+              <div>
+                <h3 className="text-lg font-medium text-white mb-3">Completed Tasks</h3>
+                {completedTasks.length === 0 ? (
+                  <div className="bg-gray-800/50 rounded-lg p-4 text-gray-400 text-center">
+                    No completed tasks
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    {completedTasks.map(task => (
+                      <div 
+                        key={task.id}
+                        className={`bg-gray-800/50 rounded-lg p-4 flex items-start opacity-70 cursor-pointer hover:bg-gray-700/50 transition-colors ${
+                          selectedTask && selectedTask.id === task.id ? 'border-l-4 border-purple-500' : ''
+                        }`}
+                        onClick={() => setSelectedTask(task)}
+                      >
+                        <button
+                          className="mt-0.5 mr-3 flex-shrink-0 h-5 w-5 rounded-full border border-purple-400 bg-purple-400 flex items-center justify-center"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleToggleStatus(task.id);
+                          }}
+                          aria-label="Mark as pending"
+                        >
+                          <LucideIcons.Check className="h-3 w-3 text-black" />
+                        </button>
+                        
+                        <div className="flex-1">
+                          <div className="flex justify-between items-start">
+                            <h4 className="font-medium text-white line-through">
+                              {task.title}
+                            </h4>
+                          </div>
+                          
+                          <div className="mt-1 text-sm text-gray-400 flex items-center">
+                            <LucideIcons.Calendar className="h-3.5 w-3.5 mr-1" />
+                            Completed
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+          
+          <div className="w-1/2 bg-gradient-dark overflow-y-auto">
+            <TaskDetail
+              task={selectedTask}
+              onUpdateTask={handleUpdateTask}
+              onDeleteTask={handleDeleteTask}
+              onToggleStatus={handleToggleStatus}
+            />
+          </div>
+        </>
+      );
+    };
+    
+    const ChatPanel = ({ conversations, setConversations, messages, setMessages, setTimeoutIds }) => {
+  const [selectedConversation, setSelectedConversation] = React.useState(null);
+  const [messageInput, setMessageInput] = React.useState('');
+  const { showToast } = React.useContext(AppContext);
+
+  // Load messages when a conversation is selected
+  React.useEffect(() => {
+    if (selectedConversation) {
+      // Mark messages as read
+      const conversationMessages = [...(messages[selectedConversation.id] || [])];
+      const updatedMessages = conversationMessages.map(msg => {
+        if (msg.senderId !== 'current-user' && !msg.read) {
+          return { ...msg, read: true };
+        }
+        return msg;
+      });
+      
+      setMessages(prev => ({ 
+        ...prev, 
+        [selectedConversation.id]: updatedMessages 
+      }));
+      
+      // Update conversation unread count
+      setConversations(prev =>
+        prev.map(conv => 
+          conv.id === selectedConversation.id 
+            ? { ...conv, unreadCount: 0 }
+            : conv
+        )
+      );
+    }
+  }, [selectedConversation]);
+
+  const handleSendMessage = (e) => {
+    e.preventDefault();
+    
+    if (!messageInput.trim() || !selectedConversation) return;
+    
+    // Create new message
+    const newMsg = {
+      id: `m${Date.now()}`,
+      senderId: 'current-user',
+      receiverId: selectedConversation.participantId,
+      content: messageInput,
+      timestamp: new Date().toISOString(),
+      read: false
+    };
+    
+    // Update messages state
+    setMessages(prev => ({
+      ...prev,
+      [selectedConversation.id]: [
+        ...(prev[selectedConversation.id] || []),
+        newMsg
+      ]
+    }));
+    
+    // Update conversation preview
+    setConversations(prev =>
+      prev.map(conv => 
+        conv.id === selectedConversation.id 
+          ? { 
+              ...conv, 
+              lastMessage: messageInput,
+              lastMessageTime: new Date().toISOString()
+            }
+          : conv
+      )
+    );
+    
+    setMessageInput('');
+    
+    // Create participant-specific responses
+    const participantResponses = {
+      '1': [ // Alex Johnson (UX Designer)
+        "That's an interesting perspective on UX design.",
+        "I've been thinking about similar design patterns recently.",
+        "Have you considered the accessibility implications of that approach?",
+        "Let's discuss this in our next design review.",
+        "I'll prototype some alternatives and share them with you."
+      ],
+      '2': [ // Samantha Lee (Frontend Developer)
+        "I'll look into that and get back to you.",
+        "Thanks for the update!",
+        "That sounds good to me.",
+        "When do you need this by?",
+        "Can we discuss this in our next meeting?"
+      ],
+      '3': [ // David Chen (Data Scientist)
+        "I'll analyze the data and share my findings.",
+        "That's an interesting data point to consider.",
+        "Have you looked at the statistical significance of those results?",
+        "Let me run some models on that data.",
+        "The correlation seems promising, but we should check for causation."
+      ],
+      '4': [ // Priya Patel (Product Manager)
+        "How does this align with our product roadmap?",
+        "Let's discuss the business impact of this decision.",
+        "Have you considered the user needs behind this feature?",
+        "I'll add this to our next sprint planning.",
+        "What metrics will we use to measure success?"
+      ],
+      '5': [ // Michael Washington (Full Stack Developer)
+        "I'll check the backend implementation for that.",
+        "Have you considered the performance implications?",
+        "Let me review the API contracts for that feature.",
+        "We should probably add some error handling for that case.",
+        "I'll write some tests to cover this scenario."
+      ]
+    };
+    
+    // Store the timeout ID so we can clean it up later
+    const timeoutId = setTimeout(() => {
+      // Only reply sometimes
+      if (Math.random() > 0.3) {
+        const participantId = selectedConversation.participantId;
+        const replies = participantResponses[participantId] || [
+          "I'll get back to you on that.",
+          "Thanks for your message.",
+          "Let me think about that.",
+          "Interesting point.",
+          "I'll follow up soon."
+        ];
+        
+        const replyMsg = {
+          id: `m${Date.now() + 1}`,
+          senderId: participantId,
+          receiverId: 'current-user',
+          content: replies[Math.floor(Math.random() * replies.length)],
+          timestamp: new Date().toISOString(),
+          read: true
+        };
+        
+        setMessages(prev => ({
+          ...prev,
+          [selectedConversation.id]: [
+            ...(prev[selectedConversation.id] || []),
+            replyMsg
+          ]
+        }));
+        
+        setConversations(prev =>
+          prev.map(conv => 
+            conv.id === selectedConversation.id 
+              ? { 
+                  ...conv, 
+                  lastMessage: replyMsg.content,
+                  lastMessageTime: replyMsg.timestamp
+                }
+              : conv
+          )
+        );
+      }
+    }, 1000 + Math.random() * 2000);
+
+    setTimeoutIds(prev => [...prev, timeoutId]);
+  };
+  
+  return (
+    <>
+      <div className="w-1/3 bg-gradient-dark border-r border-gray-700 flex flex-col overflow-hidden">
+        <div className="p-5 border-b border-gray-700">
+          <h3 className="font-medium text-white">Messages</h3>
+        </div>
+        
+        <div className="flex-1 overflow-y-auto">
+          <ConversationList
+            conversations={conversations}
+            selectedConversation={selectedConversation}
+            onSelectConversation={setSelectedConversation}
+          />
+        </div>
+      </div>
+      
+      <div className="w-2/3 bg-gradient-dark flex flex-col overflow-hidden">
+        {selectedConversation ? (
+          <>
+            <div className="p-4 border-b border-gray-700 flex items-center">
+              <img 
+                src={selectedConversation.participantAvatar} 
+                alt={selectedConversation.participantName} 
+                className="w-8 h-8 rounded-full object-cover"
+              />
+              <h3 className="ml-3 font-medium text-white">{selectedConversation.participantName}</h3>
+            </div>
+            
+            <div className="flex-1 overflow-y-auto p-4">
+              <MessageList 
+                messages={messages[selectedConversation.id] || []} 
+                currentUserId="current-user"
+              />
+            </div>
+            
+            <form 
+              className="p-4 border-t border-gray-700 flex items-center"
+              onSubmit={handleSendMessage}
+            >
+              <input 
+                type="text" 
+                placeholder="Type a message..." 
+                className="flex-1 bg-gray-800/50 border-none rounded-md py-2 px-4 text-white focus:outline-none"
+                value={messageInput}
+                onChange={(e) => setMessageInput(e.target.value)}
+              />
+              <button 
+                type="submit"
+                className="ml-3 bg-purple-600 text-white p-2 rounded-md hover:bg-purple-700 transition-colors"
+                disabled={!messageInput.trim()}
+              >
+                <LucideIcons.Send className="h-5 w-5" />
+              </button>
+            </form>
+          </>
+        ) : (
+          <div className="h-full flex items-center justify-center p-8 text-center text-gray-400">
+            Select a conversation to start messaging
+          </div>
+        )}
+      </div>
+    </>
+  );
+};
+    // Post Detail Component
+    const PostDetail = ({ post, authorName, authorAvatar, onClose }) => {
+      const { showToast } = React.useContext(AppContext);
+      
+      const handleShare = async () => {
+        // Use the Web Share API if available
+        if (navigator.share) {
+          try {
+            await navigator.share({
+              title: post.title,
+              text: post.content,
+              url: window.location.href,
+            });
+            showToast('Post shared successfully!');
+          } catch (error) {
+            console.error('Error sharing:', error);
+            // Fallback to clipboard
+            copyToClipboard();
+          }
+        } else {
+          // Fallback for browsers that don't support Web Share API
+          copyToClipboard();
+        }
+      };
+      
+      const copyToClipboard = () => {
+        const shareText = `${post.title}\n\n${post.content}\n\nShared from HobbyHive`;
+        navigator.clipboard.writeText(shareText).then(() => {
+          showToast('Link copied to clipboard!');
+        }).catch(err => {
+          console.error('Failed to copy:', err);
+          showToast('Failed to copy link. Please try again.');
+        });
+      };
+      
+      return (
+        <div className="space-y-4">
+          <div className="flex items-center">
+            <img src={authorAvatar} alt={authorName} className="w-10 h-10 rounded-full object-cover" />
+            <div className="ml-3">
+              <p className="font-medium text-white">{authorName}</p>
+              <p className="text-xs text-gray-400">{formatDateLong(post.date)}</p>
+            </div>
+          </div>
+          
+          <h3 className="text-xl font-bold text-white">{post.title}</h3>
+          
+          <p className="text-gray-300">{post.content}</p>
+          
+          <div className="flex items-center justify-between pt-2">
+            <div className="flex items-center space-x-4">
+              <span className="flex items-center text-gray-400">
+                <LucideIcons.Heart className="h-5 w-5 mr-1.5" />
+                {post.likes}
+              </span>
+              <span className="flex items-center text-gray-400">
+                <LucideIcons.MessageSquare className="h-5 w-5 mr-1.5" />
+                {post.comments}
+              </span>
+            </div>
+            
+            <button
+              onClick={handleShare}
+              className="flex items-center space-x-1 text-purple-400 hover:text-purple-300 transition-colors"
+            >
+              <LucideIcons.Share className="h-5 w-5" />
+              <span>Share</span>
+            </button>
+          </div>
+        </div>
+      );
+    };
+    
+    // Dashboard Component (Main app wrapper)
+    const Dashboard = () => {
+  const [activeSection, setActiveSection] = React.useState('search');
+  const [showModal, setShowModal] = React.useState(false);
+  const [modalTitle, setModalTitle] = React.useState('');
+  const [modalContent, setModalContent] = React.useState(null);
+  const [toast, setToast] = React.useState({ show: false, message: '' });
+  // Add these state variables for chat
+  const [conversations, setConversations] = React.useState(mockConversations);
+  const [messages, setMessages] = React.useState(mockMessages);
+  const [timeoutIds, setTimeoutIds] = React.useState([]);
+
+  // Clean up timeouts when component unmounts
+  React.useEffect(() => {
+    return () => {
+      timeoutIds.forEach(id => clearTimeout(id));
+    };
+  }, [timeoutIds]);
+
+  const handleShowModal = (title, content) => {
+    setModalTitle(title);
+    setModalContent(content);
+    setShowModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+  };
+
+  const showToastMessage = (message) => {
+    setToast({ show: true, message });
+    setTimeout(() => {
+      setToast({ show: false, message: '' });
+    }, 3000);
+  };
+
+  return (
+    <AppContext.Provider value={{ 
+      activeSection, 
+      setActiveSection,
+      showModal: handleShowModal,
+      closeModal: handleCloseModal,
+      showToast: showToastMessage
+    }}>
+      <div className="flex h-[calc(100vh-3rem)]">
+        <Sidebar />
+        <div className="flex-1 flex overflow-hidden">
+          {activeSection === 'search' && <SearchPanel />}
+          {activeSection === 'calendar' && <CalendarPanel />}
+          {activeSection === 'todo' && <TodoPanel />}
+          {activeSection === 'chat' && (
+            <ChatPanel 
+              conversations={conversations}
+              setConversations={setConversations}
+              messages={messages}
+              setMessages={setMessages}
+              setTimeoutIds={setTimeoutIds}
+            />
+          )}
+        </div>
+        
+        {showModal && (
+          <Modal title={modalTitle} onClose={handleCloseModal}>
+            {modalContent}
+          </Modal>
+        )}
+        
+        {toast.show && <Toast message={toast.message} />}
+      </div>
+    </AppContext.Provider>
+  );
+};
+    
+    // App Component (Entry point)
+    const App = () => {
+      return (
+        <div className="flex flex-col min-h-screen bg-[rgb(10,17,34)] text-white">
+          <header className="fixed top-0 left-0 right-0 bg-gradient-dark z-50 h-12">
+            <div className="flex items-center h-full px-4">
+              <button 
+                className="text-gray-400 hover:text-white transition-colors"
+                onClick={() => window.location.href='https://singular-kringle-5f87fe.netlify.app/recruiter%20dashboard'}
+              >
+                <LucideIcons.ArrowLeft className="h-5 w-5" />
+              </button>
+              <h1 className="ml-4 text-lg font-semibold">Recruiter Dashboard</h1>
+              <div className="ml-auto flex items-center">
+                
+              </div>
+            </div>
+          </header>
+          <main className="flex-grow pt-12">
+            <Dashboard />
+          </main>
+        </div>
+      );
+    };
+    
+    // Render the App
+    ReactDOM.createRoot(document.getElementById('root')).render(
+      <React.StrictMode>
+        <App />
+      </React.StrictMode>
+    );
+  </script>
+</body>
+</html>

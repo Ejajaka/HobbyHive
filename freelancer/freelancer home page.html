@@ -1,0 +1,2408 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+    <title>Freelancer Homepage</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23A78BFA' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='lucide lucide-palette-icon lucide-palette'%3E%3Cpath d='M12 22a1 1 0 0 1 0-20 10 9 0 0 1 10 9 5 5 0 0 1-5 5h-2.25a1.75 1.75 0 0 0-1.4 2.8l.3.4a1.75 1.75 0 0 1-1.4 2.8z'/%3E%3Ccircle cx='13.5' cy='6.5' r='.5' fill='%23A78BFA'/%3E%3Ccircle cx='17.5' cy='10.5' r='.5' fill='%23A78BFA'/%3E%3Ccircle cx='6.5' cy='12.5' r='.5' fill='%23A78BFA'/%3E%3Ccircle cx='8.5' cy='7.5' r='.5' fill='%23A78BFA'/%3E%3C/svg%3E" />
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        purple: {
+                            400: '#a78bfa',
+                            500: '#8b5cf6',
+                            600: '#7c3aed',
+                            700: '#6d28d9'
+                        },
+                        pink: {
+                            400: '#f472b6',
+                            500: '#ec4899'
+                        },
+                        gray: {
+                            700: '#374151',
+                            800: '#1f2937',
+                            900: '#111827'
+                        }
+                    }
+                }
+            }
+        };
+    </script>
+    <style>
+        /* Base styles */
+        
+        body {
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            background: #0F1729;
+        }
+        /* Add smooth scrolling to the document */
+        
+        html {
+            scroll-behavior: smooth;
+        }
+        /* Custom utility classes */
+        
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .line-clamp-1 {
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 1;
+            overflow: hidden;
+        }
+        
+        .line-clamp-2 {
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 2;
+            overflow: hidden;
+        }
+        /* Search results animation */
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .search-results-animation {
+            animation: fadeIn 0.2s ease-out forwards;
+        }
+        /* Highlight search match */
+        
+        .search-highlight {
+            background-color: rgba(139, 92, 246, 0.3);
+            padding: 0 2px;
+            border-radius: 2px;
+        }
+        /* File upload area styling */
+        
+        .file-upload-area {
+            border: 2px dashed rgba(139, 92, 246, 0.5);
+            transition: all 0.2s ease-in-out;
+        }
+        
+        .file-upload-area.drag-over {
+            border-color: #8b5cf6;
+            background-color: rgba(139, 92, 246, 0.1);
+        }
+        
+        .file-upload-area:hover {
+            border-color: #a78bfa;
+        }
+        /* Delete button animation */
+        
+        @keyframes shake {
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+            10%,
+            30%,
+            50%,
+            70%,
+            90% {
+                transform: translateX(-2px);
+            }
+            20%,
+            40%,
+            60%,
+            80% {
+                transform: translateX(2px);
+            }
+        }
+        
+        .shake-animation {
+            animation: shake 0.5s cubic-bezier(.36, .07, .19, .97) both;
+        }
+        /* Custom scrollbar for modals */
+        
+        .modal-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .modal-scrollbar::-webkit-scrollbar-track {
+            background: rgba(15, 23, 42, 0.3);
+            border-radius: 10px;
+        }
+        
+        .modal-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(139, 92, 246, 0.4);
+            border-radius: 10px;
+        }
+        
+        .modal-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: rgba(139, 92, 246, 0.6);
+        }
+        /* File item hover effect */
+        
+        .file-item {
+            transition: all 0.2s ease;
+        }
+        
+        .file-item:hover {
+            background-color: rgba(139, 92, 246, 0.1);
+            transform: translateY(-2px);
+        }
+        /* Download button animation */
+        
+        .download-btn {
+            transition: all 0.2s ease;
+        }
+        
+        .download-btn:hover {
+            transform: translateY(-1px);
+        }
+        
+        .download-btn:active {
+            transform: translateY(1px);
+        }
+    </style>
+</head>
+
+<body>
+    <div id="root" class="min-h-screen flex flex-col" style="background: #0F1729">
+        <!-- Header -->
+        <nav class="fixed w-full bg-gray-900/80 backdrop-blur-md shadow-lg z-50">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex items-center justify-between h-16">
+                    <!-- Logo -->
+                    <div class="flex items-center space-x-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="none" class="h-8 w-8 text-purple-400">
+              <!-- Dots -->
+              <circle cx="13.5" cy="6.5" r="1.5"></circle>
+              <circle cx="17.5" cy="10.5" r="1.5"></circle>
+              <circle cx="8.5" cy="7.5" r="1.5"></circle>
+              <circle cx="6.5" cy="12.5" r="1"></circle>
+              <!-- Main hexagon shape -->
+              <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z" fill="none" stroke="currentColor" stroke-width="2"></path>
+            </svg>
+                        <span class="text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+              <a href="https://singular-kringle-5f87fe.netlify.app/freelancer%20home%20page">HobbyHive</a>
+            </span>
+                    </div>
+
+                    <!-- Search Bar -->
+                    <div class="flex-1 max-w-2xl mx-8 relative search-container">
+                        <div class="relative">
+                            <input type="text" id="search-input" placeholder="Search for courses, topics, or instructors..." class="w-full bg-gray-800/50 text-gray-200 placeholder-gray-400 rounded-full py-2 pl-10 pr-4 focus:outline-none focus:ring-2 focus:ring-purple-400/50" />
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+                        </div>
+
+                        <div id="search-results" class="hidden absolute top-full left-0 right-0 mt-2 bg-gray-800/95 backdrop-blur-sm rounded-lg shadow-lg border border-gray-700 max-h-80 overflow-y-auto z-50 search-results-animation">
+                            <!-- Search results will be dynamically populated here -->
+                        </div>
+                    </div>
+
+                    <!-- Navigation Icons -->
+                    <div class="flex items-center space-x-6">
+                        <button class="text-purple-400 hover:text-purple-300 transition-colors" onclick="window.location.href='https://singular-kringle-5f87fe.netlify.app/skillgig'">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6">
+                <line x1="12" y1="1" x2="12" y2="23"></line>
+                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+              </svg>
+            </button>
+                        <button class="text-purple-400 hover:text-purple-300 transition-colors" onclick="window.location.href='https://singular-kringle-5f87fe.netlify.app/skillswap'">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-repeat-icon lucide-repeat"><path d="m17 2 4 4-4 4"/><path d="M3 11v-1a4 4 0 0 1 4-4h14"/><path d="m7 22-4-4 4-4"/><path d="M21 13v1a4 4 0 0 1-4 4H3"/></svg>
+                
+              
+            </button>
+                        <button class="text-purple-400 hover:text-purple-300 transition-colors" onclick="window.location.href='https://singular-kringle-5f87fe.netlify.app/skill%20course%20page'">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6">
+                <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+                <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
+              </svg>
+            </button>
+                        <div class="h-6 w-px bg-gray-700"></div>
+
+                        <!-- Notifications -->
+                        <div class="relative">
+                            <button class="text-purple-400 hover:text-purple-300 transition-colors" id="notifications-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6">
+                  <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                  <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                </svg>
+              </button>
+                            <span class="absolute -top-1 -right-1 bg-pink-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">3</span>
+
+                            <div id="notifications-dropdown" class="hidden absolute right-0 mt-2 w-72 bg-gray-800/95 backdrop-blur-sm rounded-lg shadow-lg border border-gray-700 z-50">
+                                <div class="p-3 border-b border-gray-700">
+                                    <h3 class="text-lg font-semibold" style="color: white;">Notifications</h3>
+                                </div>
+                                <div class="p-2">
+                                    <div class="p-2 hover:bg-gray-700/50 rounded transition-colors cursor-pointer">
+                                        <p class="font-medium" style="color: white;">New course available: Advanced Painting</p>
+                                        <span class="text-xs text-gray-400">2h ago</span>
+                                    </div>
+                                    <div class="p-2 hover:bg-gray-700/50 rounded transition-colors cursor-pointer">
+                                        <p class="font-medium" style="color: white;">Your progress in Digital Art is outstanding!</p>
+                                        <span class="text-xs text-gray-400">5h ago</span>
+                                    </div>
+                                    <div class="p-2 hover:bg-gray-700/50 rounded transition-colors cursor-pointer">
+                                        <p class="font-medium" style="color: white;">Offer from Boracle!</p>
+                                        <span class="text-xs text-gray-400">1d ago</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Wishlist Button (without dropdown) -->
+                        <button class="text-purple-400 hover:text-purple-300 transition-colors" id="wishlist-btn" onclick="window.location.href='https://singular-kringle-5f87fe.netlify.app/wishlist'">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6">
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+              </svg>
+            </button>
+
+                        <!-- Profile -->
+                        <div class="relative">
+                            <button class="text-purple-400 hover:text-purple-300 transition-colors" id="profile-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+              </button>
+                            <div id="profile-dropdown" class="hidden absolute right-0 mt-2 w-64 bg-gray-800/95 backdrop-blur-sm rounded-lg shadow-lg border border-gray-700 z-50">
+
+                                <div class="py-1">
+                                    <a href="https://singular-kringle-5f87fe.netlify.app/freelancers%20profile%20page" class="dropdown-item block px-4 py-2 hover:bg-purple-900/10" style="color: white;">My Profile</a>
+
+                                    </a>
+                                    <a href="https://singular-kringle-5f87fe.netlify.app/mycourse" class="dropdown-item block px-4 py-2 hover:bg-purple-900/10" style="color: white;">My Courses</a>
+
+
+                                    <a href="https://singular-kringle-5f87fe.netlify.app/helpcenter" class="block px-4 py-2 text-gray-200 hover:bg-gray-700/50 transition-colors">
+                  Help Center
+                  </a>
+                                    <div class="border-t border-gray-700 my-1"></div>
+                                    <a href="https://singular-kringle-5f87fe.netlify.app/homepage" class="block px-4 py-2 text-red-400 hover:bg-gray-700/50 transition-colors">
+                    Logout
+                  </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- MainContent -->
+        <main class="flex-grow pt-24 px-4 md:px-8 pb-12 max-w-7xl mx-auto w-full relative">
+            <!-- WelcomeSection -->
+            <div class="mb-12">
+                <div class="flex flex-col md:flex-row md:justify-between md:items-center">
+                    <div>
+                        <h1 class="text-3xl font-bold text-white">Welcome back, Alex!</h1>
+                        <p class="text-gray-400 mt-2">Ready to continue your learning journey?</p>
+                    </div>
+                    <button id="create-post-btn" class="flex items-center gap-2 px-6 py-3 mt-4 md:mt-0 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full text-white font-medium shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            <span>Create Post</span>
+          </button>
+                </div>
+            </div>
+
+            <!-- RecentPosts -->
+            <div class="mb-12">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-2xl font-bold text-white">Recently Posted</h2>
+                    <div class="flex space-x-2">
+                        <button class="p-2 rounded-full bg-gray-800/50 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors" aria-label="Scroll left" id="posts-scroll-left">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5">
+                <polyline points="15 18 9 12 15 6"></polyline>
+              </svg>
+            </button>
+                        <button class="p-2 rounded-full bg-gray-800/50 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors" aria-label="Scroll right" id="posts-scroll-right">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5">
+                <polyline points="9 18 15 12 9 6"></polyline>
+              </svg>
+            </button>
+                    </div>
+                </div>
+
+                <div id="recent-posts-container" class="flex space-x-4 overflow-x-auto pb-4 snap-x scrollbar-hide scroll-smooth">
+                    <!-- Posts will be dynamically loaded here -->
+                </div>
+            </div>
+
+            <!-- RecentCourses -->
+            <div class="mb-12">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-2xl font-bold text-white">Recently Opened</h2>
+                    <div class="flex space-x-2">
+                        <button class="p-2 rounded-full bg-gray-800/50 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors" aria-label="Scroll left" id="recent-courses-scroll-left">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5">
+                <polyline points="15 18 9 12 15 6"></polyline>
+              </svg>
+            </button>
+                        <button class="p-2 rounded-full bg-gray-800/50 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors" aria-label="Scroll right" id="recent-courses-scroll-right">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5">
+                <polyline points="9 18 15 12 9 6"></polyline>
+              </svg>
+            </button>
+                    </div>
+                </div>
+
+                <div id="recent-courses-container" class="flex space-x-4 overflow-x-auto pb-4 snap-x scrollbar-hide scroll-smooth">
+                    <!-- Courses will be dynamically loaded here -->
+                </div>
+            </div>
+
+            <!-- AdvancedCourses -->
+            <div class="mb-12">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-2xl font-bold text-white">What's Next</h2>
+                    <div class="flex space-x-2">
+                        <button class="p-2 rounded-full bg-gray-800/50 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors" aria-label="Scroll left" id="advanced-courses-scroll-left">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5">
+                <polyline points="15 18 9 12 15 6"></polyline>
+              </svg>
+            </button>
+                        <button class="p-2 rounded-full bg-gray-800/50 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors" aria-label="Scroll right" id="advanced-courses-scroll-right">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5">
+                <polyline points="9 18 15 12 9 6"></polyline>
+              </svg>
+            </button>
+                    </div>
+                </div>
+
+                <div id="advanced-courses-container" class="flex space-x-4 overflow-x-auto pb-4 snap-x scrollbar-hide scroll-smooth">
+                    <!-- Advanced courses will be dynamically loaded here -->
+                </div>
+            </div>
+
+            <!-- Tracker -->
+            <div class="mb-12">
+                <h2 class="text-2xl font-bold text-white mb-6">Tracker</h2>
+                <div id="activities-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <!-- Activities will be dynamically loaded here -->
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="bg-gray-900/80 backdrop-blur-md border-t border-gray-800 pt-12 pb-6 mt-auto">
+            <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-lg font-semibold text-white mb-4">About HobbyHive</h3>
+                    <p class="text-gray-400 leading-relaxed">
+                        Empowering creativity and skill development through interactive learning experiences.
+                    </p>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-semibold text-white mb-4">Quick Links</h3>
+                    <ul class="space-y-2">
+                        <li><a href="https://singular-kringle-5f87fe.netlify.app/aboutus%20after%20logginin" class="text-gray-400 hover:text-purple-400 transition-colors">About Us</a></li>
+                        <li><a href="https://singular-kringle-5f87fe.netlify.app/freelancer%20home%20page" class="text-gray-400 hover:text-purple-400 transition-colors">Home</a></li>
+                        <li><a href="https://singular-kringle-5f87fe.netlify.app/success%20stories%20after%20logging%20in" class="text-gray-400 hover:text-purple-400 transition-colors">Success stories</a></li>
+                        <li><a href="https://singular-kringle-5f87fe.netlify.app/mycourse" class="text-gray-400 hover:text-purple-400 transition-colors">My Courses</a></li>
+                        <li><a href="https://singular-kringle-5f87fe.netlify.app/howtobecomeinstructor" class="text-gray-400 hover:text-purple-400 transition-colors">Become an Instructor</a></li>
+
+
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-semibold text-white mb-4">Support</h3>
+                    <ul class="space-y-2">
+                        <li><a href="https://singular-kringle-5f87fe.netlify.app/helpcenter" class="text-gray-400 hover:text-purple-400 transition-colors">Help Center</a></li>
+                        <li><a href="https://singular-kringle-5f87fe.netlify.app/community%20guidelines" class="text-gray-400 hover:text-purple-400 transition-colors">Community Guidelines</a></li>
+                        <li><a href="https://singular-kringle-5f87fe.netlify.app/terms%20and%20conditions" class="text-gray-400 hover:text-purple-400 transition-colors">Terms And Conditions</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-semibold text-white mb-4">Connect With Us</h3>
+                    <div class="flex space-x-4">
+                        <a href="https://www.facebook.com/hobby.hive/" class="text-gray-400 hover:text-purple-400 transition-colors">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6">
+                <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+              </svg>
+                        </a>
+                        <a href="https://x.com/Hobby_Hive" class="text-gray-400 hover:text-purple-400 transition-colors">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6">
+                <path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"></path>
+              </svg>
+                        </a>
+                        <a href="https://www.instagram.com/hobby_hive9/" class="text-gray-400 hover:text-purple-400 transition-colors">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6">
+                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+              </svg>
+                        </a>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="max-w-7xl mx-auto px-4 mt-8 pt-6 border-t border-gray-800 text-center">
+                <p class="text-gray-400 text-sm">&copy; 2024 HobbyHive. All rights reserved.</p>
+            </div>
+        </footer>
+
+        <!-- Chat -->
+        <div id="chat-container">
+            <button id="chat-toggle-btn" class="fixed bottom-4 right-4 p-4 rounded-full bg-purple-600 text-white shadow-lg hover:bg-purple-700 transition-all duration-300 z-50">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+        </svg>
+      </button>
+
+            <div id="chat-panel" class="fixed transition-all duration-300 z-50 hidden h-[500px] bottom-0 right-4 rounded-t-lg flex flex-col w-96 bg-gray-800/95 backdrop-blur-md border border-gray-700 shadow-lg">
+                <div class="flex items-center justify-between p-4 border-b border-gray-700">
+                    <div class="flex items-center">
+                        <div id="back-to-contacts" class="hidden mr-3 p-1 text-gray-400 hover:text-white transition-colors">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5">
+                <polyline points="15 18 9 12 15 6"></polyline>
+              </svg>
+                        </div>
+
+                        <div id="active-contact" class="hidden relative mr-3">
+                            <!-- Active contact will be rendered here -->
+                        </div>
+
+                        <h3 class="font-semibold text-white" id="chat-title">Messages</h3>
+                    </div>
+
+                    <div class="flex items-center">
+                        <button id="chat-expand-btn" class="p-1 text-gray-400 hover:text-white transition-colors">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5">
+                <polygon points="15 3 21 3 21 9"></polygon>
+                <polygon points="9 21 3 21 3 15"></polygon>
+                <line x1="21" y1="3" x2="14" y2="10"></line>
+                <line x1="3" y1="21" x2="10" y2="14"></line>
+              </svg>
+            </button>
+                        <button id="chat-close-btn" class="p-1 ml-2 text-gray-400 hover:text-white transition-colors">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </button>
+                    </div>
+                </div>
+
+                <div class="flex-grow overflow-hidden flex flex-col">
+                    <div id="contacts-list" class="flex-grow overflow-y-auto">
+                        <!-- Contacts will be rendered here -->
+                    </div>
+
+                    <div id="chat-messages" class="hidden flex-grow overflow-y-auto bg-gray-900/50 p-4">
+                        <!-- Messages will be rendered here -->
+                    </div>
+
+                    <div id="message-input-container" class="hidden p-4 border-t border-gray-700">
+                        <div class="flex items-center bg-gray-900/50 rounded-lg">
+                            <input type="text" id="message-input" placeholder="Type a message..." class="flex-grow p-3 bg-transparent text-white placeholder-gray-400 focus:outline-none" />
+                            <button id="send-message-btn" class="p-3 text-purple-400 hover:text-purple-300 transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5">
+                  <line x1="22" y1="2" x2="11" y2="13"></line>
+                  <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                </svg>
+              </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CourseModal -->
+        <div id="course-modal" class="hidden fixed inset-0 bg-black/75 backdrop-blur-sm flex items-center justify-center z-50 transition-opacity duration-300">
+            <div class="w-full max-w-4xl max-h-[80vh] rounded-xl shadow-2xl overflow-hidden transform transition-all duration-300" style="background-color: rgb(29, 26, 58)">
+                <div class="flex justify-between items-center p-4 border-b border-gray-700">
+                    <h3 class="text-xl font-semibold text-white" id="course-modal-title"></h3>
+                    <button class="text-gray-400 hover:text-white transition-colors p-1" id="close-course-modal">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+                </div>
+
+                <div class="overflow-y-auto p-6 grid grid-cols-1 md:grid-cols-2 gap-6 modal-scrollbar">
+                    <img id="course-modal-image" src="" alt="" class="w-full rounded-lg h-64 object-cover" />
+
+                    <div>
+                        <p class="text-purple-400 font-medium" id="course-modal-instructor"></p>
+
+                        <div class="flex items-center mt-3 space-x-4 text-sm text-gray-400">
+                            <div class="flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4 mr-1 text-yellow-400">
+                  <path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z"></path>
+                </svg>
+                                <span id="course-modal-rating"></span>
+                            </div>
+
+                            <div class="flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4 mr-1">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <polyline points="12 6 12 12 16 14"></polyline>
+                </svg>
+                                <span id="course-modal-duration"></span>
+                            </div>
+
+                            <div class="flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4 mr-1">
+                  <line x1="8" x2="21" y1="6" y2="6"></line>
+                  <line x1="8" x2="21" y1="12" y2="12"></line>
+                  <line x1="8" x2="21" y1="18" y2="18"></line>
+                  <line x1="3" x2="3.01" y1="6" y2="6"></line>
+                  <line x1="3" x2="3.01" y1="12" y2="12"></line>
+                  <line x1="3" x2="3.01" y1="18" y2="18"></line>
+                </svg>
+                                <span id="course-modal-lessons"></span>
+                            </div>
+                        </div>
+
+                        <p class="text-gray-300 mt-4 leading-relaxed" id="course-modal-description"></p>
+
+                        <div id="course-modal-progress-container" class="mt-6 hidden">
+                            <div class="flex justify-between text-sm text-gray-400 mb-2">
+                                <span>Progress</span>
+                                <span id="course-modal-progress-value"></span>
+                            </div>
+                            <div class="h-2 bg-gray-700 rounded-full overflow-hidden">
+                                <div id="course-modal-progress-bar" class="h-full bg-gradient-to-r from-purple-500 to-pink-500 rounded-full" style="width: 0%"></div>
+                            </div>
+                        </div>
+
+                        <div class="mt-6 flex flex-wrap gap-3">
+                            <button id="course-modal-start-btn" class="px-5 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-medium transition-colors">
+                Start Learning
+              </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PostDetailsModal -->
+        <div id="post-modal" class="hidden fixed inset-0 bg-black/75 backdrop-blur-sm flex items-center justify-center z-50 transition-opacity duration-300">
+            <div class="w-full max-w-lg max-h-[80vh] rounded-xl shadow-2xl overflow-hidden transform transition-all duration-300" style="background-color: rgb(29, 26, 58)">
+                <div class="flex justify-between items-center p-4 border-b border-gray-700">
+                    <h3 class="text-xl font-semibold text-white">Post Details</h3>
+                    <button class="text-gray-400 hover:text-white transition-colors p-1" id="close-post-modal">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+                </div>
+
+                <div class="overflow-y-auto p-4 max-h-[calc(80vh-64px)] modal-scrollbar">
+                    <div class="flex flex-col gap-4">
+                        <img id="post-modal-image" src="" alt="" class="w-full rounded-lg max-h-[200px] object-cover" />
+
+                        <div>
+                            <h4 id="post-modal-title" class="text-xl font-bold text-white mb-1"></h4>
+                            <p id="post-modal-author" class="text-purple-400 font-medium mb-3"></p>
+
+                            <div class="mb-4">
+                                <h5 class="text-white font-semibold mb-2">Description</h5>
+                                <p id="post-modal-description" class="text-gray-300 text-sm"></p>
+                            </div>
+
+                            <!-- Files Section - New Addition -->
+                            <div id="post-modal-files-section" class="mb-4 hidden">
+                                <h5 class="text-white font-semibold mb-2">Files</h5>
+                                <div id="post-modal-files-list" class="space-y-2 mt-2">
+                                    <!-- Files will be populated here -->
+                                </div>
+                            </div>
+
+                            <div class="flex flex-col sm:flex-row gap-3 mt-3">
+                                <button id="delete-post-btn" class="px-4 py-1.5 bg-red-600 hover:bg-red-700 text-white rounded-lg font-medium transition-colors flex items-center justify-center gap-2 text-sm">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4">
+                    <path d="M3 6h18"></path>
+                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"></path>
+                    <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                  </svg>
+                  <span>Delete Post</span>
+                </button>
+
+                                <button id="share-post-btn" class="px-4 py-1.5 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-medium transition-colors flex items-center justify-center gap-2 text-sm">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4">
+                    <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+                    <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+                  </svg>
+                  <span>Share</span>
+                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Create Post Modal -->
+        <div id="create-post-modal" class="hidden fixed inset-0 bg-black/75 backdrop-blur-sm flex items-center justify-center z-50 transition-opacity duration-300">
+            <div class="w-full max-w-md max-h-[80vh] rounded-xl shadow-2xl overflow-hidden transform transition-all duration-300" style="background-color: rgb(29, 26, 58)">
+                <div class="flex justify-between items-center p-3 border-b border-gray-700">
+                    <h3 class="text-lg font-semibold text-white">Create New Post</h3>
+                    <button class="text-gray-400 hover:text-white transition-colors p-1" id="close-create-post-modal">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+                </div>
+
+                <div class="overflow-y-auto p-4 max-h-[calc(80vh-56px)] modal-scrollbar">
+                    <div class="mb-4">
+                        <label for="post-title" class="block text-sm font-medium text-gray-300 mb-1">Project Title</label>
+                        <input type="text" id="post-title" placeholder="Enter a title for your project" class="w-full bg-gray-800/50 text-white placeholder-gray-500 border border-gray-700 rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500 text-sm"
+                        />
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="post-description" class="block text-sm font-medium text-gray-300 mb-1">Project Description</label>
+                        <textarea id="post-description" rows="3" placeholder="Describe your project, skills used, and what you learned..." class="w-full bg-gray-800/50 text-white placeholder-gray-500 border border-gray-700 rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500 text-sm"></textarea>
+                    </div>
+
+                    <div class="mb-4">
+                        <p class="block text-sm font-medium text-gray-300 mb-1">Project Image</p>
+                        <div id="file-upload-area" class="file-upload-area rounded-lg p-4 flex flex-col items-center justify-center cursor-pointer">
+                            <input type="file" id="file-upload-input" class="hidden" accept="image/*" />
+
+                            <div id="upload-icon-container">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-10 w-10 text-purple-400 mb-3">
+                  <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7"></path>
+                  <polyline points="16 16 12 12 8 16"></polyline>
+                  <line x1="12" y1="12" x2="12" y2="21"></line>
+                  <path d="M19 8V2H13"></path>
+                  <path d="M15 4L21 10"></path>
+                </svg>
+
+                                <div class="text-center">
+                                    <p class="text-gray-300 font-medium text-sm mb-1">Drag and drop your image here</p>
+                                    <p class="text-gray-500 text-xs mb-3">or click to browse files</p>
+                                    <button id="browse-files-btn" class="px-3 py-1.5 bg-purple-600 hover:bg-purple-700 text-white rounded-lg text-xs font-medium transition-colors">
+                    Browse Files
+                  </button>
+                                </div>
+                            </div>
+
+                            <div id="image-preview-container" class="hidden w-full">
+                                <img id="image-preview" class="max-h-[150px] rounded-lg mx-auto mb-3" src="" alt="Preview" />
+                                <button id="change-image-btn" class="px-3 py-1.5 bg-gray-700 hover:bg-gray-600 text-white rounded-lg text-xs font-medium transition-colors mx-auto block">
+                  Change Image
+                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center mb-4">
+                        <div class="relative flex items-start">
+                            <div class="flex h-6 items-center">
+                                <input id="attach-files" type="checkbox" class="h-4 w-4 rounded border-gray-700 bg-gray-800 text-purple-600 focus:ring-purple-600 focus:ring-offset-gray-900" />
+                            </div>
+                            <div class="ml-3 text-sm leading-6">
+                                <label for="attach-files" class="text-gray-300">Attach additional files</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="additional-files-container" class="mb-4 hidden">
+                        <div class="p-3 border border-dashed border-gray-700 rounded-lg bg-gray-800/30">
+                            <div class="flex items-center justify-between mb-2">
+                                <p class="text-sm text-gray-300">Select files to upload</p>
+                                <button id="add-more-files-btn" class="text-xs text-purple-400 hover:text-purple-300">
+                  + Add more
+                </button>
+                            </div>
+                            <input type="file" id="additional-files-input" class="hidden" multiple />
+                            <button id="browse-additional-files-btn" class="px-3 py-1.5 mt-1 bg-gray-700 hover:bg-gray-600 text-white rounded-lg text-xs font-medium transition-colors w-full">
+                Browse Files
+              </button>
+                            <div id="selected-files-list" class="mt-3 space-y-2">
+                                <!-- Selected files will appear here -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-end gap-3">
+                        <button id="cancel-post-btn" class="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg font-medium transition-colors text-sm">
+              Cancel
+            </button>
+                        <button id="submit-post-btn" class="px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg font-medium shadow-lg hover:shadow-xl transition-all duration-300 text-sm">
+              Post Project
+            </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Delete Confirmation Modal -->
+        <div id="delete-confirmation-modal" class="hidden fixed inset-0 bg-black/75 backdrop-blur-sm flex items-center justify-center z-[60] transition-opacity duration-300">
+            <div class="w-full max-w-md rounded-xl shadow-2xl overflow-hidden transform transition-all duration-300" style="background-color: rgb(29, 26, 58)">
+                <div class="p-6">
+                    <div class="flex items-center justify-center mb-4 text-red-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-16 w-16">
+              <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+              <line x1="12" y1="9" x2="12" y2="13"></line>
+              <line x1="12" y1="17" x2="12.01" y2="17"></line>
+            </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-white text-center mb-2">Delete Post</h3>
+                    <p class="text-gray-300 text-center mb-6">Are you sure you want to delete this post? This action cannot be undone.</p>
+
+                    <div class="flex justify-center gap-4">
+                        <button id="cancel-delete-btn" class="px-5 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg font-medium transition-colors">
+              Cancel
+            </button>
+                        <button id="confirm-delete-btn" class="px-5 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-medium transition-colors">
+              Delete Post
+            </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+                // Data objects
+                const recentPosts = [{
+                    id: 1,
+                    title: "My Weekend Photography Project",
+                    author: "Alex",
+                    image: "https://images.unsplash.com/photo-1554048612-b6a482bc67e5?w=800&auto=format&fit=crop&q=60",
+                    type: "",
+                    description: "Spent the weekend exploring urban photography across the city. Would love feedback on my composition and lighting techniques. Anyone interested in joining me for photo walks on weekends?",
+                    personDetails: {
+                        name: "Alex",
+                        username: "@johnphoto",
+                        avatar: "https://images.unsplash.com/photo-1599566150163-29194dcaad36?w=400&auto=format&fit=crop&q=60",
+                        description: "Professional photographer with over 8 years of experience. Specializing in urban photography and portrait shoots. I enjoy teaching others and collaborating on creative projects.",
+                        location: "Brooklyn, NY",
+                        memberSince: "March 2021",
+                        skills: ["Urban Photography", "Portrait Photography", "Photo Editing", "Lighting"]
+                    },
+                    files: [{
+                        name: "camera_settings.pdf",
+                        type: "pdf",
+                        size: "1.2 MB",
+                        url: "#"
+                    }, {
+                        name: "photo_tips.docx",
+                        type: "doc",
+                        size: "580 KB",
+                        url: "#"
+                    }]
+                }, {
+                    id: 2,
+                    title: "Guitar Learning Progress - Month 3",
+                    author: "Alex",
+                    image: "https://images.unsplash.com/photo-1510915361894-db8b60106cb1?w=800&auto=format&fit=crop&q=60",
+                    type: "",
+                    description: "Three months into learning guitar and I can finally play some of my favorite songs! Sharing my progress and practice routine. If anyone has tips for improving fingerpicking techniques, I'd appreciate it.",
+                    personDetails: {
+                        name: "Alex",
+                        username: "@mariamusic",
+                        avatar: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&auto=format&fit=crop&q=60",
+                        description: "Music enthusiast learning guitar. I've been practicing daily for three months and documenting my journey. I enjoy folk and indie music, and hope to write my own songs eventually.",
+                        location: "Austin, TX",
+                        memberSince: "January 2022",
+                        skills: ["Guitar", "Music Theory", "Songwriting"]
+                    },
+                    files: [{
+                        name: "practice_routine.pdf",
+                        type: "pdf",
+                        size: "850 KB",
+                        url: "#"
+                    }, {
+                        name: "beginner_chords.jpg",
+                        type: "image",
+                        size: "1.5 MB",
+                        url: "#"
+                    }, {
+                        name: "song_progress.mp3",
+                        type: "audio",
+                        size: "4.2 MB",
+                        url: "#"
+                    }]
+                }, {
+                    id: 3,
+                    title: "Digital Art Character Design",
+                    author: "Alex",
+                    image: "https://images.unsplash.com/photo-1619410283995-43d9134e7656?w=800&auto=format&fit=crop&q=60",
+                    type: "",
+                    description: "Just finished this fantasy character design for my personal project. Created using Procreate with custom brushes. Looking for feedback on the color palette and proportions from fellow digital artists.",
+                    personDetails: {
+                        name: "Alex",
+                        username: "@alexarts",
+                        avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=400&auto=format&fit=crop&q=60",
+                        description: "Digital artist and illustrator with a passion for fantasy and anime art. I'm working on a series of character designs for my webcomic project launching next year.",
+                        location: "San Francisco, CA",
+                        memberSince: "August 2020",
+                        skills: ["Digital Illustration", "Character Design", "Concept Art", "Anime Style"]
+                    },
+                    files: [{
+                        name: "character_sketch.png",
+                        type: "image",
+                        size: "2.8 MB",
+                        url: "#"
+                    }, {
+                        name: "color_palette.pdf",
+                        type: "pdf",
+                        size: "640 KB",
+                        url: "#"
+                    }]
+                }, {
+                    id: 5,
+                    title: "My First Unity Game Prototype",
+                    author: "Alex",
+                    image: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=800&auto=format&fit=crop&q=60",
+                    type: "",
+                    description: "After six weeks of learning Unity, I've completed my first playable game prototype! It's a simple platformer with custom pixel art. Would love feedback on the mechanics and any suggestions for improvement.",
+                    personDetails: {
+                        name: "Alex",
+                        username: "@ryangamedev",
+                        avatar: "https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?w=400&auto=format&fit=crop&q=60",
+                        description: "Game development enthusiast learning Unity in my spare time. I'm passionate about indie games and hope to release my own title someday.",
+                        location: "Seattle, WA",
+                        memberSince: "May 2019",
+                        skills: ["Game Design", "Unity", "C#", "Pixel Art", "Level Design"]
+                    },
+                    files: [{
+                        name: "game_demo.mp4",
+                        type: "video",
+                        size: "12.5 MB",
+                        url: "#"
+                    }, {
+                        name: "scripts.zip",
+                        type: "zip",
+                        size: "3.4 MB",
+                        url: "#"
+                    }, {
+                        name: "level_design_notes.txt",
+                        type: "text",
+                        size: "45 KB",
+                        url: "#"
+                    }]
+                }];
+
+                const courses = [{
+                    id: 1,
+                    title: "Digital Art Fundamentals",
+                    instructor: "William",
+                    image: "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=800&auto=format&fit=crop&q=60",
+                    progress: 65,
+                    description: "Master the core principles of digital art in this comprehensive course. Learn about composition, color theory, and digital painting techniques using industry-standard software. Perfect for beginners looking to build a strong foundation in digital art creation.",
+                    rating: 4.8,
+                    reviews: 120,
+                    duration: "12 hours",
+                    lessons: 24
+                }, {
+                    id: 2,
+                    title: "Urban Sketching",
+                    instructor: "Mike Rivera",
+                    image: "https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=800&auto=format&fit=crop&q=60",
+                    progress: 30,
+                    description: "Capture the energy of city life through urban sketching. This course teaches you how to quickly sketch buildings, people, and urban scenes with confidence. Learn perspective techniques, ink and watercolor methods, and how to develop your own sketching style.",
+                    rating: 4.6,
+                    reviews: 85,
+                    duration: "8 hours",
+                    lessons: 16
+                }, {
+                    id: 3,
+                    title: "Pottery Basics",
+                    instructor: "Emma Thompson",
+                    image: "https://images.unsplash.com/photo-1493106641515-6b5631de4bb9?w=800&auto=format&fit=crop&q=60",
+                    progress: 45,
+                    description: "Discover the joy of working with clay in this hands-on pottery course. From centering clay on the wheel to glazing your finished pieces, you'll learn all the fundamental techniques needed to create beautiful ceramic works.",
+                    rating: 4.9,
+                    reviews: 150,
+                    duration: "10 hours",
+                    lessons: 20
+                }, {
+                    id: 4,
+                    title: "Music Production",
+                    instructor: "David Kim",
+                    image: "https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?w=800&auto=format&fit=crop&q=60",
+                    progress: 80,
+                    description: "Learn to produce professional-quality music from your home studio. This course covers everything from beat making and sound design to mixing and mastering. Suitable for beginners and intermediate producers alike.",
+                    rating: 4.7,
+                    reviews: 200,
+                    duration: "15 hours",
+                    lessons: 30
+                }];
+
+                const advancedCourses = [{
+                    id: 5,
+                    title: "Advanced Woodworking",
+                    instructor: "Wood Master",
+                    description: "Take your woodworking skills to the next level with advanced joinery techniques, furniture design principles, and finishing methods. This course includes hands-on projects that will challenge and inspire you.",
+                    image: "https://images.unsplash.com/photo-1533090368676-1fd25485db88?w=800&auto=format&fit=crop&q=60",
+                    rating: 4.9,
+                    reviews: 95,
+                    duration: "20 hours",
+                    lessons: 25
+                }, {
+                    id: 6,
+                    title: "Advanced Photography",
+                    instructor: "Lisa Wong",
+                    description: "Master professional lighting setups, advanced composition techniques, and post-processing workflows. This course is designed for photographers ready to elevate their work to a professional level.",
+                    image: "https://images.unsplash.com/photo-1542038784456-1ea8e935640e?w=800&auto=format&fit=crop&q=60",
+                    rating: 4.7,
+                    reviews: 110,
+                    duration: "18 hours",
+                    lessons: 22
+                }, {
+                    id: 7,
+                    title: "3D Modeling Masterclass",
+                    instructor: "John Smith",
+                    description: "Create complex 3D models for games, animation, and product visualization. Learn advanced modeling techniques, UV unwrapping, and texturing workflows used by industry professionals.",
+                    image: "https://images.unsplash.com/photo-1593720213428-28a5b9e94613?w=800&auto=format&fit=crop&q=60",
+                    rating: 4.8,
+                    reviews: 180,
+                    duration: "25 hours",
+                    lessons: 30
+                }, {
+                    id: 8,
+                    title: "Advanced Piano Techniques",
+                    instructor: "Maria Garcia",
+                    description: "Explore advanced piano repertoire, improvisation techniques, and performance skills. This course will help you develop your musicality and technical proficiency at the keyboard.",
+                    image: "https://images.unsplash.com/photo-1552422535-c45813c61732?w=800&auto=format&fit=crop&q=60",
+                    rating: 4.9,
+                    reviews: 75,
+                    duration: "15 hours",
+                    lessons: 20
+                }];
+
+                const activities = [{
+                    name: "Music",
+                    progress: 75
+                }, {
+                    name: "Fitness",
+                    progress: 45
+                }, {
+                    name: "Sports",
+                    progress: 60
+                }, {
+                    name: "Art",
+                    progress: 90
+                }];
+
+                const contacts = [{
+                    id: 1,
+                    name: 'Emma Wilson',
+                    avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&auto=format&fit=crop&q=60',
+                    lastMessage: 'Would you like to collaborate on a new project?',
+                    time: '10:45 AM',
+                    unread: 2,
+                    online: true
+                }, {
+                    id: 2,
+                    name: 'James Chen',
+                    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&auto=format&fit=crop&q=60',
+                    lastMessage: 'The photography workshop was amazing!',
+                    time: 'Yesterday',
+                    unread: 0,
+                    online: false
+                }, {
+                    id: 3,
+                    name: 'Sofia Rodriguez',
+                    avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&auto=format&fit=crop&q=60',
+                    lastMessage: 'I loved your pottery designs',
+                    time: 'Yesterday',
+                    unread: 1,
+                    online: true
+                }, {
+                    id: 4,
+                    name: 'Lucas Kim',
+                    avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&auto=format&fit=crop&q=60',
+                    lastMessage: 'Let me know when you\'re free to jam',
+                    time: 'Mon',
+                    unread: 0,
+                    online: false
+                }, {
+                    id: 5,
+                    name: 'Olivia Taylor',
+                    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=60',
+                    lastMessage: 'Can you share that painting technique?',
+                    time: 'Sun',
+                    unread: 0,
+                    online: true
+                }];
+
+                const contactMessages = {
+                    1: [{
+                        id: 1,
+                        content: 'Hi there! I saw your digital artwork on the platform',
+                        sender: 'contact',
+                        timestamp: '10:30 AM',
+                        contactId: 1
+                    }, {
+                        id: 2,
+                        content: 'Would you like to collaborate on a new project?',
+                        sender: 'contact',
+                        timestamp: '10:32 AM',
+                        contactId: 1
+                    }, {
+                        id: 3,
+                        content: 'That sounds interesting! What kind of project do you have in mind?',
+                        sender: 'user',
+                        timestamp: '10:40 AM',
+                        contactId: 1
+                    }, ],
+                    2: [{
+                        id: 1,
+                        content: 'The photography workshop was amazing!',
+                        sender: 'contact',
+                        timestamp: 'Yesterday',
+                        contactId: 2
+                    }, {
+                        id: 2,
+                        content: 'I learned so many new techniques',
+                        sender: 'contact',
+                        timestamp: 'Yesterday',
+                        contactId: 2
+                    }, {
+                        id: 3,
+                        content: 'Glad you enjoyed it! Would you like to join the advanced session next week?',
+                        sender: 'user',
+                        timestamp: 'Yesterday',
+                        contactId: 2
+                    }, ],
+                    3: [{
+                        id: 1,
+                        content: 'I loved your pottery designs',
+                        sender: 'contact',
+                        timestamp: 'Yesterday',
+                        contactId: 3
+                    }, {
+                        id: 2,
+                        content: 'Thank you! I\'ve been experimenting with new glazing techniques',
+                        sender: 'user',
+                        timestamp: 'Yesterday',
+                        contactId: 3
+                    }, {
+                        id: 3,
+                        content: 'They look amazing! Would you teach me sometime?',
+                        sender: 'contact',
+                        timestamp: 'Yesterday',
+                        contactId: 3
+                    }, ],
+                    4: [{
+                        id: 1,
+                        content: 'Let me know when you\'re free to jam',
+                        sender: 'contact',
+                        timestamp: 'Monday',
+                        contactId: 4
+                    }, {
+                        id: 2,
+                        content: 'I\'m free this weekend. Saturday afternoon?',
+                        sender: 'user',
+                        timestamp: 'Monday',
+                        contactId: 4
+                    }, {
+                        id: 3,
+                        content: 'Sounds good! I\'ll bring my guitar',
+                        sender: 'contact',
+                        timestamp: 'Monday',
+                        contactId: 4
+                    }, ],
+                    5: [{
+                        id: 1,
+                        content: 'Can you share that painting technique?',
+                        sender: 'contact',
+                        timestamp: 'Sunday',
+                        contactId: 5
+                    }, {
+                        id: 2,
+                        content: 'Of course! It\'s a wet-on-wet technique with acrylic paints',
+                        sender: 'user',
+                        timestamp: 'Sunday',
+                        contactId: 5
+                    }, {
+                        id: 3,
+                        content: 'Thanks! I\'ll try it out',
+                        sender: 'contact',
+                        timestamp: 'Sunday',
+                        contactId: 5
+                    }, ]
+                };
+
+                // File type icons mapping
+                const fileTypeIcons = {
+                    pdf: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 text-red-400"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><path d="M9 15h6"></path><path d="M9 11h6"></path></svg>',
+                    doc: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 text-blue-400"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>',
+                    image: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 text-green-400"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>',
+                    audio: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 text-yellow-400"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>',
+                    video: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 text-purple-400"><polygon points="23 7 16 12 23 17 23 7"></polygon><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect></svg>',
+                    zip: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 text-orange-400"><path d="M21 8v13H3V8"></path><path d="M1 3h22v5H1z"></path><path d="M10 12h4"></path></svg>',
+                    text: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 text-gray-400"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>',
+                    default: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 text-gray-400"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>'
+                };
+
+                // State management
+                let state = {
+                    chat: {
+                        isOpen: false,
+                        isExpanded: false,
+                        activeContactId: null,
+                        messageInput: '',
+                        messages: {...contactMessages
+                        }
+                    },
+                    search: {
+                        query: '',
+                        showResults: false
+                    },
+                    dropdowns: {
+                        notifications: false,
+                        profile: false
+                    },
+                    modals: {
+                        course: {
+                            isOpen: false,
+                            currentCourse: null
+                        },
+                        post: {
+                            isOpen: false,
+                            currentPost: null
+                        },
+                        createPost: {
+                            isOpen: false,
+                            imageFile: null,
+                            imagePreviewUrl: null,
+                            attachFiles: false,
+                            additionalFiles: []
+                        },
+                        deleteConfirmation: {
+                            isOpen: false,
+                            postId: null
+                        }
+                    },
+                    postIdCounter: 10 // Starting from a higher number than existing posts
+                };
+
+                // DOM Elements
+                const elements = {
+                    search: {
+                        input: document.getElementById('search-input'),
+                        results: document.getElementById('search-results')
+                    },
+                    dropdowns: {
+                        notifications: {
+                            button: document.getElementById('notifications-btn'),
+                            dropdown: document.getElementById('notifications-dropdown')
+                        },
+                        profile: {
+                            button: document.getElementById('profile-btn'),
+                            dropdown: document.getElementById('profile-dropdown')
+                        }
+                    },
+                    chat: {
+                        toggleButton: document.getElementById('chat-toggle-btn'),
+                        panel: document.getElementById('chat-panel'),
+                        expandButton: document.getElementById('chat-expand-btn'),
+                        closeButton: document.getElementById('chat-close-btn'),
+                        contactsList: document.getElementById('contacts-list'),
+                        chatMessages: document.getElementById('chat-messages'),
+                        backButton: document.getElementById('back-to-contacts'),
+                        activeContact: document.getElementById('active-contact'),
+                        chatTitle: document.getElementById('chat-title'),
+                        messageInput: document.getElementById('message-input'),
+                        sendButton: document.getElementById('send-message-btn'),
+                        messageInputContainer: document.getElementById('message-input-container')
+                    },
+                    sections: {
+                        recentPosts: {
+                            container: document.getElementById('recent-posts-container'),
+                            scrollLeft: document.getElementById('posts-scroll-left'),
+                            scrollRight: document.getElementById('posts-scroll-right')
+                        },
+                        recentCourses: {
+                            container: document.getElementById('recent-courses-container'),
+                            scrollLeft: document.getElementById('recent-courses-scroll-left'),
+                            scrollRight: document.getElementById('recent-courses-scroll-right')
+                        },
+                        advancedCourses: {
+                            container: document.getElementById('advanced-courses-container'),
+                            scrollLeft: document.getElementById('advanced-courses-scroll-left'),
+                            scrollRight: document.getElementById('advanced-courses-scroll-right')
+                        },
+                        activities: {
+                            container: document.getElementById('activities-container')
+                        }
+                    },
+                    modals: {
+                        course: {
+                            modal: document.getElementById('course-modal'),
+                            closeButton: document.getElementById('close-course-modal'),
+                            title: document.getElementById('course-modal-title'),
+                            image: document.getElementById('course-modal-image'),
+                            instructor: document.getElementById('course-modal-instructor'),
+                            rating: document.getElementById('course-modal-rating'),
+                            duration: document.getElementById('course-modal-duration'),
+                            lessons: document.getElementById('course-modal-lessons'),
+                            description: document.getElementById('course-modal-description'),
+                            progressContainer: document.getElementById('course-modal-progress-container'),
+                            progressValue: document.getElementById('course-modal-progress-value'),
+                            progressBar: document.getElementById('course-modal-progress-bar'),
+                            startButton: document.getElementById('course-modal-start-btn')
+                        },
+                        post: {
+                            modal: document.getElementById('post-modal'),
+                            closeButton: document.getElementById('close-post-modal'),
+                            image: document.getElementById('post-modal-image'),
+                            title: document.getElementById('post-modal-title'),
+                            author: document.getElementById('post-modal-author'),
+                            description: document.getElementById('post-modal-description'),
+                            filesSection: document.getElementById('post-modal-files-section'),
+                            filesList: document.getElementById('post-modal-files-list'),
+                            shareButton: document.getElementById('share-post-btn'),
+                            deleteButton: document.getElementById('delete-post-btn')
+                        },
+                        createPost: {
+                            modal: document.getElementById('create-post-modal'),
+                            closeButton: document.getElementById('close-create-post-modal'),
+                            titleInput: document.getElementById('post-title'),
+                            descriptionInput: document.getElementById('post-description'),
+                            fileUploadArea: document.getElementById('file-upload-area'),
+                            fileInput: document.getElementById('file-upload-input'),
+                            browseButton: document.getElementById('browse-files-btn'),
+                            uploadIconContainer: document.getElementById('upload-icon-container'),
+                            imagePreviewContainer: document.getElementById('image-preview-container'),
+                            imagePreview: document.getElementById('image-preview'),
+                            changeImageButton: document.getElementById('change-image-btn'),
+                            cancelButton: document.getElementById('cancel-post-btn'),
+                            submitButton: document.getElementById('submit-post-btn'),
+                            attachFilesCheckbox: document.getElementById('attach-files'),
+                            additionalFilesContainer: document.getElementById('additional-files-container'),
+                            additionalFilesInput: document.getElementById('additional-files-input'),
+                            browseAdditionalFilesBtn: document.getElementById('browse-additional-files-btn'),
+                            addMoreFilesBtn: document.getElementById('add-more-files-btn'),
+                            selectedFilesList: document.getElementById('selected-files-list')
+                        },
+                        deleteConfirmation: {
+                            modal: document.getElementById('delete-confirmation-modal'),
+                            cancelButton: document.getElementById('cancel-delete-btn'),
+                            confirmButton: document.getElementById('confirm-delete-btn')
+                        }
+                    },
+                    createPostButton: document.getElementById('create-post-btn'),
+                    wishlistButton: document.getElementById('wishlist-btn')
+                };
+
+                // Initialize components
+                function initializeComponents() {
+                    renderRecentPosts();
+                    renderRecentCourses();
+                    renderAdvancedCourses();
+                    renderActivities();
+                    renderContacts();
+                    setupEventListeners();
+                }
+
+                // Search functionality
+                function highlightMatches(text, query) {
+                    if (!query) return text;
+                    const regex = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+                    return text.replace(regex, '<span class="search-highlight">$1</span>');
+                }
+
+                function handleSearch(e) {
+                    const query = e.target.value.trim();
+                    state.search.query = query;
+                    state.search.showResults = query.length >= 2;
+
+                    if (state.search.showResults) {
+                        renderSearchResults(query);
+                    }
+
+                    elements.search.results.classList.toggle('hidden', !state.search.showResults);
+                }
+
+                function renderSearchResults(query) {
+                    const resultsContainer = elements.search.results;
+                    resultsContainer.innerHTML = '';
+
+                    // Combine all searchable items
+                    const allCourses = [...courses, ...advancedCourses];
+
+                    // Filter items based on query
+                    const filteredCourses = allCourses.filter(course =>
+                        course.title.toLowerCase().includes(query.toLowerCase()) ||
+                        course.instructor.toLowerCase().includes(query.toLowerCase()) ||
+                        course.description.toLowerCase().includes(query.toLowerCase())
+                    );
+
+                    const filteredPosts = recentPosts.filter(post =>
+                        post.title.toLowerCase().includes(query.toLowerCase()) ||
+                        post.author.toLowerCase().includes(query.toLowerCase()) ||
+                        post.description.toLowerCase().includes(query.toLowerCase())
+                    );
+
+                    // Get unique instructors from search
+                    const instructors = new Set();
+                    allCourses.forEach(course => {
+                        if (course.instructor.toLowerCase().includes(query.toLowerCase())) {
+                            instructors.add(course.instructor);
+                        }
+                    });
+
+                    const instructorsList = Array.from(instructors);
+
+                    // Create search results
+                    const resultsContent = document.createElement('div');
+                    resultsContent.className = 'p-4';
+
+                    // No results found
+                    if (filteredCourses.length === 0 && filteredPosts.length === 0 && instructorsList.length === 0) {
+                        resultsContent.innerHTML = `
+            <div class="text-center py-4">
+              <p class="text-gray-400">No results found for "${query}"</p>
+            </div>
+          `;
+                        resultsContainer.appendChild(resultsContent);
+                        return;
+                    }
+
+                    // Create instructors section
+                    if (instructorsList.length > 0) {
+                        resultsContent.innerHTML += `
+            <h3 class="text-sm uppercase text-gray-400 font-semibold mb-2">Instructors</h3>
+            <div class="space-y-2 mb-4">
+              ${instructorsList.map(instructor => `
+                <div class="flex items-center p-2 hover:bg-gray-700/50 rounded transition-colors cursor-pointer">
+                  <div class="ml-2">
+                    <p class="text-white">${highlightMatches(instructor, query)}</p>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          `;
+        }
+        
+        // Create courses section
+        if (filteredCourses.length > 0) {
+          resultsContent.innerHTML += `
+            <h3 class="text-sm uppercase text-gray-400 font-semibold mb-2">Courses</h3>
+            <div class="space-y-3 mb-4">
+              ${filteredCourses.slice(0, 3).map(course => `
+                <div class="flex items-start gap-3 p-2 hover:bg-gray-700/50 rounded transition-colors cursor-pointer" data-course-id="${course.id}">
+                  <img
+                    src="${course.image}"
+                    alt="${course.title}"
+                    class="w-12 h-12 rounded object-cover"
+                  />
+                  <div>
+                    <h4 class="font-medium text-white">${highlightMatches(course.title, query)}</h4>
+                    <p class="text-sm text-gray-400">${highlightMatches(course.instructor, query)}</p>
+                  </div>
+                </div>
+              `).join('')}
+              ${filteredCourses.length > 3 ? `<p class="text-sm text-purple-400 cursor-pointer hover:text-purple-300 transition-colors px-2">See ${filteredCourses.length - 3} more courses</p>` : ''}
+            </div>
+          `;
+        }
+        
+        // Create posts section
+        if (filteredPosts.length > 0) {
+          resultsContent.innerHTML += `
+            <h3 class="text-sm uppercase text-gray-400 font-semibold mb-2">Posts</h3>
+            <div class="space-y-3">
+              ${filteredPosts.slice(0, 3).map(post => `
+                <div class="flex items-start gap-3 p-2 hover:bg-gray-700/50 rounded transition-colors cursor-pointer" data-post-id="${post.id}">
+                  <img
+                    src="${post.image}"
+                    alt="${post.title}"
+                    class="w-12 h-12 rounded object-cover"
+                  />
+                  <div>
+                    <h4 class="font-medium text-white">${highlightMatches(post.title, query)}</h4>
+                    <p class="text-sm text-gray-400">by ${highlightMatches(post.author, query)}</p>
+                  </div>
+                </div>
+              `).join('')}
+              ${filteredPosts.length > 3 ? `<p class="text-sm text-purple-400 cursor-pointer hover:text-purple-300 transition-colors px-2">See ${filteredPosts.length - 3} more posts</p>` : ''}
+            </div>
+          `;
+        }
+        
+        resultsContainer.appendChild(resultsContent);
+        
+        // Add event listeners to search results
+        const courseItems = resultsContainer.querySelectorAll('[data-course-id]');
+        courseItems.forEach(item => {
+          item.addEventListener('click', () => {
+            const courseId = parseInt(item.dataset.courseId);
+            openCourseModal(courseId);
+            closeSearchResults();
+          });
+        });
+        
+        const postItems = resultsContainer.querySelectorAll('[data-post-id]');
+        postItems.forEach(item => {
+          item.addEventListener('click', () => {
+            const postId = parseInt(item.dataset.postId);
+            openPostModal(postId);
+            closeSearchResults();
+          });
+        });
+      }
+      
+      function closeSearchResults() {
+        state.search.showResults = false;
+        elements.search.results.classList.add('hidden');
+      }
+
+      // Render functions
+      function renderRecentPosts() {
+        const container = elements.sections.recentPosts.container;
+        container.innerHTML = '';
+
+        recentPosts.forEach(post => {
+          const postCard = document.createElement('div');
+          postCard.className = 'flex-none w-80 backdrop-blur-sm rounded-xl overflow-hidden border border-gray-700 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer';
+          postCard.style.backgroundColor = 'rgba(29, 26, 58, 0.6)';
+          postCard.dataset.id = post.id;
+          
+          const hasFiles = post.files && post.files.length > 0;
+          
+          postCard.innerHTML = `
+            <img 
+              src="${post.image}" 
+              alt="${post.title}" 
+              class="w-full h-48 object-cover"
+            />
+            <div class="p-4">
+              <div class="flex items-center justify-between mb-2">
+                <h3 class="text-lg font-semibold text-white">${post.title}</h3>
+                ${post.type ? `<span class="text-xs px-2 py-1 rounded-full">${post.type}</span>` : ''}
+              </div>
+              <div class="flex justify-between items-center">
+                <p class="text-sm text-gray-400">by ${post.author}</p>
+                ${hasFiles ? `
+                  <div class="flex items-center gap-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4 text-purple-400">
+                      <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
+                      <polyline points="13 2 13 9 20 9"></polyline>
+                    </svg>
+                    <span class="text-xs text-purple-400">${post.files.length} ${post.files.length === 1 ? 'file' : 'files'}</span>
+                  </div>
+                ` : ''}
+              </div>
+            </div>
+          `;
+          
+          postCard.addEventListener('click', () => openPostModal(post.id));
+          container.appendChild(postCard);
+        });
+      }
+
+      function renderRecentCourses() {
+        const container = elements.sections.recentCourses.container;
+        container.innerHTML = '';
+
+        courses.forEach(course => {
+          const courseCard = document.createElement('div');
+          courseCard.className = 'flex-none w-80 backdrop-blur-sm rounded-xl overflow-hidden border border-gray-700 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer';
+          courseCard.style.backgroundColor = 'rgba(29, 26, 58, 0.6)';
+          courseCard.dataset.id = course.id;
+          
+          courseCard.innerHTML = `
+            <img 
+              src="${course.image}" 
+              alt="${course.title}" 
+              class="w-full h-48 object-cover"
+            />
+            <div class="p-4">
+              <h3 class="text-lg font-semibold text-white mb-1">${course.title}</h3>
+              <p class="text-sm text-gray-400 mb-3">by ${course.instructor}</p>
+              <p class="text-sm text-gray-300 mb-3 line-clamp-2">${course.description}</p>
+              <div class="mt-2">
+                <div class="flex justify-between text-xs text-gray-400 mb-1">
+                  <span>Progress</span>
+                  <span>${course.progress}%</span>
+                </div>
+                <div class="h-2 bg-gray-700 rounded-full overflow-hidden">
+                  <div 
+                    class="h-full bg-gradient-to-r from-purple-500 to-pink-500 rounded-full"
+                    style="width: ${course.progress}%"
+                  ></div>
+                </div>
+              </div>
+            </div>
+          `;
+          
+          courseCard.addEventListener('click', () => openCourseModal(course.id));
+          container.appendChild(courseCard);
+        });
+      }
+
+      function renderAdvancedCourses() {
+        const container = elements.sections.advancedCourses.container;
+        container.innerHTML = '';
+
+        advancedCourses.forEach(course => {
+          const courseCard = document.createElement('div');
+          courseCard.className = 'flex-none w-80 backdrop-blur-sm rounded-xl overflow-hidden border border-gray-700 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer';
+          courseCard.style.backgroundColor = 'rgba(29, 26, 58, 0.6)';
+          courseCard.dataset.id = course.id;
+          
+          courseCard.innerHTML = `
+            <img 
+              src="${course.image}" 
+              alt="${course.title}" 
+              class="w-full h-48 object-cover"
+            />
+            <div class="p-4">
+              <h3 class="text-lg font-semibold text-white mb-1">${course.title}</h3>
+              <p class="text-sm text-gray-400 mb-3">by ${course.instructor}</p>
+              <p class="text-sm text-gray-300 mb-3 line-clamp-2">${course.description}</p>
+            </div>
+          `;
+          
+          courseCard.addEventListener('click', () => openCourseModal(course.id));
+          container.appendChild(courseCard);
+        });
+      }
+
+      function renderActivities() {
+        const container = elements.sections.activities.container;
+        container.innerHTML = '';
+
+        activities.forEach((activity, index) => {
+          const activityCard = document.createElement('div');
+          activityCard.className = 'backdrop-blur-sm rounded-xl p-6 border border-gray-700 shadow-lg hover:shadow-xl transition-all duration-300';
+          activityCard.style.backgroundColor = 'rgba(29, 26, 58, 0.6)';
+          
+          activityCard.innerHTML = `
+            <h3 class="text-lg font-semibold text-white mb-4">${activity.name}</h3>
+            <div class="flex justify-between text-sm text-gray-400 mb-2">
+              <span>Progress</span>
+              <span>${activity.progress}%</span>
+            </div>
+            <div class="h-3 bg-gray-700 rounded-full overflow-hidden">
+              <div 
+                class="h-full bg-gradient-to-r from-purple-500 to-pink-500 rounded-full transition-all duration-700 ease-in-out"
+                style="width: ${activity.progress}%"
+              ></div>
+            </div>
+          `;
+          
+          container.appendChild(activityCard);
+        });
+      }
+
+      function renderContacts() {
+        const container = elements.chat.contactsList;
+        container.innerHTML = '';
+
+        contacts.forEach(contact => {
+          const contactCard = document.createElement('div');
+          contactCard.className = 'flex items-center p-4 hover:bg-gray-700/50 cursor-pointer transition-colors';
+          contactCard.dataset.id = contact.id;
+          
+          contactCard.innerHTML = `
+            <div class="relative">
+              <img
+                src="${contact.avatar}"
+                alt="${contact.name}"
+                class="w-12 h-12 rounded-full object-cover"
+              />
+              ${contact.online ? 
+                '<div class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-gray-800"></div>' : 
+                ''}
+              ${contact.unread > 0 ? 
+                `<div class="absolute -top-1 -right-1 w-5 h-5 bg-purple-500 rounded-full flex items-center justify-center">
+                  <span class="text-white text-xs">${contact.unread}</span>
+                </div>` : 
+                ''}
+            </div>
+            <div class="ml-4 flex-grow">
+              <div class="flex justify-between">
+                <h4 class="font-medium text-white">${contact.name}</h4>
+                <span class="text-xs text-gray-400">${contact.time}</span>
+              </div>
+              <p class="text-sm text-gray-400 line-clamp-1">${contact.lastMessage}</p>
+            </div>
+          `;
+          
+          contactCard.addEventListener('click', () => openChatWithContact(contact.id));
+          container.appendChild(contactCard);
+        });
+      }
+
+      function renderMessages(contactId) {
+        const messagesContainer = elements.chat.chatMessages;
+        messagesContainer.innerHTML = '';
+        
+        const messages = state.chat.messages[contactId] || [];
+        
+        messages.forEach(message => {
+          const messageEl = document.createElement('div');
+          messageEl.className = `mb-4 max-w-[75%] ${
+            message.sender === 'user' ? 'ml-auto' : 'mr-auto'
+          }`;
+          
+          messageEl.innerHTML = `
+            <div class="${
+              message.sender === 'user'
+                ? 'bg-purple-600 text-white rounded-lg rounded-br-none p-3'
+                : 'bg-gray-700 text-white rounded-lg rounded-bl-none p-3'
+            }">
+              ${message.content}
+            </div>
+            <div class="${
+              message.sender === 'user' ? 'text-right' : 'text-left'
+            } text-xs mt-1 text-gray-400">
+              ${message.timestamp}
+            </div>
+          `;
+          
+          messagesContainer.appendChild(messageEl);
+        });
+        
+        // Scroll to bottom
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+      }
+
+      function renderPostFiles(post) {
+        const filesSection = elements.modals.post.filesSection;
+        const filesList = elements.modals.post.filesList;
+        
+        // Hide files section if no files
+        if (!post.files || post.files.length === 0) {
+          filesSection.classList.add('hidden');
+          return;
+        }
+        
+        // Show files section and populate files
+        filesSection.classList.remove('hidden');
+        filesList.innerHTML = '';
+        
+        post.files.forEach(file => {
+          const fileItem = document.createElement('div');
+          fileItem.className = 'file-item flex items-center justify-between p-3 bg-gray-700/30 rounded-lg hover:bg-gray-700/50 transition-all duration-200';
+          
+          // Get icon based on file type or use default
+          const fileIcon = fileTypeIcons[file.type] || fileTypeIcons.default;
+          
+          fileItem.innerHTML = `
+            <div class="flex items-center space-x-3 flex-1">
+              <div class="flex-shrink-0">
+                ${fileIcon}
+              </div>
+              <div class="min-w-0 flex-1">
+                <p class="text-sm font-medium text-white truncate">${file.name}</p>
+                <p class="text-xs text-gray-400">${file.size}</p>
+              </div>
+            </div>
+            <a 
+              href="${file.url}" 
+              download="${file.name}"
+              class="download-btn ml-4 p-2 bg-gray-700 rounded-full hover:bg-purple-700 transition-colors flex-shrink-0"
+              title="Download file"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4 text-white">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="7 10 12 15 17 10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
+              </svg>
+            </a>
+          `;
+          
+          filesList.appendChild(fileItem);
+        });
+      }
+
+      // Event handlers
+      function openChatWithContact(contactId) {
+        const contact = contacts.find(c => c.id === contactId);
+        if (!contact) return;
+        
+        state.chat.activeContactId = contactId;
+        
+        elements.chat.backButton.classList.remove('hidden');
+        elements.chat.contactsList.classList.add('hidden');
+        elements.chat.chatMessages.classList.remove('hidden');
+        elements.chat.messageInputContainer.classList.remove('hidden');
+        
+        elements.chat.activeContact.innerHTML = `
+          <div class="relative">
+            <img
+              src="${contact.avatar}"
+              alt="${contact.name}"
+              class="w-8 h-8 rounded-full object-cover"
+            />
+            ${contact.online ? 
+              '<div class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 rounded-full border-2 border-gray-800"></div>' : 
+              ''}
+          </div>
+        `;
+        elements.chat.activeContact.classList.remove('hidden');
+        
+        elements.chat.chatTitle.textContent = contact.name;
+        
+        renderMessages(contactId);
+      }
+
+      function backToChatsList() {
+        state.chat.activeContactId = null;
+        
+        elements.chat.backButton.classList.add('hidden');
+        elements.chat.activeContact.classList.add('hidden');
+        elements.chat.contactsList.classList.remove('hidden');
+        elements.chat.chatMessages.classList.add('hidden');
+        elements.chat.messageInputContainer.classList.add('hidden');
+        
+        elements.chat.chatTitle.textContent = 'Messages';
+      }
+
+      function sendMessage() {
+        const input = elements.chat.messageInput;
+        const message = input.value.trim();
+        
+        if (!message || !state.chat.activeContactId) return;
+        
+        const currentTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        
+        const newMessage = {
+          id: (state.chat.messages[state.chat.activeContactId]?.length || 0) + 1,
+          content: message,
+          sender: 'user',
+          timestamp: currentTime,
+          contactId: state.chat.activeContactId
+        };
+        
+        if (!state.chat.messages[state.chat.activeContactId]) {
+          state.chat.messages[state.chat.activeContactId] = [];
+        }
+        
+        state.chat.messages[state.chat.activeContactId].push(newMessage);
+        input.value = '';
+        
+        renderMessages(state.chat.activeContactId);
+        
+        // Simulate response
+        setTimeout(() => {
+          const responses = [
+            "That sounds great! When would you like to meet?",
+            "I'd love to collaborate! What did you have in mind?",
+            "Thanks for reaching out! Let's discuss the details.",
+            "Perfect! I'll send you more information shortly.",
+            "Awesome! Looking forward to working together!"
+          ];
+          
+          const responseMessage = {
+            id: (state.chat.messages[state.chat.activeContactId]?.length || 0) + 1,
+            content: responses[Math.floor(Math.random() * responses.length)],
+            sender: 'contact',
+            timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+            contactId: state.chat.activeContactId
+          };
+          
+          state.chat.messages[state.chat.activeContactId].push(responseMessage);
+          renderMessages(state.chat.activeContactId);
+        }, 1000);
+      }
+
+      function toggleChat() {
+        state.chat.isOpen = !state.chat.isOpen;
+        elements.chat.toggleButton.classList.toggle('hidden', state.chat.isOpen);
+        elements.chat.panel.classList.toggle('hidden', !state.chat.isOpen);
+      }
+
+      function toggleChatSize() {
+        state.chat.isExpanded = !state.chat.isExpanded;
+        
+        if (state.chat.isExpanded) {
+          elements.chat.panel.classList.remove('h-[500px]', 'bottom-0', 'right-4', 'rounded-t-lg');
+          elements.chat.panel.classList.add('h-[calc(100vh-4rem)]', 'top-16', 'right-0', 'border-l');
+        } else {
+          elements.chat.panel.classList.add('h-[500px]', 'bottom-0', 'right-4', 'rounded-t-lg');
+          elements.chat.panel.classList.remove('h-[calc(100vh-4rem)]', 'top-16', 'right-0', 'border-l');
+        }
+      }
+
+      function toggleDropdown(dropdown) {
+        // Close all dropdowns first
+        Object.keys(state.dropdowns).forEach(key => {
+          if (key !== dropdown) {
+            state.dropdowns[key] = false;
+            elements.dropdowns[key].dropdown.classList.add('hidden');
+          }
+        });
+        
+        // Toggle the selected dropdown
+        state.dropdowns[dropdown] = !state.dropdowns[dropdown];
+        elements.dropdowns[dropdown].dropdown.classList.toggle('hidden', !state.dropdowns[dropdown]);
+      }
+
+      function handleWishlistClick() {
+        showToast();
+      }
+
+      function handleScroll(container, direction) {
+        const scrollAmount = 320;
+        const currentScroll = container.scrollLeft;
+        const newScroll = direction === 'left' 
+          ? Math.max(0, currentScroll - scrollAmount)
+          : Math.min(container.scrollWidth - container.clientWidth, currentScroll + scrollAmount);
+        
+        container.scrollTo({
+          left: newScroll,
+          behavior: 'smooth'
+        });
+      }
+
+      function openCourseModal(id) {
+        const allCourses = [...courses, ...advancedCourses];
+        const course = allCourses.find(c => c.id === parseInt(id));
+        
+        if (!course) return;
+        
+        state.modals.course.isOpen = true;
+        state.modals.course.currentCourse = course;
+        
+        elements.modals.course.title.textContent = course.title;
+        elements.modals.course.image.src = course.image;
+        elements.modals.course.image.alt = course.title;
+        elements.modals.course.instructor.textContent = `by ${course.instructor}`;
+        elements.modals.course.rating.textContent = `${course.rating} (${course.reviews} reviews)`;
+        elements.modals.course.duration.textContent = course.duration;
+        elements.modals.course.lessons.textContent = `${course.lessons} lessons`;
+        elements.modals.course.description.textContent = course.description;
+        
+        if (course.progress !== undefined) {
+  elements.modals.course.progressContainer.classList.remove('hidden');
+  elements.modals.course.progressValue.textContent = `${course.progress}%`;
+  elements.modals.course.progressBar.style.width = `${course.progress}%`;
+  elements.modals.course.startButton.textContent = 'Continue Learning';
+
+  // Add redirect on button click for "Continue Learning"
+  elements.modals.course.startButton.onclick = () => {
+    window.location.href = 'https://singular-kringle-5f87fe.netlify.app/content-painting';
+  };
+
+} else {
+  elements.modals.course.progressContainer.classList.add('hidden');
+  elements.modals.course.startButton.textContent = 'Start Learning';
+
+  // Add redirect on button click for "Start Learning"
+  elements.modals.course.startButton.onclick = () => {
+    window.location.href = 'https://singular-kringle-5f87fe.netlify.app/skill%20course%20page';
+  };
+}
+
+        
+        elements.modals.course.modal.classList.remove('hidden');
+      }
+
+      function closeCourseModal() {
+        state.modals.course.isOpen = false;
+        state.modals.course.currentCourse = null;
+        elements.modals.course.modal.classList.add('hidden');
+      }
+
+      function openPostModal(id) {
+        const post = recentPosts.find(p => p.id === parseInt(id));
+        
+        if (!post) return;
+        
+        state.modals.post.isOpen = true;
+        state.modals.post.currentPost = post;
+        
+        elements.modals.post.image.src = post.image;
+        elements.modals.post.image.alt = post.title;
+        elements.modals.post.title.textContent = post.title;
+        elements.modals.post.author.textContent = `by ${post.author}`;
+        elements.modals.post.description.textContent = post.description;
+        
+        // Render post files
+        renderPostFiles(post);
+        
+        elements.modals.post.modal.classList.remove('hidden');
+      }
+
+      function closePostModal() {
+        state.modals.post.isOpen = false;
+        state.modals.post.currentPost = null;
+        elements.modals.post.modal.classList.add('hidden');
+      }
+
+      function openCreatePostModal() {
+        // Reset form fields
+        elements.modals.createPost.titleInput.value = '';
+        elements.modals.createPost.descriptionInput.value = '';
+        
+        // Reset image preview
+        state.modals.createPost.imageFile = null;
+        state.modals.createPost.imagePreviewUrl = null;
+        elements.modals.createPost.imagePreview.src = '';
+        elements.modals.createPost.uploadIconContainer.classList.remove('hidden');
+        elements.modals.createPost.imagePreviewContainer.classList.add('hidden');
+        
+        // Reset additional files
+        state.modals.createPost.attachFiles = false;
+        state.modals.createPost.additionalFiles = [];
+        elements.modals.createPost.attachFilesCheckbox.checked = false;
+        elements.modals.createPost.additionalFilesContainer.classList.add('hidden');
+        elements.modals.createPost.selectedFilesList.innerHTML = '';
+        
+        // Show modal
+        state.modals.createPost.isOpen = true;
+        elements.modals.createPost.modal.classList.remove('hidden');
+      }
+
+      function closeCreatePostModal() {
+        state.modals.createPost.isOpen = false;
+        elements.modals.createPost.modal.classList.add('hidden');
+      }
+
+      function toggleAdditionalFilesSection() {
+        state.modals.createPost.attachFiles = elements.modals.createPost.attachFilesCheckbox.checked;
+        elements.modals.createPost.additionalFilesContainer.classList.toggle('hidden', !state.modals.createPost.attachFiles);
+      }
+
+      function handleFileUpload(file) {
+        if (!file || !file.type.startsWith('image/')) {
+          showToast('Please select a valid image file');
+          return;
+        }
+        
+        state.modals.createPost.imageFile = file;
+        
+        // Create a preview of the image
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          state.modals.createPost.imagePreviewUrl = e.target.result;
+          elements.modals.createPost.imagePreview.src = e.target.result;
+          elements.modals.createPost.uploadIconContainer.classList.add('hidden');
+          elements.modals.createPost.imagePreviewContainer.classList.remove('hidden');
+        };
+        reader.readAsDataURL(file);
+      }
+
+      function handleAdditionalFilesUpload(files) {
+        if (!files || files.length === 0) return;
+        
+        // Add files to state
+        for (let i = 0; i < files.length; i++) {
+          state.modals.createPost.additionalFiles.push(files[i]);
+        }
+        
+        // Update UI
+        renderSelectedFiles();
+      }
+
+      function renderSelectedFiles() {
+        const container = elements.modals.createPost.selectedFilesList;
+        container.innerHTML = '';
+        
+        state.modals.createPost.additionalFiles.forEach((file, index) => {
+          const fileItem = document.createElement('div');
+          fileItem.className = 'flex items-center justify-between p-2 bg-gray-700/50 rounded-lg text-sm';
+          
+          fileItem.innerHTML = `
+            <span class="text-gray-200 truncate max-w-[200px]">${file.name}</span>
+            <button 
+              class="text-gray-400 hover:text-red-400 transition-colors p-1"
+              data-index="${index}"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </button>
+          `;
+          
+          const removeButton = fileItem.querySelector('button');
+          removeButton.addEventListener('click', () => {
+            state.modals.createPost.additionalFiles.splice(index, 1);
+            renderSelectedFiles();
+          });
+          
+          container.appendChild(fileItem);
+        });
+      }
+
+      function handleFileDrop(e) {
+        e.preventDefault();
+        elements.modals.createPost.fileUploadArea.classList.remove('drag-over');
+        
+        if (e.dataTransfer.files.length > 0) {
+          const file = e.dataTransfer.files[0];
+          handleFileUpload(file);
+        }
+      }
+
+      function createNewPost() {
+        const title = elements.modals.createPost.titleInput.value.trim();
+        const description = elements.modals.createPost.descriptionInput.value.trim();
+        const imageUrl = state.modals.createPost.imagePreviewUrl;
+        
+        if (!title) {
+          showToast('Please enter a title for your project');
+          elements.modals.createPost.titleInput.focus();
+          return;
+        }
+        
+        if (!description) {
+          showToast('Please enter a description for your project');
+          elements.modals.createPost.descriptionInput.focus();
+          return;
+        }
+        
+        if (!imageUrl) {
+          showToast('Please upload an image for your project');
+          return;
+        }
+        
+        // Process additional files if any
+        const files = [];
+        if (state.modals.createPost.attachFiles && state.modals.createPost.additionalFiles.length > 0) {
+          state.modals.createPost.additionalFiles.forEach(file => {
+            // Get file extension
+            const fileExtension = file.name.split('.').pop().toLowerCase();
+            let fileType = 'default';
+            
+            // Determine file type based on extension
+            if (['pdf'].includes(fileExtension)) {
+              fileType = 'pdf';
+            } else if (['doc', 'docx', 'txt', 'rtf'].includes(fileExtension)) {
+              fileType = 'doc';
+            } else if (['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg'].includes(fileExtension)) {
+              fileType = 'image';
+            } else if (['mp3', 'wav', 'ogg', 'flac'].includes(fileExtension)) {
+              fileType = 'audio';
+            } else if (['mp4', 'webm', 'mov', 'avi'].includes(fileExtension)) {
+              fileType = 'video';
+            } else if (['zip', 'rar', '7z', 'tar', 'gz'].includes(fileExtension)) {
+              fileType = 'zip';
+            } else if (['txt', 'md'].includes(fileExtension)) {
+              fileType = 'text';
+            }
+            
+            // Format file size
+            const fileSize = file.size;
+            let formattedSize;
+            
+            if (fileSize < 1024) {
+              formattedSize = `${fileSize} B`;
+            } else if (fileSize < 1024 * 1024) {
+              formattedSize = `${Math.round(fileSize / 1024)} KB`;
+            } else {
+              formattedSize = `${Math.round(fileSize / (1024 * 1024) * 10) / 10} MB`;
+            }
+            
+            files.push({
+              name: file.name,
+              type: fileType,
+              size: formattedSize,
+              url: URL.createObjectURL(file) // Create a temporary URL
+            });
+          });
+        }
+        
+        // Create new post
+        const newPost = {
+          id: state.postIdCounter++,
+          title: title,
+          author: 'Alex', // Current user
+          image: imageUrl,
+          description: description,
+          personDetails: {
+            name: 'Alex',
+            username: '@alex',
+            avatar: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=400&auto=format&fit=crop&q=60',
+            description: 'Creative developer and designer passionate about building innovative projects.',
+            location: 'San Francisco, CA',
+            memberSince: 'January 2024',
+            skills: ['Web Development', 'UI/UX Design', 'Photography', 'Creative Coding']
+          },
+          files: files
+        };
+        
+        // Add to beginning of posts array
+        recentPosts.unshift(newPost);
+        
+        // Re-render posts
+        renderRecentPosts();
+        
+        // Close modal
+        closeCreatePostModal();
+        
+        // Show success notification
+        showToast('Project posted successfully!');
+      }
+
+      function openDeleteConfirmationModal(postId) {
+        state.modals.deleteConfirmation.isOpen = true;
+        state.modals.deleteConfirmation.postId = postId;
+        elements.modals.deleteConfirmation.modal.classList.remove('hidden');
+      }
+
+      function closeDeleteConfirmationModal() {
+        state.modals.deleteConfirmation.isOpen = false;
+        state.modals.deleteConfirmation.postId = null;
+        elements.modals.deleteConfirmation.modal.classList.add('hidden');
+      }
+
+      function deletePost() {
+        const postId = state.modals.deleteConfirmation.postId;
+        if (!postId) return;
+        
+        // Find post index and remove it
+        const postIndex = recentPosts.findIndex(p => p.id === postId);
+        if (postIndex !== -1) {
+          recentPosts.splice(postIndex, 1);
+          
+          // Re-render posts
+          renderRecentPosts();
+          
+          // Close modals
+          closeDeleteConfirmationModal();
+          closePostModal();
+          
+          // Show success notification
+          showToast('Post deleted successfully!');
+        }
+      }
+
+      function sharePost() {
+        if (!state.modals.post.currentPost) return;
+        
+        // Use navigator.share if available, otherwise copy to clipboard
+        if (navigator.share) {
+          navigator.share({
+            title: state.modals.post.currentPost.title,
+            text: `Check out this post from ${state.modals.post.currentPost.author}: ${state.modals.post.currentPost.title}`,
+            url: window.location.href,
+          })
+            .then(() => {
+              showToast('Post shared successfully!');
+            })
+            .catch((error) => {
+              console.error('Error sharing post:', error);
+              copyLinkToClipboard();
+            });
+        } else {
+          copyLinkToClipboard();
+        }
+      }
+
+      function copyLinkToClipboard() {
+        const textarea = document.createElement('textarea');
+        textarea.value = window.location.href;
+        document.body.appendChild(textarea);
+        textarea.select();
+        
+        try {
+          const successful = document.execCommand('copy');
+          if (successful) {
+            showToast('Link copied to clipboard!');
+          } else {
+            showToast('Failed to copy link');
+          }
+        } catch (err) {
+          console.error('Error copying link:', err);
+          showToast('Failed to copy link');
+        }
+        
+        document.body.removeChild(textarea);
+      }
+
+      function showToast(message) {
+        const toast = document.createElement('div');
+        toast.className = 'fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white px-6 py-3 rounded-lg shadow-lg z-50';
+        toast.textContent = message;
+        
+        document.body.appendChild(toast);
+        
+        setTimeout(() => {
+          toast.classList.add('opacity-0', 'transition-opacity', 'duration-300');
+          setTimeout(() => {
+            document.body.removeChild(toast);
+          }, 300);
+        }, 3000);
+      }
+
+      function handleModalBackdropClick(e, modal, closeFunc) {
+        if (e.target === modal) {
+          closeFunc();
+        }
+      }
+
+      // Setup event listeners
+      function setupEventListeners() {
+        // Search
+        elements.search.input.addEventListener('input', handleSearch);
+        document.addEventListener('click', (e) => {
+          if (!elements.search.input.contains(e.target) && !elements.search.results.contains(e.target)) {
+            closeSearchResults();
+          }
+        });
+        
+        // Dropdowns
+        elements.dropdowns.notifications.button.addEventListener('click', () => toggleDropdown('notifications'));
+        elements.dropdowns.profile.button.addEventListener('click', () => toggleDropdown('profile'));
+        
+        // Wishlist button
+        elements.wishlistButton.addEventListener('click', handleWishlistClick);
+        
+        // Close dropdowns when clicking outside
+        document.addEventListener('click', (e) => {
+          const notInDropdown = !(
+            elements.dropdowns.notifications.dropdown.contains(e.target) || 
+            elements.dropdowns.notifications.button.contains(e.target) ||
+            elements.dropdowns.profile.dropdown.contains(e.target) || 
+            elements.dropdowns.profile.button.contains(e.target)
+          );
+          
+          if (notInDropdown) {
+            Object.keys(state.dropdowns).forEach(key => {
+              state.dropdowns[key] = false;
+              elements.dropdowns[key].dropdown.classList.add('hidden');
+            });
+          }
+        });
+        
+        // Scroll buttons
+        elements.sections.recentPosts.scrollLeft.addEventListener('click', () => 
+          handleScroll(elements.sections.recentPosts.container, 'left'));
+        elements.sections.recentPosts.scrollRight.addEventListener('click', () => 
+          handleScroll(elements.sections.recentPosts.container, 'right'));
+        
+        elements.sections.recentCourses.scrollLeft.addEventListener('click', () => 
+          handleScroll(elements.sections.recentCourses.container, 'left'));
+        elements.sections.recentCourses.scrollRight.addEventListener('click', () => 
+          handleScroll(elements.sections.recentCourses.container, 'right'));
+        
+        elements.sections.advancedCourses.scrollLeft.addEventListener('click', () => 
+          handleScroll(elements.sections.advancedCourses.container, 'left'));
+        elements.sections.advancedCourses.scrollRight.addEventListener('click', () => 
+          handleScroll(elements.sections.advancedCourses.container, 'right'));
+        
+        // Chat
+        elements.chat.toggleButton.addEventListener('click', toggleChat);
+        elements.chat.closeButton.addEventListener('click', toggleChat);
+        elements.chat.expandButton.addEventListener('click', toggleChatSize);
+        elements.chat.backButton.addEventListener('click', backToChatsList);
+        elements.chat.sendButton.addEventListener('click', sendMessage);
+        elements.chat.messageInput.addEventListener('keypress', (e) => {
+          if (e.key === 'Enter') sendMessage();
+        });
+        
+        // Course Modal
+        elements.modals.course.closeButton.addEventListener('click', closeCourseModal);
+        elements.modals.course.modal.addEventListener('click', (e) => 
+          handleModalBackdropClick(e, elements.modals.course.modal, closeCourseModal));
+        
+        // Post Modal
+        elements.modals.post.closeButton.addEventListener('click', closePostModal);
+        elements.modals.post.modal.addEventListener('click', (e) => 
+          handleModalBackdropClick(e, elements.modals.post.modal, closePostModal));
+        elements.modals.post.shareButton.addEventListener('click', sharePost);
+        elements.modals.post.deleteButton.addEventListener('click', () => {
+          if (state.modals.post.currentPost) {
+            openDeleteConfirmationModal(state.modals.post.currentPost.id);
+          }
+        });
+        
+        // Create Post
+        elements.createPostButton.addEventListener('click', openCreatePostModal);
+        
+        // Create Post Modal
+        elements.modals.createPost.closeButton.addEventListener('click', closeCreatePostModal);
+        elements.modals.createPost.cancelButton.addEventListener('click', closeCreatePostModal);
+        elements.modals.createPost.modal.addEventListener('click', (e) => 
+          handleModalBackdropClick(e, elements.modals.createPost.modal, closeCreatePostModal));
+        
+        elements.modals.createPost.browseButton.addEventListener('click', () => {
+          elements.modals.createPost.fileInput.click();
+        });
+        
+        elements.modals.createPost.changeImageButton.addEventListener('click', () => {
+          elements.modals.createPost.fileInput.click();
+        });
+        
+        elements.modals.createPost.fileInput.addEventListener('change', (e) => {
+          if (e.target.files.length > 0) {
+            handleFileUpload(e.target.files[0]);
+          }
+        });
+        
+        elements.modals.createPost.fileUploadArea.addEventListener('click', () => {
+          if (!elements.modals.createPost.imagePreviewContainer.contains(event.target) && 
+              !elements.modals.createPost.changeImageButton.contains(event.target)) {
+            elements.modals.createPost.fileInput.click();
+          }
+        });
+        
+        elements.modals.createPost.fileUploadArea.addEventListener('dragover', (e) => {
+          e.preventDefault();
+          elements.modals.createPost.fileUploadArea.classList.add('drag-over');
+        });
+        
+        elements.modals.createPost.fileUploadArea.addEventListener('dragleave', (e) => {
+          e.preventDefault();
+          elements.modals.createPost.fileUploadArea.classList.remove('drag-over');
+        });
+        
+        elements.modals.createPost.fileUploadArea.addEventListener('drop', handleFileDrop);
+        elements.modals.createPost.submitButton.addEventListener('click', createNewPost);
+        
+        // Additional files functionality
+        elements.modals.createPost.attachFilesCheckbox.addEventListener('change', toggleAdditionalFilesSection);
+        
+        elements.modals.createPost.browseAdditionalFilesBtn.addEventListener('click', () => {
+          elements.modals.createPost.additionalFilesInput.click();
+        });
+        
+        elements.modals.createPost.addMoreFilesBtn.addEventListener('click', () => {
+          elements.modals.createPost.additionalFilesInput.click();
+        });
+        
+        elements.modals.createPost.additionalFilesInput.addEventListener('change', (e) => {
+          if (e.target.files.length > 0) {
+            handleAdditionalFilesUpload(e.target.files);
+          }
+        });
+        
+        // Delete Confirmation Modal
+        elements.modals.deleteConfirmation.cancelButton.addEventListener('click', closeDeleteConfirmationModal);
+        elements.modals.deleteConfirmation.confirmButton.addEventListener('click', deletePost);
+        elements.modals.deleteConfirmation.modal.addEventListener('click', (e) => 
+          handleModalBackdropClick(e, elements.modals.deleteConfirmation.modal, closeDeleteConfirmationModal));
+      }
+
+      // Initialize the application
+      initializeComponents();
+    })();
+    </script>
+</body>
+
+</html>

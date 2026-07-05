@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HobbyHive - Where Hobbies Meet Opportunities</title>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23A78BFA' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='lucide lucide-palette-icon lucide-palette'%3E%3Cpath d='M12 22a1 1 0 0 1 0-20 10 9 0 0 1 10 9 5 5 0 0 1-5 5h-2.25a1.75 1.75 0 0 0-1.4 2.8l.3.4a1.75 1.75 0 0 1-1.4 2.8z'/%3E%3Ccircle cx='13.5' cy='6.5' r='.5' fill='%23A78BFA'/%3E%3Ccircle cx='17.5' cy='10.5' r='.5' fill='%23A78BFA'/%3E%3Ccircle cx='6.5' cy='12.5' r='.5' fill='%23A78BFA'/%3E%3Ccircle cx='8.5' cy='7.5' r='.5' fill='%23A78BFA'/%3E%3C/svg%3E" />
+
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22currentColor%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%20class%3D%22lucide%20lucide-palette-icon%20lucide-palette%22%3E%3Cpath%20d%3D%22M12%2022a1%201%200%200%201%200-20%2010%209%200%200%201%2010%209%205%205%200%200%201-5%205h-2.25a1.75%201.75%200%200%200-1.4%202.8l.3.4a1.75%201.75%200%200%201-1.4%202.8z%22/%3E%3Ccircle%20cx%3D%2213.5%22%20cy%3D%226.5%22%20r%3D%22.5%22%20fill%3D%22currentColor%22/%3E%3Ccircle%20cx%3D%2217.5%22%20cy%3D%2210.5%22%20r%3D%22.5%22%20fill%3D%22currentColor%22/%3E%3Ccircle%20cx%3D%226.5%22%20cy%3D%2212.5%22%20r%3D%22.5%22%20fill%3D%22currentColor%22/%3E%3Ccircle%20cx%3D%228.5%22%20cy%3D%227.5%22%20r%3D%22.5%22%20fill%3D%22currentColor%22/%3E%3C/svg%3E" />
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23A78BFA' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='lucide lucide-palette-icon lucide-palette'%3E%3Cpath d='M12 22a1 1 0 0 1 0-20 10 9 0 0 1 10 9 5 5 0 0 1-5 5h-2.25a1.75 1.75 0 0 0-1.4 2.8l.3.4a1.75 1.75 0 0 1-1.4 2.8z'/%3E%3Ccircle cx='13.5' cy='6.5' r='.5' fill='%23A78BFA'/%3E%3Ccircle cx='17.5' cy='10.5' r='.5' fill='%23A78BFA'/%3E%3Ccircle cx='6.5' cy='12.5' r='.5' fill='%23A78BFA'/%3E%3Ccircle cx='8.5' cy='7.5' r='.5' fill='%23A78BFA'/%3E%3C/svg%3E" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      .hobby-carousel {
+        overflow: hidden;
+        position: relative;
+      }
+
+      #hobbyContainer {
+        display: flex;
+        transition: transform 0.02s linear;
+      }
+
+      .review-card {
+        transition: all 0.5s ease-out;
+        opacity: 0;
+        transform: translateY(50px);
+      }
+
+      .review-card.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .feature-card {
+        transition: all 0.5s ease-out;
+        position: relative;
+      }
+
+      .feature-card:hover .feature-icon {
+        transform: scale(1.1);
+      }
+
+      .feature-icon {
+        transition: all 0.5s ease-out;
+      }
+
+      .feature-card .bg-gray-900\/80 {
+        backdrop-filter: blur(10px);
+      }
+
+      .feature-card:hover .bg-gray-900\/80 {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px -5px rgba(167, 139, 250, 0.3);
+      }
+
+      .connecting-line {
+        position: absolute;
+        height: 2px;
+        background: rgba(167, 139, 250, 0.3);
+        top: 50%;
+        transform: translateY(-50%);
+        opacity: 0.5;
+        animation: flowLine 2s infinite;
+      }
+
+      @keyframes flowLine {
+        0% {
+          opacity: 0.2;
+          transform: translateY(-50%) scaleX(0.95);
+        }
+        50% {
+          opacity: 0.5;
+          transform: translateY(-50%) scaleX(1);
+        }
+        100% {
+          opacity: 0.2;
+          transform: translateY(-50%) scaleX(0.95);
+        }
+      }
+
+      .feature-card::after {
+        content: '';
+        position: absolute;
+        inset: -1px;
+        background: rgba(167, 139, 250, 0.1);
+        filter: blur(15px);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        z-index: -1;
+        border-radius: 1rem;
+      }
+
+      .feature-card:hover::after {
+        opacity: 0.2;
+      }
+
+      .faq-item {
+        transition: all 0.3s ease;
+      }
+
+      .faq-answer {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
+        opacity: 0;
+      }
+
+      .faq-item.active .faq-answer {
+        max-height: 200px;
+        opacity: 1;
+      }
+
+      .faq-item:hover {
+        transform: translateX(10px);
+      }
+
+      /* Carousel Styles */
+      .carousel {
+        position: relative;
+        height: 500px;
+        overflow: hidden;
+        border-radius: 8px;
+      }
+
+      .slide {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        transition: opacity 0.5s ease-in-out;
+      }
+
+      .slide.active {
+        opacity: 1;
+      }
+
+      .slide img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .nav-button {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background: rgba(0, 0, 0, 0.5);
+        color: white;
+        border: none;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        cursor: pointer;
+        font-size: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background-color 0.3s;
+        z-index: 10;
+      }
+
+      .nav-button:hover {
+        background: rgba(0, 0, 0, 0.75);
+      }
+
+      .prev {
+        left: 16px;
+      }
+
+      .next {
+        right: 16px;
+      }
+
+      .dots {
+        position: absolute;
+        bottom: 16px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 8px;
+        z-index: 10;
+      }
+
+      .dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        border: none;
+        background: rgba(255, 255, 255, 0.5);
+        cursor: pointer;
+        padding: 0;
+        transition: background-color 0.3s;
+      }
+
+      .dot.active {
+        background: white;
+      }
+    </style>
+  </head>
+  <body class="min-h-screen bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900">
+    <!-- Navigation Bar -->
+    <nav class="fixed w-full transition-all duration-300 z-50" id="navbar">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-16">
+          <div class="flex items-center space-x-2">
+            <i data-lucide="palette" class="h-8 w-8 text-purple-400"></i>
+            <span class="text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+              <a href="https://singular-kringle-5f87fe.netlify.app/homepage">HobbyHive</a>
+            </span>
+          </div>
+          <div class="flex items-center space-x-4">
+            <button class="px-4 py-2 text-purple-400 hover:text-purple-300 font-medium flex items-center space-x-1">
+              <i data-lucide="log-in" class="h-4 w-4"></i>
+              <span><a href="https://startling-selkie-4a9e88.netlify.app/sign-in">Sign In</a></span>
+            </button>
+            <button class="px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-full hover:opacity-90 transition-opacity flex items-center space-x-1">
+              <i data-lucide="user-plus" class="h-4 w-4"></i>
+              <span><a href="https://startling-selkie-4a9e88.netlify.app/sign-up">Sign Up</a></span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="pt-32 pb-20 px-4">
+      <div class="max-w-7xl mx-auto">
+        <div class="grid lg:grid-cols-2 gap-12 items-center">
+          <div class="space-y-8">
+            <h1 class="text-5xl lg:text-6xl font-bold text-white">
+              Where
+              <span class="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+                Hobbies
+              </span>
+              Meet
+              <span class="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+                Opportunities
+              </span>
+            </h1>
+            <p class="text-xl text-gray-300">
+              Connect with fellow enthusiasts, showcase your passion, and turn your hobbies into amazing opportunities.
+            </p>
+            <div class="flex space-x-4">
+              <button class="px-8 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-full hover:opacity-90 transition-opacity text-lg font-medium">
+                <a href="https://startling-selkie-4a9e88.netlify.app/sign-up">Get Started</a>
+              </button>
+              <button id="learnMoreBtn" class="px-8 py-3 border-2 border-purple-400 text-purple-400 rounded-full hover:bg-purple-900/30 transition-colors text-lg font-medium">
+                Learn More
+              </button>
+            </div>
+          </div>
+          <div class="relative">
+            <div class="absolute -inset-4 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg opacity-30 blur-3xl"></div>
+            <div class="relative rounded-lg shadow-xl overflow-hidden">
+              <div class="carousel">
+                <div class="slide active">
+                  <img src="https://i.imgur.com/TThqp8C.png" alt="Slide 1">
+                </div>
+                <div class="slide">
+                  <img src="https://i.imgur.com/pcJNtJG.png" alt="Slide 2">
+                </div>
+                <div class="slide">
+                  <img src="https://i.imgur.com/I2XvXnF.png" alt="Slide 3">
+                </div>
+
+                <button class="nav-button prev">❮</button>
+                <button class="nav-button next">❯</button>
+
+                <div class="dots">
+                  <button class="dot active"></button>
+                  <button class="dot"></button>
+                  <button class="dot"></button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Hobby Carousel -->
+    <div class="py-20 overflow-hidden bg-gray-800/30">
+      <div class="max-w-7xl mx-auto px-4">
+        <h2 class="text-3xl font-bold text-center text-white mb-12">Explore Popular Hobbies</h2>
+        <div class="flex space-x-8 hobby-carousel">
+          <div class="flex space-x-8" id="hobbyContainer"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Features Section -->
+    <div id="howItWorks" class="py-20 px-4 bg-gray-800/50">
+      <div class="max-w-7xl mx-auto">
+        <h2 class="text-3xl font-bold text-center text-white mb-16">How It Works</h2>
+        <div class="grid md:grid-cols-3 gap-12">
+          <div class="text-center feature-card">
+            <div class="relative group cursor-pointer">
+              <div class="bg-gray-900/80 p-8 rounded-lg border border-purple-400/30 hover:border-purple-400/60 transition-all duration-300">
+                <div class="mb-6">
+                  <i data-lucide="dollar-sign" class="feature-icon h-16 w-16 mx-auto text-purple-400"></i>
+                </div>
+                <h3 class="text-3xl font-bold text-white mb-6 uppercase tracking-wider">Skill Gig</h3>
+                <p class="text-xl text-gray-300 leading-relaxed">Turn your hobby into income by offering services, classes, or products to interested learners.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="text-center feature-card">
+            <div class="relative group cursor-pointer">
+              <div class="bg-gray-900/80 p-8 rounded-lg border border-purple-400/30 hover:border-purple-400/60 transition-all duration-300">
+                <div class="mb-6">
+                  <i data-lucide="repeat" class="feature-icon h-16 w-16 mx-auto text-purple-400"></i>
+                </div>
+                <h3 class="text-3xl font-bold text-white mb-6 uppercase tracking-wider">Skill Swap</h3>
+                <p class="text-xl text-gray-300 leading-relaxed">Exchange your expertise with others in a collaborative learning environment.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="text-center feature-card">
+            <div class="relative group cursor-pointer">
+              <div class="bg-gray-900/80 p-8 rounded-lg border border-purple-400/30 hover:border-purple-400/60 transition-all duration-300">
+                <div class="mb-6">
+                  <i data-lucide="graduation-cap" class="feature-icon h-16 w-16 mx-auto text-purple-400"></i>
+                </div>
+                <h3 class="text-3xl font-bold text-white mb-6 uppercase tracking-wider">Skill Course</h3>
+                <p class="text-xl text-gray-300 leading-relaxed">Create and sell structured online courses to share your knowledge globally.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Reviews Section -->
+    <div class="py-20 px-4 bg-gray-900">
+      <div class="max-w-7xl mx-auto">
+        <h2 class="text-3xl font-bold text-center text-white mb-16">What Our Community Says</h2>
+        <div class="space-y-8" id="reviewsContainer"></div>
+      </div>
+    </div>
+
+    <!-- FAQ Section -->
+    <div class="py-20 px-4 bg-gray-800/30">
+      <div class="max-w-3xl mx-auto">
+        <h2 class="text-3xl font-bold text-center text-white mb-16">Frequently Asked Questions</h2>
+        <div class="space-y-6" id="faqContainer"></div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 border-t border-gray-800">
+      <div class="max-w-7xl mx-auto px-4 py-12">
+        <div class="grid md:grid-cols-4 gap-8">
+          <div class="space-y-4">
+            <div class="flex items-center space-x-2">
+              <i data-lucide="palette" class="h-8 w-8 text-purple-400"></i>
+              <span class="text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+                HobbyHive
+              </span>
+            </div>
+            <p class="text-gray-400">Where passions come to life and skills find their worth.</p>
+          </div>
+          <div>
+            <h4 class="text-white font-semibold mb-4">Quick Links</h4>
+            <ul class="space-y-2 text-gray-400">
+              <li><a href="https://singular-kringle-5f87fe.netlify.app/aboutus" class="hover:text-purple-400">About Us</a></li>
+           
+              <li><a href="https://singular-kringle-5f87fe.netlify.app/success%20stories" class="hover:text-purple-400">Success Stories</a></li>
+              <li><a href="https://singular-kringle-5f87fe.netlify.app/howtobecomeinstructor" class="hover:text-purple-400">How To Become Instructor</a></li>
+              
+            </ul>
+          </div>
+          <div>
+            <h4 class="text-white font-semibold mb-4">Support</h4>
+            <ul class="space-y-2 text-gray-400">
+              <li><a href="https://singular-kringle-5f87fe.netlify.app/helpcenter" class="hover:text-purple-400">Help Center</a></li>
+              <li><a href="https://singular-kringle-5f87fe.netlify.app/community%20guidelines" class="hover:text-purple-400">Community Guidelines</a></li>
+              <li><a href="https://singular-kringle-5f87fe.netlify.app/terms%20and%20conditions" class="hover:text-purple-400">Terms and Conditions</a></li>
+         
+            </ul>
+          </div>
+          <div>
+            <h4 class="text-white font-semibold mb-4">Connect With Us</h4>
+            <div class="flex space-x-4">
+              <a href="https://www.facebook.com/hobby.hive/" class="text-gray-400 hover:text-purple-400">
+                <i data-lucide="facebook" class="h-6 w-6"></i>
+              </a>
+              <a href="https://x.com/Hobby_Hive" class="text-gray-400 hover:text-purple-400">
+                <i data-lucide="twitter" class="h-6 w-6"></i>
+              </a>
+              <a href="https://www.instagram.com/hobby_hive9/" class="text-gray-400 hover:text-purple-400">
+                <i data-lucide="instagram" class="h-6 w-6"></i>
+              </a>
+              
+            </div>
+          </div>
+        </div>
+        <div class="mt-12 pt-8 border-t border-gray-800 text-center text-gray-400">
+          <p>&copy; <span id="currentYear"></span> HobbyHive. All rights reserved.</p>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      // Initialize Lucide icons
+      lucide.createIcons();
+
+      // Handle navbar scroll effect
+      const navbar = document.getElementById('navbar');
+      window.addEventListener('scroll', () => {
+        if (window.scrollY > 20) {
+          navbar.classList.add('bg-gray-900/80', 'backdrop-blur-md', 'shadow-lg');
+        } else {
+          navbar.classList.remove('bg-gray-900/80', 'backdrop-blur-md', 'shadow-lg');
+        }
+      });
+
+      // Set current year in footer
+      document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+      // Hobbies data
+      const hobbies = [
+        { name: "Photography", image: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&h=300&q=80" },
+        { name: "Painting", image: "https://images.unsplash.com/photo-1513364776144-60967b0f800f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&h=300&q=80" },
+        { name: "Cooking", image: "https://images.unsplash.com/photo-1556911220-e15b29be8c8f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&h=300&q=80" },
+        { name: "Music", image: "https://images.unsplash.com/photo-1511379938547-c1f69419868d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&h=300&q=80" },
+        { name: "Gardening", image: "https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&h=300&q=80" },
+        { name: "Writing", image: "https://images.unsplash.com/photo-1455390582262-044cdead277a?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&h=300&q=80" },
+        { name: "Dancing", image: "https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&h=300&q=80" },
+        { name: "Yoga", image: "https://images.unsplash.com/photo-1506126613408-eca07ce68773?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&h=300&q=80" },
+        { name: "Gaming", image: "https://images.unsplash.com/photo-1538481199705-c710c4e965fc?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&h=300&q=80" },
+        { name: "Reading", image: "https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&h=300&q=80" }
+      ];
+
+      // Populate hobby carousel
+      const hobbyContainer = document.getElementById('hobbyContainer');
+      const doubledHobbies = [...hobbies, ...hobbies];
+      doubledHobbies.forEach(hobby => {
+        const hobbyElement = document.createElement('div');
+        hobbyElement.className = 'flex-none w-64';
+        hobbyElement.innerHTML = `
+          <div class="relative group">
+            <img src="${hobby.image}" alt="${hobby.name}" class="w-64 h-48 object-cover rounded-lg" />
+            <div class="absolute inset-0 bg-gradient-to-t from-gray-900 to-transparent opacity-60 rounded-lg"></div>
+            <h3 class="absolute bottom-4 left-4 text-white font-semibold text-lg">${hobby.name}</h3>
+          </div>
+        `;
+        hobbyContainer.appendChild(hobbyElement);
+      });
+
+      // Animate hobby carousel
+      const animateCarousel = () => {
+        const scrollAmount = 1;
+        let currentScroll = 0;
+        setInterval(() => {
+          currentScroll += scrollAmount;
+          if (currentScroll >= hobbyContainer.scrollWidth / 2) {
+            currentScroll = 0;
+          }
+          hobbyContainer.style.transform = `translateX(-${currentScroll}px)`;
+        }, 20);
+      };
+      animateCarousel();
+
+      // Reviews data
+      const reviews = [
+        {
+          name: "Sarah Johnson",
+          hobby: "Photography",
+          text: "HobbyHive helped me turn my photography passion into a thriving side business!",
+          image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=200&h=200&q=80"
+        },
+        {
+          name: "Michael Chen",
+          hobby: "Cooking",
+          text: "Through skill sharing, I've learned authentic recipes from chefs worldwide.",
+          image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=200&h=200&q=80"
+        },
+        {
+          name: "Emma Davis",
+          hobby: "Painting",
+          text: "The skill swap feature let me exchange my painting lessons for guitar tutorials!",
+          image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=200&h=200&q=80"
+        },
+        {
+          name: "James Wilson",
+          hobby: "Music",
+          text: "I've found amazing collaborators and students through HobbyHive's platform.",
+          image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=200&h=200&q=80"
+        },
+        {
+          name: "Lisa Martinez",
+          hobby: "Gardening",
+          text: "The community here is incredible! I've learned so much about urban gardening.",
+          image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=200&h=200&q=80"
+        }
+      ];
+
+      // Populate reviews
+      const reviewsContainer = document.getElementById('reviewsContainer');
+      reviews.forEach((review, index) => {
+        const reviewElement = document.createElement('div');
+        reviewElement.className = 'review-card bg-gray-800 p-6 rounded-lg shadow-lg border border-gray-700 mb-6 max-w-2xl mx-auto';
+        reviewElement.innerHTML = `
+          <div class="flex items-center space-x-4 mb-4">
+            <img src="${review.image}" alt="${review.name}" class="w-12 h-12 rounded-full" />
+            <div>
+              <h4 class="text-lg font-semibold text-white">${review.name}</h4>
+              <p class="text-purple-400">${review.hobby}</p>
+            </div>
+          </div>
+          <p class="text-gray-300">${review.text}</p>
+        `;
+        reviewsContainer.appendChild(reviewElement);
+      });
+
+      // FAQ data
+      const faqs = [
+        {
+          question: "How do I get started on HobbyHive?",
+          answer: "Simply sign up for a free account, complete your profile highlighting your skills and interests, and start exploring opportunities to share or learn new hobbies!"
+        },
+        {
+          question: "What's the difference between Skill Gig and Skill Course?",
+          answer: "Skill Gig is for offering one-on-one sessions or small group classes, while Skill Course lets you create pre-recorded, structured content that learners can access anytime."
+        },
+        {
+          question: "How does Skill Swap work?",
+          answer: "Skill Swap lets you exchange your expertise with others. For example, you could teach photography while learning guitar from another community member."
+        },
+        {
+          question: "Can I earn money through HobbyHive?",
+          answer: "Yes! You can monetize your skills through Skill Gigs, creating online courses, or offering premium content to your followers."
+        },
+        {
+          question: "How do you ensure quality and safety?",
+          answer: "We verify all instructors, implement a review system, and have community guidelines to maintain a safe and high-quality learning environment."
+        }
+      ];
+
+      // Populate FAQs
+      const faqContainer = document.getElementById('faqContainer');
+      faqs.forEach((faq, index) => {
+        const faqElement = document.createElement('div');
+        faqElement.className = 'faq-item bg-gray-800/50 rounded-lg overflow-hidden cursor-pointer transform transition-transform duration-300';
+        faqElement.innerHTML = `
+          <button class="w-full px-6 py-4 text-left flex items-center justify-between">
+            <span class="text-lg font-medium text-white">${faq.question}</span>
+            <i data-lucide="chevron-down" class="h-5 w-5 text-purple-400 transform transition-transform duration-300"></i>
+          </button>
+          <div class="faq-answer px-6 pb-4">
+            <p class="text-gray-300">${faq.answer}</p>
+          </div>
+        `;
+        faqContainer.appendChild(faqElement);
+      });
+
+      // Initialize Lucide icons for the newly added FAQ items
+      lucide.createIcons();
+
+      // Add click handlers for FAQ items
+      document.querySelectorAll('.faq-item').forEach(faqElement => {
+        const button = faqElement.querySelector('button');
+        const icon = button.querySelector('i');
+        
+        button.addEventListener('click', () => {
+          const isActive = faqElement.classList.contains('active');
+          
+          // Close all FAQs
+          document.querySelectorAll('.faq-item').forEach(item => {
+            const itemIcon = item.querySelector('button i');
+            item.classList.remove('active');
+            if (itemIcon) {
+              itemIcon.style.transform = 'rotate(0deg)';
+            }
+          });
+
+          // Toggle clicked FAQ
+          if (!isActive) {
+            faqElement.classList.add('active');
+            if (icon) {
+              icon.style.transform = 'rotate(180deg)';
+            }
+          }
+        });
+      });
+
+      // Updated review cards animation
+      const observeReviews = () => {
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('visible');
+            } else {
+              entry.target.classList.remove('visible');
+            }
+          });
+        }, { 
+          threshold: 0.2,
+          rootMargin: '0px'
+        });
+
+        document.querySelectorAll('.review-card').forEach(card => {
+          observer.observe(card);
+        });
+      };
+      observeReviews();
+
+      // Animate feature cards on scroll
+      const observeFeatures = () => {
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.style.opacity = '1';
+              entry.target.style.transform = 'translateY(0)';
+            }
+          });
+        }, { threshold: 0.5 });
+
+        document.querySelectorAll('.feature-card').forEach((card, index) => {
+          card.style.opacity = '0';
+          card.style.transform = 'translateY(2rem)';
+          card.style.transition = 'all 0.5s ease-out';
+          card.style.transitionDelay = `${index * 0.2}s`;
+          observer.observe(card);
+        });
+      };
+      observeFeatures();
+
+      // Image Carousel Functionality
+      document.addEventListener('DOMContentLoaded', () => {
+        const slides = document.querySelectorAll('.slide');
+        const dots = document.querySelectorAll('.dot');
+        const prevButton = document.querySelector('.prev');
+        const nextButton = document.querySelector('.next');
+        let currentIndex = 0;
+        let interval;
+
+        function showSlide(index) {
+            // Remove active class from all slides and dots
+            slides.forEach(slide => slide.classList.remove('active'));
+            dots.forEach(dot => dot.classList.remove('active'));
+
+            // Add active class to current slide and dot
+            slides[index].classList.add('active');
+            dots[index].classList.add('active');
+        }
+
+        function nextSlide() {
+            currentIndex = (currentIndex + 1) % slides.length;
+            showSlide(currentIndex);
+        }
+
+        function prevSlide() {
+            currentIndex = (currentIndex - 1 + slides.length) % slides.length;
+            showSlide(currentIndex);
+        }
+
+        // Event listeners for navigation buttons
+        nextButton.addEventListener('click', () => {
+            clearInterval(interval);
+            nextSlide();
+            startAutoSlide();
+        });
+
+        prevButton.addEventListener('click', () => {
+            clearInterval(interval);
+            prevSlide();
+            startAutoSlide();
+        });
+
+        // Event listeners for dots
+        dots.forEach((dot, index) => {
+            dot.addEventListener('click', () => {
+                clearInterval(interval);
+                currentIndex = index;
+                showSlide(currentIndex);
+                startAutoSlide();
+            });
+        });
+
+        // Auto slide function
+        function startAutoSlide() {
+            interval = setInterval(nextSlide, 3000);
+        }
+
+        // Start the auto slide
+        startAutoSlide();
+      });
+
+      // Learn More button functionality
+      document.getElementById('learnMoreBtn').addEventListener('click', () => {
+        const howItWorksSection = document.getElementById('howItWorks');
+        howItWorksSection.scrollIntoView({ behavior: 'smooth' });
+      });
+    </script>
+  </body>
+</html>
