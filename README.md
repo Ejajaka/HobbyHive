@@ -90,6 +90,3 @@ This is a static HTML/CSS/JS project — no build step required.
    npx serve .
    ```
 
-## Author
-
-**Sanjeev** — [GitHub](https://github.com/Ejajaka)
