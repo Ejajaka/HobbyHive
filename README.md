@@ -1,4 +1,4 @@
-# HobbyHive 🐝
+# HobbyHive
 
 A skill-sharing and freelance marketplace that connects **freelancers** offering creative skills (painting, photography, and more) with **recruiters** looking to hire talent — plus a learning track for people who want to pick up a new skill from scratch.
 
@@ -14,14 +14,14 @@ HobbyHive is a two-sided platform:
 
 ## Features
 
-- 🔐 Authentication flow — sign up, sign in, forgot/reset password
-- 🧑‍🎨 Freelancer home page and public profile pages
-- 🧑‍💼 Recruiter dashboard, activity page, and profile page
-- 🎯 **SkillGig** — gig discovery for freelance work
-- 🔄 **SkillSwap** — trade/exchange skills with other users
-- 📚 Skill course pages (e.g. painting, photography) with a path to becoming an instructor
-- ❤️ Wishlist and "My Courses" tracking
-- 🌟 Success stories, About Us, Help Center, Community Guidelines, and Terms & Conditions pages
+-  Authentication flow — sign up, sign in, forgot/reset password
+-  Freelancer home page and public profile pages
+-  Recruiter dashboard, activity page, and profile page
+-  **SkillGig** — gig discovery for freelance work
+-  **SkillSwap** — trade/exchange skills with other users
+-  Skill course pages (e.g. painting, photography) with a path to becoming an instructor
+-  Wishlist and "My Courses" tracking
+-  Success stories, About Us, Help Center, Community Guidelines, and Terms & Conditions pages
 - Separate loading/landing states for freelancers vs. recruiters
 
 ## Tech Stack
